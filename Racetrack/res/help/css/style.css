@@ -1,0 +1,130 @@
+@charset "UTF-8";
+/* CSS Document */
+ul, li, nav {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: "Comic Sans MS";
+	color: #333;
+}
+img {
+	width: 100%;
+	border: 1px solid #CCC;
+	border-radius: 5px;
+}
+
+h1 > a {
+	text-decoration: none;
+	color: #444;
+}
+
+.center {
+	margin: 0 auto;
+	max-width: 700px;
+}
+
+.sceneDescription {
+	border-bottom: 1px solid #CCC;
+	margin: 20px 0;
+}
+.sceneDescription:last-child {
+	border-bottom: none;
+}
+
+.sceneLabeling {
+	list-style: none;
+	counter-reset: item;
+}
+.sceneLabeling > li {
+	counter-increment: item;
+	margin-bottom: 5px;
+}
+.sceneLabeling > li:before {
+	margin-left: -20px;
+	margin-right: 3px;
+	content: counter(item) '.';
+	color: #12AD8D;
+}
+
+#mainNav {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #444;
+	border-left: 0;
+	border-right: 0;
+	list-style: none;
+}
+
+#mainNav > ul {
+	display: inline;
+	text-align: center;
+	list-style: none;
+	padding: 0;
+}
+
+#mainNav > ul > li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#mainNav > ul > li > a {
+	display: inline-block;
+	margin: 0;
+	text-align: center;
+	text-decoration: none;
+	color: #666;
+	border-bottom: 4px solid #FFF;
+	margin-bottom: 4px;
+	
+	transition: all ease-in-out 0.2s;
+}
+
+#mainNav > ul > li:first-child > a {
+	width: 99%;
+}
+
+@media only screen and (min-width: 400px) {
+#mainNav > ul > li > a {
+	width: 32.5%;
+}
+}
+
+@media only screen and (max-width: 400px) and (min-width: 260px) {
+#mainNav > ul > li > a {
+	width: 49%;
+}
+}
+
+@media only screen and (max-width: 260px) {
+#mainNav > ul > li > a {
+	width: 99%;
+}
+}
+
+
+
+#mainNav > ul > li > a:hover {
+	/*border-bottom: 4px solid #777;*/
+	color: #444;
+	font-weight: bold;
+}
+#mainNav > ul > li > a:hover:before, #mainNav > ul > li > a:hover:after {
+	content: '-';
+}
+
+#mainNav > ul > li > a#active {
+	color: #27A982;
+	/*border-bottom: 4px solid #27A982;*/
+	font-weight: bold;
+}
+#mainNav > ul > li > a#active:before {
+	content: '>';
+}
+#mainNav > ul > li > a#active:after {
+	content: '<';
+}
+
+ 

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.main.java.gui.scenes.GameController">
+   <children>
+      <Pane fx:id="gameAreaBasePane" prefHeight="569.0" prefWidth="900.0" style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Pane fx:id="gameAreaPreviewPane" layoutX="10.0" layoutY="10.0" prefHeight="569.0" prefWidth="900.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <StackPane fx:id="infoActionLabelWrapper" mouseTransparent="true" prefHeight="59.0" prefWidth="900.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox maxWidth="500.0" prefHeight="60.0" prefWidth="500.0" style="-fx-border-color: #DDD; -fx-background-color: rgba(255,255,255,0.8);" StackPane.alignment="CENTER">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="currentActionLabel" text="Label" textOverrun="CENTER_WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Comic Sans MS" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
+               </children>
+               <StackPane.margin>
+                  <Insets top="-1.0" />
+               </StackPane.margin>
+            </VBox>
+         </children>
+      </StackPane>
+      <HBox fx:id="gameMenue" alignment="CENTER" layoutX="802.0" layoutY="6.0" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <ImageView fx:id="showHideInfoActionImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#showHideInfoActionWrapper" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@resources/showHideTop.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="helpLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#openHelp" prefHeight="40.0" prefWidth="40.0" text="?">
+               <font>
+                  <Font name="Comic Sans MS" size="26.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Label>
+            <Label fx:id="closeLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#exitCurrentGame" prefHeight="40.0" prefWidth="40.0" text="X">
+               <font>
+                  <Font name="Comic Sans MS" size="26.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Label>
+         </children>
+      </HBox>
+      <HBox layoutY="379.0" prefHeight="80.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <HBox fx:id="playerBox" alignment="CENTER" prefHeight="80.0" prefWidth="350.0" style="-fx-background-color: #FEFEFE; -fx-border-color: #999;" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="-1.0" right="-1.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </HBox>
+            <Pane maxHeight="80.0" maxWidth="150.0" minHeight="80.0" minWidth="150.0" prefHeight="80.0" prefWidth="150.0" style="-fx-background-color: #FEFEFE; -fx-border-color: #999;" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Pane>
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="350.0" style="-fx-background-color: #FEFEFE; -fx-border-color: #999;" HBox.hgrow="ALWAYS">
+               <children>
+                  <StackPane prefHeight="75.0" prefWidth="150.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Moves">
+                           <StackPane.margin>
+                              <Insets top="55.0" />
+                           </StackPane.margin>
+                           <font>
+                              <Font name="Comic Sans MS" size="13.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="roundText" text="0">
+                           <font>
+                              <Font name="Comic Sans MS" size="36.0" />
+                           </font>
+                           <StackPane.margin>
+                              <Insets top="-15.0" />
+                           </StackPane.margin>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <StackPane prefHeight="75.0" prefWidth="150.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Speed">
+                           <StackPane.margin>
+                              <Insets top="55.0" />
+                           </StackPane.margin>
+                           <font>
+                              <Font name="Comic Sans MS" size="13.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="speedText" alignment="CENTER" contentDisplay="CENTER" ellipsisString="/" prefHeight="51.0" prefWidth="80.0" text="0/0" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS">
+                           <font>
+                              <Font name="Comic Sans MS" size="36.0" />
+                           </font>
+                           <StackPane.margin>
+                              <Insets top="-15.0" />
+                           </StackPane.margin>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <StackPane prefHeight="75.0" prefWidth="150.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time">
+                           <StackPane.margin>
+                              <Insets top="55.0" />
+                           </StackPane.margin>
+                           <font>
+                              <Font name="Comic Sans MS" size="13.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="timeText" text="--">
+                           <font>
+                              <Font name="Comic Sans MS" size="36.0" />
+                           </font>
+                           <StackPane.margin>
+                              <Insets top="-15.0" />
+                           </StackPane.margin>
+                        </Label>
+                     </children>
+                  </StackPane>
+               </children>
+               <HBox.margin>
+                  <Insets left="-1.0" right="-1.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </HBox>
+         </children>
+      </HBox>
+      <StackPane fx:id="movePreviewPaneWrapper" layoutX="325.0" layoutY="569.0" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0">
+         <children>
+            <StackPane fx:id="movePreviewPane" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #FEFEFE; -fx-border-color: #999;">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding></StackPane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

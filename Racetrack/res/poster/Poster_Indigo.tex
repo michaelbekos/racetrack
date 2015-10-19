@@ -1,0 +1,265 @@
+\documentclass[a0, portrait, english, ngerman]{a0poster}
+%\documentclass[a0,plainsections]{sciposter}
+%\usepackage{posterA0}
+
+\usepackage[nologos]{edposter}
+%\usepackage[iso]{umlaute}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{pstricks}
+\usepackage{tikz}
+\usepackage{wrapfig}
+%\usepackage{posterbox}
+\usepackage{lipsum}
+
+%---------SILBENTRENNUNG--------
+\hyphenation{Netz-werk, Kar-ten-an-zahl, zwi-schen, je-weils, Spei-chern, Er-fahrung-en}
+
+%\definecolor{bgcolor}{gray}{0.9}
+\definecolor{newgrey}{rgb}{0.75,0.75,0.75}
+\definecolor{bgcolor}{rgb}{1,1,1}
+\definecolor{Blue}{RGB}{0,0,255}
+\definecolor{unirot}{RGB}{165,30,55} % uni-rot
+
+\title{Programmierprojekt SS2015:\\Racetrack}
+
+%Wenn man hier nicht alle Informationen gibt, streikt er,
+%also einfach leere Klammern stehen lassen.
+  \authorleft{}
+  \affiliationleft{}
+  \emailleft{}
+\author{}
+ \affiliation{}
+ \email{}
+  \authorright{}
+  \affiliationright{}
+  \emailright{}
+
+
+\def\bordercolor{unirot}
+%Spaltentrennleiste
+\def\colsepcolor{unirot}
+%Sec-tion Head-er Farbe  - was für eine Abkürzung... :-)
+\def\secheadcol{unirot}
+\def\greycolor{newgrey}
+
+\graphicspath{{./images/}}
+%Die Logos müssen redefiniert werden. Dazu in jedem Fall
+%Vektorgrafiken verwenden, sieht sonst mistig aus. Am besten in
+%denselben Ordner wie das TeX-File ablegen.
+% \def\leftlogo{unilogo.eps}
+% \def\leftlogoscale{0.25}
+% \def\rightlogo{logo.eps}
+% \def\rightlogoscale{0.4}
+
+\renewcommand{\baselinestretch}{1.0}
+
+% Neues Befehl um Bilder einfacher einzufuegen.
+\newcommand{\insertpicture}[2]{\begin{center}
+							
+\includegraphics[width=\columnwidth]{#1}
+								\textbf{#2}
+								\end{center}}
+
+
+\begin{document}
+%\background{1. .98 .98}{1. .85 .85}{0.1}
+\pagecolor{bgcolor}
+\maketitle
+\setlength{\parindent}{0pt}
+\setlength{\unitlength}{1mm}
+
+\vspace{-10cm}
+{\begin{center}
+	\begin{LARGE}
+		Teilnehmer: Denis Heid, Tobias Kaulich, Stefan Feil, Sotirios Pavlidis\\
+		Betreuer: Till Bruckdorfer, Michael Bekos\\ 
+	\end{LARGE}
+	\begin{Large}
+		Arbeitsbereich Algorithmik\\
+	\end{Large}
+\end{center}}
+
+
+\begin{picture}(770,50)(0,0)
+% \put(15,135){\includegraphics[width=15cm]{Indigo.eps}}
+% \put(605,145){\includegraphics[width=15cm]{unilogo.eps}}
+\end{picture}
+
+
+
+
+
+
+% \vspace{-19.5cm}
+% \centerline{\LARGE \bf \color{\greycolor}Programmierprojekt SS 2014}
+% \vspace{1.5cm} 
+% \centerline{\Huge \textbf{abcdefghijklmnopqrstuvwxyz}}
+% \vspace{1.5cm}
+% \centerline{\bf \LARGE \color{\secheadcol}Teilnehmer 1, Teilnehmer 2, \ldots}
+
+
+
+\vspace{-2cm}
+
+\setlength{\fboxrule}{3pt}
+
+
+%\setlength{\fboxsep}{0pt}
+\newcommand{\posterbox}[6]{%
+\put(#1){%
+\begin{minipage}[t]{#3}%
+\color{unirot}%
+{\LARGE #5}%
+%\vspace*{2mm}%
+\fbox{\colorbox{white}{%
+\makebox[#3]{
+\begin{minipage}[t][#2]{#4}%
+\color{black}%
+\vspace*{7mm}%
+#6
+\end{minipage}}}}%
+\end{minipage}}%
+}%
+
+\newcommand{\posterboxcenterheading}[6]{%
+\posterbox{#1}{#2}{#3}{#4}{\centerline{#5}}{#6}
+}%
+
+
+%%%%%%%%%Hier geht's los
+% 
+
+% erste Variante: mit posterboxen ...
+
+% \newcommand{\defaultboxwidth}{23cm}
+% \newcommand{\defaulttextwidth}{22cm}
+% 
+% \begin{picture}(800,800)
+% 
+% \large
+% \posterboxcenterheading{10,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 1}{%
+% Denkt euch was aus...
+% }% 
+% 
+% 
+% \posterboxcenterheading{270,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 2}{%
+% Kreativität ist gefragt
+% }
+% 
+% 
+% 
+% \posterboxcenterheading{530,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 3}{%
+% \ldots
+% }
+% 
+% 
+% \put(50,185){\includegraphics{images/screen.eps}}%width=68cm
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{10,175}{24.2cm}{36cm}{35cm}{Header 4}{%
+% \ldots
+%  }
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{400,175}{13.7cm}{33cm}{32cm}{Header 5}{%
+% \ldots
+%  }
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{400,00}{8.5cm}{36cm}{35cm}{Header 6}{%
+% 
+%  }
+% 
+% % 
+% % ein paar Pfeile zum Screenshot etc pp...
+% \put(216,505){
+% \begin{tikzpicture}
+% \draw [line width=12,unirot,->] (27,55) -- (22,50);
+% \end{tikzpicture}}
+% 
+% \put(508,515){
+% \begin{tikzpicture}
+% \draw [line width=12,unirot,->] (27,55) -- (25,51);
+% \end{tikzpicture}}
+% 
+% \put(373,-80){
+% \begin{tikzpicture}
+% \draw [line width=70,unirot] (26,56) -- (26,52);
+% \end{tikzpicture}}
+% 
+% 
+% \end{picture}
+
+% zweite Variante: multicolumn text
+
+\begin{multicols}{3}
+\large
+\section{Einführung}
+
+Racetrack ist ein rundenbasiertes Online Rennspiel, welches man auf einem zentralen Server spielt. Spieler können sich einen Namen geben und bekommen unterschiedliche Farben zugewiesen, mit denen sie sich wiedererkennen können. Das Spielfeld ähnelt stark einem Koordinatensystem mit streckenmarkierenden Linien, einem Start und einem Ziel. Die Herausforderung bei diesem Spiel ist es, vom Startpunkt aus mit weniger Runden als die Mitspieler ins Ziel zu gelangen.\\
+
+\subsection{Spielanleitung}
+
+Am Anfang eines jeden Spiels wählt sich jeder Spieler, angefangen beim letzten Teilnehmer, einen Startpunkt von einer Auswahl an Positionen aus. Im nun darauf folgenden Spielverlauf ist die Reihenfolge umgedreht und der erste Spieler kann seine Position ändern. Dabei darf immer die Geschwindigkeit um +/-1 und 0 in jeweils X- und Y- Richtung verändert werden. Somit kann man über die Runden hinweg sehr schnell werden, man muss aber auf Kurven aufpassen, da man durch nicht rechtzeitiges Abbremsen sehr leicht aus der Strecke fliegen kann und man dadurch verliert. Der Sieger steht fest, sobald entweder nur noch ein Spieler auf der Strecke verbleibt oder der Erste das Ziel erreicht.\\
+
+\subsection{Grafische Oberfläche}
+    
+\begin{center}
+	\textbf{Spiel}
+\end{center}
+
+Sobald man auf dem Server angemeldet ist und auf Start drückt, gelangt man in den Spielbrowser. Hier kann man entweder einem bestehenden Spiel beitreten oder ein eigenes erstellen. Gelistet sind alle Spiele, die noch nicht voll oder gestartet sind. Das Erstellen erfolgt über das (+) Symbol in der oberen rechten Ecke. Links daneben ist der Nachladebutton, mit dem vom Server aktuellere Informationen angefordert werden können. Erstellt man ein neues Spiel, hat man die Möglichkeit die Spieleranzahl, den Schwierigkeitsgrad sowie die Strecke auszuwählen. Es gibt bei Release 5 verschiedene Strecken, 3 Schwierigkeitsgrade und die Spieleranzahl reicht von 2 bis 5. Beim einfachsten Schwierigkeitsgrad hat man 30 Sekunden Zeit für seine Runde, beim mittleren 15 Sekunden und beim schweren 5. Somit kann man sehr einfach kontrollieren, wie chaotisch das Spiel werden soll - Für das absolute Durcheinander empfehlen wir den schweren Modus mit 5 Spielern, für das angeheneme Zusammensein eine leichte Runde zu zweit.\\
+
+\begin{center}
+	\textbf{User Interface}
+\end{center}
+
+Der größte Teil des Bildschirmes wird durch die Strecke eingenommen, für taktisches Vorausberechnen ist sie komplett zu sehen. Am unteren Rand des Spielfeldes sind die teilnehmenden Spieler aufgereiht, dabei ist der sich ander Reihe befindende Spieler visuell hervorgehoben, Spieler die disconnected sind oder durch einen Crash nicht mehr mitspielen können sind ausgegraut. Sobald man an der Reihe ist, kann man entweder über das sich in der unteren Mitte befindende Auswahlfeld seine Geschwindigkeit verändern (jeder Punkt repräsentiert eine mögliche Kombination von X-/Y- Gewschwindigkeitserhöhung/-Verringerung), oder man drückt auf dem Spielfeld auf eine der für einen erreichbaren Positionen. Rechts neben dem Auswahlfeld sieht man die zurzeitige Rundenanzahl, seine Geschwindigkeit und eventuell, falls man an der Reihe ist, seine zur Auswahl der Position verbleibende Zeit. Am oberen Bildschirmrand hat man eine textliche Repräsenation des zurzeitigen Spielzuges, rechts daneben die Option diese aus/ein-zublenden, eine Hilfefunktion und die Möglichkeit das Spiel zu verlassen.\\
+\section{Spieloptionen}
+
+\section{Architektur}
+\begin{center}
+	\textbf{Architektur}
+\end{center}
+	\subsection{Netzwerk}
+    
+Die Kommunikation zwischen Server und Client ruht auf einer TCP-Verbindung (TCP deshalb, da das Spiel rundenbasiert ist, und sehr wenig Information über den Spielverlauf gesendet wird, die dafür aber sehr relevant ist und auf jeden Fall ankommen muss). Sie wird einmal beim erstigen Verbinden aufgebaut und besteht die ganze Zeit über, solange der Nutzer sich nicht wieder ausloggt. Der Server wartet nach einmaligem starten auf Port 55570 auf Clients. Beim Verbindungsaufbau bekommt jeder Client eine eindeutige Verbindungsnummer zugewiesen, die diese Verbindung repräsentiert, für den Nutzer selber sichtbar ist aber nur sein (eindeutiger) Name.\\
+
+\subsection{Client}
+
+Auf dem Client werden Informationen eingehender Nachrichten in eine Art Austauschobjekt eingespeichert, aus der die grafische Oberfläche ihre anzuzeigenden Informationen nimmt. Über Handler, welche die Nachrichten verarbeiten, wird dieser Prozess des Anzeigens neuer Informationen eingeleitet. Der Client ist nur eine visuelle Repräsentation der Serverinformationen, dafür zuständige Operationen des Users entgegenzunehmen und weiterzuleiten - hier wird nichts berechnet um eventuelles Cheaten zu unterbinden, alles läuft über den zentralen Server.\\
+
+\subsection{Server}
+
+Ohne den Server läuft nichts, er verwaltet die Clients, ordnet sie Spielen zu, übernimmt die Berechnung und Validierung von eingehenden Eingaben der User. Eine Administrationsebene ist für die Zuordung eingehender Nachrichten zuständig und die verbreitung von validierten Informationen, jedes Spiel ist ein vom Rest abgetrenntes Objekt, mit dazugehöriger Logik.\\
+
+\section{Team}
+
+Um mit den anfangs 8 Teilnehmern an einem Projekt gut arbeiten zu können, wurde es in 4 Teilbereiche eingeteilt mit gleichmäßig verteilter Gruppengröße von 2 pro Bereich. Netzwerk, Administration, Logik und GUI. Da im Verlaufe des Semesters die Hälfte des Teams dieses verließ, wurden aus den 4 2er-Teams kleinere Einheiten, die zum Teil einander aushelfen mussten. Unter hilfreicher Anleitung der 2 Tutoren wurde das Projekt seiner Fertigstellung entegegengeleitet, sie unterstützen die Koordination in der Gruppe, so dass Bereiche, die hinterherhinkten die nötige Aufmerksamkeit bekamen. In wöchentlichen Sitzungen wurde der Fortschritt des Programms diskutiert, Ziele gesetzt und bisher erreichtes vorgestellt. Dadurch wurde das Projekt kontinuierlich der Fertigstellung entgegengebracht.\\
+
+\section{Methoden und Erfahrungen}
+
+Als Programmiersprache haben wir Java verwendet, es bietet alles was man für ein solches Projekt braucht und ist in Kombination mit Eclipse somit hervorragend geeignet. Zu Beginn des Projekts haben wir uns mit der Programmierumgebung vertraut gemacht, indem wir verschiedene Mini-Projects zu bearbeiten bekommen haben welche simplistische Repräsenationen der eigentlichen Aufgaben darstellten, um mit der den Problemenstellungen klarzukommen. Außerdem haben wir uns mit Debugging in Java, JUnit, Trello und GIT vertraut gemacht. Diese Hiflsmittel verwendeten wir um gut als große Gruppe an einem Programm zu arbeiten und uns zu koordinieren.\\
+Wir lernten in diesem Projekt sehr viel über das Arbeiten im Team, daraus resultierende Vorzüge und Probleme. Darüber hinaus haben wir festgestellt, dass eine genaue Projektplanung zu einem später stark reduzierten Programmieraufwand führt und man sich als Team präzise abstimmen muss um einen reibungslosen Ablauf zu garantieren.
+
+\section{Fakten}
+Anzahl Codezeilen: 51180 \\
+Anzahl Commits: 644\\
+Anzahl Klassendateien: 95 \\
+Beliebteste Programmieruhrzeit: Mittwochs 0 Uhr und 11 Uhr\\
+Durchschnittliche Klassengrö\ss{}e: 141 Zeilen \\
+
+\end{multicols}
+
+
+\end {document}

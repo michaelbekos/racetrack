@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Racetrack: Help</title>
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="center">
+	<h1>Racetrack Help </h1>
+	<nav id="mainNav">
+		<ul>
+			<li><a href="../rules/index.html"> Rules </a></li>
+			<li><a href="../setup/index.html"> Setup </a></li>
+			<li><a href="../start/index.html"> Start </a></li>
+			<li><a href="../listOfLobbies/index.html"> List of games </a></li>
+			<li><a href="../newGame/index.html"> New game </a></li>
+			<li><a href="../lobby/index.html"> Lobby </a></li>
+			<li><a href="../game/index.html" id="active"> The Game </a></li>
+		</ul>
+	</nav>
+	
+	<div class="sceneDescription">
+		<h2>Let's start the game</h2>
+		<p>
+			This scene is the main game scene and shows all important parameters.
+		</p>
+		<img src="../images/5_gameStart.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				On the lower left, all players will be listed. The current active player is highlighted with a filled circle. If one of the players does not participate any more either by leaving the game or by crashing, his or her circle will be colored gray.
+			</li>
+			<li>
+				On the top you will find the so called action label. The action label will show you when you have to move or when you have to perform an action as well as who is currently playing.
+			</li>
+			<li>
+				On the left, there is the possibility to hide the information and action label, show this help by pressing the question mark next to it or exit the current running game by pressing the X.
+			</li>
+		</ol>
+	</div>
+	<div class="sceneDescription">
+		<h2>Gameplay</h2>
+		<p>
+			Lets have a look on how to actually play this game ;)<br>
+			Start the game by choosing your initial starting position as one of the gold highlighted circles on the track. The goal is to reach the finish line (highlighted in blue) first.<br>
+			After choosing those positions you can only increase or decrease your velocity by plus/minus one in each direction based on your previous velocity. Keep this in mind if you are getting to fast.
+		</p>
+		<img src="../images/6_gamePlay.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Use the 3x3 matrix to choose your new location. If you don't want to use the matrix you can hover over the game area / game track to select your next location. Both ways a performed click will be taken as a confirmation for a position.
+			</li>
+			<li>
+				The next possible locations will be shown on the grid. Only those locations are valid moves and can be performed. Any location outside the track or the current location of another player isn't a valid move.
+			</li>
+			<li>
+				Indicates the number of moves each player have done.
+			</li>
+			<li>
+				Shows your current velocity.
+			</li>
+			<li>
+				If you are running out of time, the last few seconds will be shown at the bottom right.
+			</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

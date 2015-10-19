@@ -1,0 +1,267 @@
+\documentclass[a0, portrait, english, ngerman]{a0poster}
+%\documentclass[a0,plainsections]{sciposter}
+%\usepackage{posterA0}
+
+\usepackage[nologos]{edposter}
+%\usepackage[iso]{umlaute}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{pstricks}
+\usepackage{tikz}
+\usepackage{wrapfig}
+%\usepackage{posterbox}
+\usepackage{lipsum}
+
+%\definecolor{bgcolor}{gray}{0.9}
+\definecolor{newgrey}{rgb}{0.75,0.75,0.75}
+\definecolor{bgcolor}{rgb}{1,1,1}
+\definecolor{Blue}{RGB}{0,0,255}
+\definecolor{unirot}{RGB}{165,30,55} % uni-rot
+
+\title{Programmierprojekt SS2015:\\Netzwerk Racetrack}
+
+%Wenn man hier nicht alle Informationen gibt, streikt er,
+%also einfach leere Klammern stehen lassen.
+  \authorleft{}
+  \affiliationleft{}
+  \emailleft{}
+\author{}
+ \affiliation{}
+ \email{}
+  \authorright{}
+  \affiliationright{}
+  \emailright{}
+
+
+\def\bordercolor{unirot}
+%Spaltentrennleiste
+\def\colsepcolor{unirot}
+%Sec-tion Head-er Farbe  - was für eine Abkürzung... :-)
+\def\secheadcol{unirot}
+\def\greycolor{newgrey}
+
+\graphicspath{{./images/}}
+%Die Logos müssen redefiniert werden. Dazu in jedem Fall
+%Vektorgrafiken verwenden, sieht sonst mistig aus. Am besten in
+%denselben Ordner wie das TeX-File ablegen.
+ \def\leftlogo{unilogo.eps}
+ \def\leftlogoscale{0.25}
+ \def\rightlogo{RacetrackLogo_V1.eps}
+ \def\rightlogoscale{0.4}
+
+\renewcommand{\baselinestretch}{1.0}
+
+% Neues Befehl um Bilder einfacher einzufuegen.
+\newcommand{\insertpicture}[2]{\begin{center}
+							
+\includegraphics[width=\columnwidth]{#1}
+								\textbf{#2}
+								\end{center}}
+
+
+\begin{document}
+%\background{1. .98 .98}{1. .85 .85}{0.1}
+\pagecolor{bgcolor}
+\maketitle
+\setlength{\parindent}{0pt}
+\setlength{\unitlength}{1mm}
+
+\vspace{-10cm}
+{\begin{center}
+	\begin{LARGE}
+		Teilnehmer: Denis Heid, Sotirios Pavlidis, Stefan Feil, Tobias Kaulich\\
+		Betreuer: Till Bruckdorfer, Michael Bekos\\ 
+	\end{LARGE}
+	\begin{Large}
+		Arbeitsbereich Algorithmik\\
+	\end{Large}
+\end{center}}
+
+
+\begin{picture}(770,50)(0,0)
+ \put(15,135){\includegraphics[width=15cm]{RacetrackLogo_V1.eps}}
+ \put(605,145){\includegraphics[width=15cm]{unilogo.eps}}
+\end{picture}
+
+
+
+
+
+
+% \vspace{-19.5cm}
+% \centerline{\LARGE \bf \color{\greycolor}Programmierprojekt SS 2015}
+% \vspace{1.5cm} 
+% \centerline{\Huge \textbf{abcdefghijklmnopqrstuvwxyz}}
+% \vspace{1.5cm}
+% \centerline{\bf \LARGE \color{\secheadcol}Teilnehmer 1, Teilnehmer 2, \ldots}
+
+
+
+\vspace{-2cm}
+
+\setlength{\fboxrule}{3pt}
+
+
+%\setlength{\fboxsep}{0pt}
+\newcommand{\posterbox}[6]{%
+\put(#1){%
+\begin{minipage}[t]{#3}%
+\color{unirot}%
+{\LARGE #5}%
+%\vspace*{2mm}%
+\fbox{\colorbox{white}{%
+\makebox[#3]{
+\begin{minipage}[t][#2]{#4}%
+\color{black}%
+\vspace*{7mm}%
+#6
+\end{minipage}}}}%
+\end{minipage}}%
+}%
+
+\newcommand{\posterboxcenterheading}[6]{%
+\posterbox{#1}{#2}{#3}{#4}{\centerline{#5}}{#6}
+}%
+
+
+%%%%%%%%%Hier geht's los
+% 
+
+% erste Variante: mit posterboxen ...
+
+% \newcommand{\defaultboxwidth}{23cm}
+% \newcommand{\defaulttextwidth}{22cm}
+% 
+% \begin{picture}(800,800)
+% 
+% \large
+% \posterboxcenterheading{10,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 1}{%
+% Denkt euch was aus...
+% }% 
+% 
+% 
+% \posterboxcenterheading{270,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 2}{%
+% Kreativität ist gefragt
+% }
+% 
+% 
+% 
+% \posterboxcenterheading{530,810}{22.7cm}{\defaultboxwidth}{\defaulttextwidth}{Header 3}{%
+% \ldots
+% }
+% 
+% 
+% \put(50,185){\includegraphics{images/screen.eps}}%width=68cm
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{10,175}{24.2cm}{36cm}{35cm}{Header 4}{%
+% \ldots
+%  }
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{400,175}{13.7cm}{33cm}{32cm}{Header 5}{%
+% \ldots
+%  }
+% 
+% 
+% 
+% 
+%  \posterboxcenterheading{400,00}{8.5cm}{36cm}{35cm}{Header 6}{%
+% 
+%  }
+% 
+% % 
+% % ein paar Pfeile zum Screenshot etc pp...
+% \put(216,505){
+% \begin{tikzpicture}
+% \draw [line width=12,unirot,->] (27,55) -- (22,50);
+% \end{tikzpicture}}
+% 
+% \put(508,515){
+% \begin{tikzpicture}
+% \draw [line width=12,unirot,->] (27,55) -- (25,51);
+% \end{tikzpicture}}
+% 
+% \put(373,-80){
+% \begin{tikzpicture}
+% \draw [line width=70,unirot] (26,56) -- (26,52);
+% \end{tikzpicture}}
+% 
+% 
+% \end{picture}
+
+% zweite Variante: multicolumn text
+
+\begin{multicols}{3}
+\large
+\centering
+\section{Einführung}
+
+Netzwerk Racetrack ist ein rundenbasiertes Rennspiel, abgeleitet vom Original, welches man auf Papier spielt und nun als Netzwerkspiel implementiert wurde. Spieler können sich einen Namen geben und bekommen unterschiedliche Farben zugewiesen mit denen sie sich wiedererkennen können. Die Herausforderung bei diesem Spiel ist es, vom Startpunkt mit weniger Zügen als die Mitspieler ins Ziel zu gelangen. Erschwert wird das Abbiegen durch die Trägheit der Autos und einer begrenzten Reaktionszeit.\\
+
+\section{Das Spiel}
+
+\subsection{Spiel erstellen}
+
+Sobald man auf dem Server angemeldet ist und auf Startbutton klickt, gelangt man in die Spieleliste. Hier kann man entweder einem bestehenden Spiel beitreten oder ein Eigenes erstellen. In der oberen rechten Ecke ist der Aktualisierungsbutton, mit dem vom Server aktuellere Informationen angefordert werden können. Das Erstellen eines neuen Spiels erfolgt über das "+" Symbol neben dem Aktualisierungsbutton: Man hat die Möglichkeit die Spieleranzahl, den Schwierigkeitsgrad sowie die Strecke auszuwählen. Es gibt 5 verschiedene Strecken und 3 Schwierigkeitsgrade. Die Spieleranzahl reicht von 2 bis 5. Der Schwierigkeitsgrad beeinflusst die Zeit die man zur Auswahl seines Zuges hat (leicht: 30s, mittel: 15s, schwer: 5s).
+
+\vspace{0.5cm}
+\centering \includegraphics[scale=0.85]{images/CreateGame.eps} \\
+
+\subsection{Spielanleitung}
+
+Am Anfang eines Spiels wählt sich jeder Spieler 
+in umgekehrter Reihenfolge zur Spiel-Beitritts-Reihenfolge einen Startpunkt von einer Auswahl an Startpositionen aus. Im darauf folgenden Spielverlauf ist diese Reihenfolge umgedreht und der erste Spieler kann seine Position ändern. Dabei darf die Geschwindigkeit immer um +/-1 oder 0 in jeweils X- und Y- Richtung verändert werden. Der Sieger steht fest, sobald alle anderen Spieler gegen die Streckenbegrenzung gefahren sind oder er über die Ziellinie gefahren ist. Wenn man innerhalb des Zeitlimits keinen Zug macht wird die vorhandene Geschwindigkeit beibehalten.\\
+
+\centering \includegraphics[scale=0.85]{images/ListOfGames.eps} \\
+
+\section{Grafische Oberfläche}
+
+Am unteren Rand des Spielfeldes sind links die teilnehmenden Spieler aufgereiht, dabei ist der sich an der Reihe befindende Spieler mit einem gefüllten Kreis visuell hervorgehoben. Spieler, die nicht mehr verbunden sind oder durch einen Crash nicht mehr mitspielen können, sind ausgegraut. Sobald der jeweilige Spieler an der Reihe ist, kann er entweder über das Auswahlfeld unten mittig seine Geschwindigkeit verändern (jeder Punkt repräsentiert eine mögliche Kombination von X-/Y- Geschwindigkeitsveränderung), oder er drückt auf dem Spielfeld auf eine der erreichbaren Positionen. Der Timer in der unteren rechten Ecke zeigt an wie viel Zeit für den Spielzug verbleibt. Daneben lässt sich die momentane Geschwindigkeit erkennen, sowie die Anzahl der gespielten Züge.\\
+
+\vspace{0.5cm}
+\centering \includegraphics[scale=0.85]{images/GamePlay.eps} \\
+
+\section{Architektur}
+	\subsection{Netzwerk}
+    
+Die Kommunikation zwischen Server und Client ruht auf einer TCP-Verbindung (TCP eignet sich am besten für die sichere Übertragung von minimalem Informationsgehalt). Sie wird einmalig bei der ersten Verbindung aufgebaut und besteht solange, bis der Nutzer sich ausloggt.\\
+
+\subsection{Client}
+
+Auf der Seite des Clients werden Informationen eingehender Nachrichten in einer Datenstruktur gespeichert, aus der die grafische Oberfläche ihre anzuzeigenden Informationen nimmt. Für jeden Nachrichtentyp gibt es einen Handler. Dieser wertet die Nachricht aus und benachrichtigt gegebenenfalls andere Teile des Programms, wie z.B. die GUI. Der Client besteht aus GUI, Datenstruktur und Controller. Er ist dafür zuständig Operationen des Users entgegenzunehmen und weiterzuleiten - hier wird nichts berechnet um eventuelles Schummeln zu unterbinden.\\
+
+\vspace{0.5cm}
+\centering \includegraphics[scale=0.55]{images/Struktur3.eps} \\
+
+\subsection{Server}
+
+Der Server ist das Herzstück, er übernimmt die Verwaltung von Spielern und Spielen sowie die Validierung und Verarbeitung der Eingaben aller User. Eine Administrationsebene ist für die Zuordung eingehender Nachrichten an die jeweiligen Spiele zuständig und die Verbreitung von validierten Informationen. Jedes Spiel ist ein vom Rest abgetrenntes Objekt, mit dazugehöriger Logik.\\
+
+\section{Team}
+
+Um mit den anfangs acht Teilnehmern an einem Projekt zusammen arbeiten zu können, wurde es in vier Teilbereiche eingeteilt mit gleichmä\ss{}ig verteilter Gruppengrö\ss{}e von zwei pro Bereich: Netzwerk, Administration, Logik und GUI. Da sehr früh im Semester vier Teilnehmer das Team verlie\ss{}en, teilten wir uns in zwei Paare, mit Verantwortlichkeit für je zwei Bereiche auf, die zum Teil einander aushalfen. In wöchentlichen Sitzungen wurde der Fortschritt des Programms diskutiert, Ziele gesetzt und bisher Erreichtes vorgestellt. Aufgrund der stark geschrumpften Gruppengrö\ss{}e mussten mehrere Projektziele gestrichen werden, z.b. eine künstliche Intelligenz.\\
+
+\section{Methoden und Erfahrungen}
+
+Als Programmiersprache haben wir Java verwendet, als Editor Eclipse, zum Kommunizieren nutzten wir die Plattform Trello und das Projekt Repository verwalteten wir mit GIT.
+Aus diesem Projekt konnten wir mitnehmen: eine genaue Projektplanung zu frühem Zeitpunkt führt zu stark reduziertem Programmieraufwand. Desweiteren haben wir festgestellt, dass man Vorstellungen sehr präzise formulieren muss, damit jeder im Team das gleiche Bild vor Augen hat. Darunter fällt die Einhaltung von Deadlines, Designabsprachen und Schnittstellenverträgen.
+
+\section{Fakten}
+Anzahl Codezeilen: 14076 \\
+Anzahl Commits: 744\\
+Anzahl Klassendateien: 102 \\
+Beliebteste Programmieruhrzeit: 13 Uhr\\
+Durchschnittliche Klassengrö\ss{}e: 138 Zeilen \\
+
+\end{multicols}
+
+
+\end {document}

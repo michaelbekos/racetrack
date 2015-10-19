@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Racetracker: Help</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+
+<div class="center">
+	<h1>Racetrack Help </h1>
+	<nav id="mainNav">
+		<ul>
+			<li><a href="rules/index.html"> Rules </a></li>
+			<li><a href="setup/index.html"> Setup </a></li>
+			<li><a href="start/index.html"> Start </a></li>
+			<li><a href="listOfLobbies/index.html"> List of games </a></li>
+			<li><a href="newGame/index.html"> New game </a></li>
+			<li><a href="lobby/index.html"> Lobby </a></li>
+			<li><a href="game/index.html"> The Game </a></li>
+		</ul>
+	</nav>
+	
+	<p>
+		Welcome to Racetracker!<br>
+		We are pleased to see you choosing Racetracker and play a game.<br>
+		Let me introduce you to the game and show you some of the features you can expect from the game.
+	</p>
+	<hr>
+	
+	<div class="sceneDescription">
+		<h2>Setup connection</h2>
+		<p>
+			This is the first scene you will encounter after launching Racetracker.<br>
+			In this scene, you have to set up a connection to a game server which can host games.
+		</p>
+		<img src="images/0_setupScene.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Enter a valid IP-V4 address for the host.
+			</li>
+			<li>
+				Enter a valid port for the host connection. 
+			</li>
+			<li>
+				Enter a user name. If the user name you have chosen is already taken by someone else, a suffix will be added to make your name unique.
+			</li>
+			<li>
+				The Save-button will be enabled if all fields contains valid content. <br>
+				The Save button will be enabled if all fields contain valid content. After pressing the button a connection to the host server will be established. If this is not possible, the host ip and port fields will be outlined by red. After establishing a connection to the server, your username will be sent and the field will be colored yellow. After getting confirmed by the server, the field will be outlined green and you will be redirected to the main scene of the game. 
+			</li>
+			<li>
+				HELP: On every screen you will find a help button in the upper right corner. Pressing it, will show you a help for the current scene with additional information to all important subjects seen on the scene.
+			</li>
+		</ol>
+	</div>
+	<div class="sceneDescription">
+		<h2>Start scene</h2>
+		<img src="images/1_startScene.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Go to the list of games.
+			</li>
+			<li>
+				Go back to the Setup scene. 
+			</li>
+			<li>
+				Quit the game.
+			</li>
+		</ol>
+	</div>
+	<div class="sceneDescription">
+		<h2>List of games</h2>
+		<p>
+			In this scene you will see a list of all available games on the server. This scene will only be updates if you press the reload button. <br>
+			You can also create new games or join existing ones.
+		</p>
+		<img src="images/2_listOfGames.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Each of those cards represent one game.<br>
+				First you will see a preview of the map. Second the game name will be shown.
+				As the third column you can get an overview about how many players can join the game (number of circles) and how many players have already joined the game (number of filled circles). Next there are two columns displaying the host name and the play mode*. The last column gives you the oporunity to 'join the game'. 
+			</li>
+			<li>
+				Use this button to join a particular game. (If it doesn't work, please use the reload button.)
+			</li>
+			<li>
+				Create a new game.
+			</li>
+			<li>
+				Reload button; use the reload button to refresh the list of games and see the updated list of games.
+			</li>
+		</ol>
+		<p>
+			Play modes: There are three different play modes you can play. Those modes are set during the creation of the game. <br>
+			EASY; defines no changes to the game itself. <br>
+			MEDIUM; forces every player to move within 10 seconds.<br>
+			HARD; forces every player to move within 5 seconds.
+		</p>
+	</div>
+	<div class="sceneDescription">
+		<h2>Create a new game</h2>
+		<p>
+			After pressing the create new game button in the list of games, the create new game scene will be presentet. Use this scene to create new games in five easy steps.
+		</p>
+		<img src="images/3_createGame.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Choose one of the predefined maps.
+			</li>
+			<li>
+				Set a meaningful name for the game. 
+			</li>
+			<li>
+				Set a maximum number of players that can join you game. This will not be the final number of player who will play this game. Read more about it in the join a game section.
+			</li>
+			<li>
+				Set a play mode for the game.
+			</li>
+			<li>
+				Pressing the create button will send a server request to create the new game. After getting a server response you will be automatically redirected to the joing game scene.
+			</li>
+		</ol>
+		<p>
+			Play modes: There are three different play modes you can play. Those modes are set during the creation of the game. <br>
+			EASY; defines no changes to the game itself. <br>
+			MEDIUM; forces every player to move within 10 seconds.<br>
+			HARD; forces every player to move within 5 seconds.
+		</p>
+	</div>
+	<div class="sceneDescription">
+		<h2>Joining a game</h2>
+		<p>
+			Either by clicking the join button or after creating your own game, this scene will show you the players by name who will play with you in a game.
+		</p>
+		<img src="images/4_joinGame.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				If a player 'is ready to play' his or her circle will be filled. If not, the circle will be half full. If there are empty places those circles will have minimum sized border and two dashes as the name.
+			</li>
+			<li>
+				Press the ready button to indicate your status. This will give the host the option to see who have time to play right now or need some additional time to prepare.
+			</li>
+			<li>
+				The name of the game.
+			</li>
+			<li>
+				A small map preview.
+			</li>
+			<li>
+				The play mode for this game.
+			</li>
+			<li>
+				This button is only visible to the host and gives him or her the ability to start the game at any point. By pressing this button all currently assigned players will be automatically set to 'ready' and the game starts.<br>
+				The game will start as well, if all currently participating players are ready.
+			</li>
+		</ol>
+		<p>
+			Play modes: There are three different play modes you can play. Those modes are set during the creation of the game. <br>
+			EASY; defines no changes to the game itself. <br>
+			MEDIUM; forces every player to move within 10 seconds.<br>
+			HARD; forces every player to move within 5 seconds.
+		</p>
+	</div>
+	<div class="sceneDescription">
+		<h2>Let's start the game</h2>
+		<p>
+			This scene is the main game scene and shows all important parameters.
+		</p>
+		<img src="images/5_gameStart.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				On the lower left, all players will be listed. The current active player is highlighted with a filled circle. If one of the players does not participate any more either by leaving the game or by crashing, his or her circle will be colored gray.
+			</li>
+			<li>
+				On the top you will find an action and information label. The action label will show you when you have to move or when you have to perform an action or if someone else is currently playing. The information label indicates where on the game area your cursor hovers or which next move will be performed if you press on one of the 3x3 matrix circles. 
+			</li>
+			<li>
+				On the left, there is the possibility to hide the information and action label, show this help by pressing the question mark next to it or exit the current running game by pressing the X.
+			</li>
+		</ol>
+	</div>
+	<div class="sceneDescription">
+		<h2>Gameplay</h2>
+		<p>
+			Lets have a look on how to actually play this game ;)<br>
+			Start the game by choosing your initial starting position as one of the gold highlighted circles on the track. The goal is to reach the finish line (highlighted in blue) first.<br>
+			After choosing those positions you can only increase or decrease your velocity by plus/minus one in each direction based on your previous velocity. Keep this in mind if you are getting to fast.
+		</p>
+		<img src="images/6_gamePlay.jpg">
+		<ol class="sceneLabeling">
+			<li>
+				Use the 3x3 matrix to choose your new location. If you don't want to use the matrix you can hover over the game area / game track to select your next location. Both ways a performed click will be taken as a confirmation for a position.
+			</li>
+			<li>
+				The next possible locations will be shown on the grid. Only those locations are valid moves and can be performed. Any location outside the track or the current location of another player isn't a valid move.
+			</li>
+			<li>
+				Indicates the number of moves each player have done.
+			</li>
+			<li>
+				Shows your current velocity.
+			</li>
+			<li>
+				If you are running out of time, the last few seconds will be shown at the bottom right.
+			</li>
+		</ol>
+	</div>
+</div>
+
+</body>
+</html>

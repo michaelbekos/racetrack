@@ -1,0 +1,561 @@
+------------------------------
+10/08/2015
+------------------------------
+
+1. In the game, when one presses help does not go to the correct scene (menu).
+	-> Fixed
+2. In the setup connection, remove "Open help in ....".
+	-> Removed
+3. In the help, add a new (first) section with the game's rules. 
+--- Also, add it to the menu.
+	-> Added
+--- At most 5 items for the rules.
+	-> Have to be discussed during our meeting, I wrote three for now which I think are most important.
+
+4. Still to consider velocity 0/0
+
+5. Put the figs of src.main.java.gui.scenes in src.main.java.gui.scenes.resources
+	-> Done
+
+
+Important discussion points:
+----------------------------
+
+1. AI
+2. JavaDoc
+3. Code structure 
+
+Discussion:
+-----------
+What are good strategies for AIs?
+More features which hasn't been implemented?
+'No' Code structure
+'How much' Scrum
+
+Milestones:
+-----------
+
+Poster (in German): 
+--- 1st version deadline: 24/08, 10:00
+--- Final version deadline: 26/08, 10:00
+	+ Inform Till and Michael about 'StudentsDay'
+--- Who is responsible (two persons)?
+	-> Soto, Stefan
+
+Project:
+--- Final version: 14/08, 16:00 (strict)
+
+Presentation Slides (in English; appr. 10min):
+--- 1st version deadline: 26/08, 10:00
+--- Final version deadline: 28/08, 10:00
+--- Who is responsible (at most two persons)?
+	-> Game, Tools, Structure, Rules (no patterns ;) - not technical more like promotion)
+	-> Denis, Tobias
+
+Presentation: 2/09 at 10:00
+
+Final meeting (feedback,grades): after the presentation (appr. 5-10min each).
+
+------------------------------
+05/08/2015
+------------------------------
+
+A. on exit: wrong player is out
+B. crash and continues
+C. images on help
+D. connection closed 
+E. velocity 0/0 --> timer
+
+1. Help:
+---- It is not clear how the help is closing. 
+	-> Added a corresponding tooltip as well as a red color to the questionmark if the help is open
+---- *** Why does it open on the same scene, and, not on a new scene? ***
+---- Discuss: menu? Suggestion: When one clicks help on the scene he/she should see the help of this.
+	-> This is already implemented? The version wasn't uploaded in Trello but on git in the 'res' folder.
+
+2. Buttons refresh, +, ?, ... : Could you add a label on mouseover? The same on the game scene.
+	-> Added Tooltips to all of them. (Except of the showHide button in the game scene.)
+
+3. Create new game: 
+
+---- Hide the AI options (do not remove).
+	-> It's now hidden.
+---- Arrows?
+
+4. IMPORTANT: BUG WITH THE GRID.
+---- Appeared again when selecting initial position. 
+---- I moved the window to take a screenshot and it was fixed.
+
+5. IMPORTANT: GAME OVER.
+---- Two players, one left the game and the other player didn't win.
+---- Actually, the second player couldn't even leave the game.
+---- I have attached a screenshot with this @trello.
+
+----- |CCM| ----- Send vector message -----
+ControllerClient: Sent message of type VectorMessage to the server
+ControllerClient: Got a Message from the Server of type class src.main.java.com.messages.InvalidMoveMessage
+ReceiveInvalidMoveMessageClientHandler: InvalidMoveMessage now in Progress
+----- |GUI| ----- Received invalid move message -----
+ControllerClient: Message progression ended.
+----- |CCM| ----- Send leave lobby message -----
+ControllerClient: Sent message of type LeaveLobbyMessage to the server
+----- |CCM| ----- Send leave lobby message -----
+ControllerClient: Sent message of type LeaveLobbyMessage to the server
+
+5. Timer: At the beginning the velocity is 0/0.
+
+6. We have to discuss about chat, or, whether to skip it.  
+
+7. Crash with automatic move, but continues moving. 
+
+------------------------------
+29/07/2015
+------------------------------
+
+1. I have attached a couple of screenshots illustrating bugs @trello. 
+Here is the Exception I got after I did the first move (one out of two players had left the game): 
+
+java.io.EOFException
+	at java.io.ObjectInputStream$BlockDataInputStream.peekByte(Unknown Source)
+	at java.io.ObjectInputStream.readObject0(Unknown Source)
+	at java.io.ObjectInputStream.readObject(Unknown Source)
+	at src.main.java.com.ComServer$ClientHandler.readInput(ComServer.java:386)
+	at src.main.java.com.ComServer$ClientHandler.run(ComServer.java:349)
+
+2. When I clicked Join Game, I received the following Exception:
+
+Player Right now is in lobby 1
+java.lang.NullPointerException
+	at src.main.java.logic.Administration.getPlayerIdsInSameSession(Administration.java:170)
+	at src.main.java.com.messages.handler.server.RequestLobbyEntryServerHandler.generateAnswerAndUpdateModel(RequestLobbyEntryServerHandler.java:59)
+	at src.main.java.core.ControllerServer.processMessage(ControllerServer.java:143)
+	at src.main.java.core.ControllerServer.receiveMessage(ControllerServer.java:82)
+	at src.main.java.com.ComServer.processMessages(ComServer.java:189)
+	at src.main.java.com.ComServer.access$9(ComServer.java:182)
+	at src.main.java.com.ComServer$ClientHandler.addMessageToBuffer(ComServer.java:493)
+	at src.main.java.com.ComServer$ClientHandler.readInput(ComServer.java:391)
+	at src.main.java.com.ComServer$ClientHandler.run(ComServer.java:349)
+This error should not happen :)
+Blame it on someone who is not you.
+Player 0 disconnected.
+
+
+Note: I believe I had pressed very quickly twice "Save" at the Options Scene. 
+
+3. When a player leaves the game (and there are no players left), the game must stop. 
+
+Something went wrong. Check VectorMessageServerHandler.
+--------------------End Message 13---------------
+	at src.main.java.core.ControllerServer.receiveMessage(ControllerServer.java:82)
+	at src.main.java.com.ComServer.processMessages(ComServer.java:189)
+	at src.main.java.com.ComServer.access$9(ComServer.java:182)
+	at src.main.java.com.ComServer$ClientHandler.addMessageToBuffer(ComServer.java:493)
+	at src.main.java.com.ComServer$ClientHandler.readInput(ComServer.java:391)
+	at src.main.java.com.ComServer$ClientHandler.run(ComServer.java:349)
+	
+4. I had three players, all of them ready, and the game didn't start.
+
+5. Three players, one player left and:
+
+Player with ID 1 disconnected! 
+This error should not happen :)
+Blame it on someone who is not you.
+Player 1 disconnected.
+java.lang.NullPointerException
+	at src.main.java.logic.Administration.getPlayerIdsInSameSession(Administration.java:170)
+	at src.main.java.logic.Administration.generateDisconnectMessage(Administration.java:545)
+	at src.main.java.logic.Administration.playerDisconnects(Administration.java:68)
+	at src.main.java.com.messages.handler.server.DisconnectMessageServerHandler.generateAnswerAndUpdateModel(DisconnectMessageServerHandler.java:26)
+	at src.main.java.core.ControllerServer.processMessage(ControllerServer.java:143)
+	at src.main.java.core.ControllerServer.receiveMessage(ControllerServer.java:82)
+	at src.main.java.com.ComServer.processMessages(ComServer.java:189)
+	at src.main.java.com.ComServer.access$9(ComServer.java:182)
+	at src.main.java.com.ComServer$ClientHandler.addMessageToBuffer(ComServer.java:493)
+	at src.main.java.com.ComServer$ClientHandler.readInput(ComServer.java:391)
+	at src.main.java.com.ComServer$ClientHandler.run(ComServer.java:349)  
+
+------------------------------
+22/07/2015 (+ one bug at trello)
+------------------------------ 
+
+RULE: EVERYONE MUST START PLAYING THE GAME (WITH TWO CLIENTS) AND START REPORTING BUGS ON TRELLO.
+----
+-> A screenshot if necessary must be attached.
+-> And of course a clear description of how the problem produced, e.g., sequence of actions.
+
+
+1. Try a game over the real network (not 127.0.0.1)
+
+2. New game scene:
+
+--- When I am the owner of a game, I can start a game (by only clicking the Ready button).
+--- Functionality of Start game? It seems that there are bugs (ModelExchange.LobbyList.getCurrentLobby().printLobby();).
+
+----- |INF| ----- Lobby is null -----
+ControllerClient: Message progression ended.
+Exception in thread "Thread-4" java.lang.NullPointerException
+	at src.main.java.gui.scenes.LobbyController$1.changed(LobbyController.java:80)
+	at src.main.java.gui.scenes.LobbyController$1.changed(LobbyController.java:1)
+	at com.sun.javafx.binding.ExpressionHelper$SingleChange.fireValueChangedEvent(Unknown Source)
+	at com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(Unknown Source)
+	at javafx.beans.property.IntegerPropertyBase.fireValueChangedEvent(Unknown Source)
+	at javafx.beans.property.IntegerPropertyBase.markInvalid(Unknown Source)
+	at javafx.beans.property.IntegerPropertyBase.set(Unknown Source)
+	at src.main.java.logic.ModelExchange$LobbyList.setCurrentLobbyId(ModelExchange.java:142)
+	at src.main.java.gui.scenes.LobbyController.receivedUpdateFromServer(LobbyController.java:289)
+	at src.main.java.com.messages.handler.client.ReceiveOptionsClientHandler.updateModel(ReceiveOptionsClientHandler.java:43)
+	at src.main.java.core.ControllerClient.receiveMessage(ControllerClient.java:81)
+	at src.main.java.com.ComClient$ServerConnectionHandler.readInput(ComClient.java:218)
+	at src.main.java.com.ComClient$ServerConnectionHandler.run(ComClient.java:184)
+ControllerClient: Got a Message from the Server of type class src.main.java.com.messages.SendLobbysMessage
+ReceiveLobbysClientHandler: SendLobbysMessage now in Progress
+----- |CCM| ----- RECEIVED Update From Server -----
+----- |GUI| ----- Received new requesteted LobbyList -----
+ControllerClient: Message progression ended.
+
+3. Game scene:
+
+--- We played a game, I crashed and Till didn't win. The game didn't finish. 
+------- He couldn't crash. 
+------- We couldn't abort the game. 
+--- There was a case where the mouse was far apart the dot. 
+
+4. Setup connection scene:
+ 
+ --- We couldn't connect (after choosing an occupied name?): the username was becoming yellow.
+ 
+ 5. Network:
+ 
+ --------------------Message 64--------------------
+Received a VectorMessage
+Player with ID: 1 wants to move to X: 6.0 Y: 3.0
+Playermove is valid!
+Something went wrong. Check VectorMessageServerHandler.
+--------------------End Message 64---------------
+java.lang.NullPointerException
+	at src.main.java.logic.Line2D.<init>(Line2D.java:23)
+	at src.main.java.logic.Game.hasPlayerWon(Game.java:487)
+	at src.main.java.logic.Game.getWinner(Game.java:588)
+	at src.main.java.logic.Lobby.returnWinnerIndex(Lobby.java:718)
+	at src.main.java.logic.Administration.getPlayerWhoWonByPlayerID(Administration.java:265)
+	at src.main.java.com.messages.handler.server.VectorMessageServerHandler.generateAnswerAndUpdateModel(VectorMessageServerHandler.java:78)
+	at src.main.java.core.ControllerServer.processMessage(ControllerServer.java:136)
+	at src.main.java.core.ControllerServer.receiveMessage(ControllerServer.java:82)
+	at src.main.java.com.ComServer.processMessages(ComServer.java:189)
+	at src.main.java.com.ComServer.access$9(ComServer.java:182)
+	at src.main.java.com.ComServer$ClientHandler.addMessageToBuffer(ComServer.java:493)
+	at src.main.java.com.ComServer$ClientHandler.readInput(ComServer.java:391)
+	at src.main.java.com.ComServer$ClientHandler.run(ComServer.java:349)
+--------------------Message 65--------------------
+Player with ID 0 disconnected! 
+ 
+
+------------------------------
+15/07/2015      
+------------------------------
+
+1. Line segment intersection: java.awt.geom.Line2D -> static  boolean linesIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+
+2. Setup connection scene: 
+
+-- Do we allow same players' name? Each time I change username or IP/port, is a new player created?
+-- If port is not specified, there is error (e.g., java.lang.NumberFormatException). 
+-- I must not be able to connect without a name (the administration must check). 
+-- There was a connection, we erased the IP and still we could continue. 
+-- This scene need debugging (3 scenarios: establish connection, insert/update u/n, change host).
+
+3. Main scene (Racetracker): 
+
+-- On exit, a question.
+
+4. Lobby-list scene:
+
+-- Do not show game, that one cannot join. 
+-- "Lobby list" -> "List of Games" 
+
+5. Create new game:
+
+-- "Create new lobby" -> "Create new game"
+-- "Lobby name" -> "Name"
+-- Do we allow same games' names?
+-- It would be nice when creating a game, to have a default value at its names.
+-- Where is the fifth track? If there are more, how are they displayed?
+-- Default player count: 2
+-- Empty game-name should not be allowed (the server should assign a name; not always "unnamed track").
+
+6. Unknown scene:
+
+-- Add scene title (move the name of the game)
+-- Remove Ready button (since we fix the colors).
+-- "Cancel" -> "Back to the lobby-list" (one 
+
+7. Game:
+
+Algorithm:
+
+-- I enter a game and I have no clue what to do! Instructions:
+----- If I am to choose a spot, then I get the response: "Choose your initial position, among the yellow ones".
+----- If I am not to choose a spot, then: "Please wait until player <username> selects its position"
+----- If I choose invalid position, there should be a response: "The position you chose is not valid. Please try again.".
+----- Once a player chooses its position, the responses are updated accordingly. 
+-- Once all players selected initial positions, it must be clear who is playing and who is waiting:
+----- If I am about to play, then I get the response: "Choose your next move"
+----- If not so, then: "Please wait until player <username> makes his/her move"
+----- Once a player makes an invalid move, then there must be a response: "The move you made is not valid. Please try again."
+----- Once a player makes a valid move, then the responses of all players are updated accordingly.
+----- Once a player makes a valid move, speed and moves must be updated. 
+-- Collision situation:
+----- Two type: (1) on another player (which is not a valid move) and (2) outside the track
+----- Responses: To the player lost: "You lost! You can chose another game and try again!", 
+		To the other players:  "Player <username> lost. XXX remain to the game. Try more." or 
+		in case of someone winning (one player remains): "Congratulations! You have won the game."
+----- Update Circles for the clients
+-- *Rule*: As long as one player remains to the game, this player is the winner and the game stops.
+-- In the circular track, the start line must not be there; we move the finish line on top.  
+-- Finish line: If one player passes the finish line (**without collision**, that is, without crossing the boundary) we have a winner and the game stops.
+----- Response to the players lost: "Player <username> won. You lost! You can chose another game and try again!", 
+----- Response to the winner: "Congratulations! You have won the game." 
+-- A player chooses to leave the game (by pressing X):
+----- All remaining players are informed: "Player <username> left the game! XXX remain to the game. Try more." 
+		or in case of someone winning (one player remains): "Congratulations! You have won the game." 
+----- If it was the player's turn to move and he left the game, then the next player must be notified to play.
+----- Update Circles for the clients
+
+Issues: 
+
+-- I selected initial position at one player and then the move-display stopped working. Discussion!
+-- The trace must show in which position a player was on. Otherwise, it is not possible to estimate the next move.
+-- Discussion: How easy is to have the nine available moves always on screen when I am about to move?
+-- Make Speed working (see Algorithm).
+-- "Round" => "Moves": Make it working (see Algorithm).
+-- Discussion: How about the time/chat? 
+-- How about the feature of full/empty circle?
+
+8. General comments:
+
+-- A title must be at every frame, e.g., RaceTrack: username (no username-> RaceTrack)
+-- Logic -> collision: how is it implemented?
+-- Do we allow just one player?  
+ 
+
+------------------------------
+08/07/2015      
+------------------------------
+
+Generell: 
+Nullpointer Exceptions abfangen!! Wo entstehen die?
+-> �berall abfangen, damit man Fehler auf eigener Seite ausschlie�t. 
+Fehlerpotential verringern. Auch wenn es nicht n�tig erscheint abfangen!!
+
+GUI: guter Fortschritt!!
+d.h. Verbindung zwischen GUI und ClientController ist erkennbar.
+
+-> Wenn Spiel erstellt wird und Plyerposition/Farbe gewechselt wird, 
+wird neue Pos nicht angezeigt und f�hrt zu Fehler -> Anfangs die Farben fest lassen!
+-> Welche Funktion hat isready-button? Warum hat 2. Spieler einen Start-Game button?
+-> Diskussion (Spiel wird automatisch gestartet, wenn alle bereit sind!?)
+-> Spiel startet bei einem player nach Dr�cken von ready, nicht bei Start-game 
+(obwohl nicht alle Spieler da sind).
+-> Eigenen Namen in Frame anzeigen?
+-> Spielname im Frame anzeigen (zumindest bei Create game)? 
+-> Woran erkennt man, dass man dran ist? aktiver Spieler ist voller Kreis, aber dann 
+muss man sich irgendwie Farbe merken!? Der volle Kreis muss sich auch �ndern, wenn man 
+nicht mehr dran ist, oder an die Reihe kommt. 
+-> Es gibt Inkonsistenzen zwischen Wahl des Spielzuges auf Feld und Wahl des 
+Spielzuges durch 9 Felder (Positionen, Geschwindigkeiten, Spielzugwahl �berpr�fen!).
+
+Features in der GUI bezgl. Attraktivit�t sind zur Zeit nicht wichtig, 
+Funktionalit�t muss passen. Updates der Spielerz�ge funktioniert, aber 
+Update des Kreises nicht, update der Geschwindigkeit/Position auch noch nicht.
+
+Logik: 
+
+Eine AI bringt zum jetzigen Zeitpunkt nichts, andere Aspekte sind wichtiger!
+(Sichtbar ist die aber noch nicht!?)
+
+-> Wenn man einen invaliden Move geschickt hat, obwohl man einen validen machen 
+k�nnte. Was passiert da? (In GUI wird nichts angezeigt und ein richtiger Move ist 
+nicht mehr m�glich.)
+
+TestLogik: sehr sch�n!!
+-> Test ob gewonnen ist glaubhaft (aber nicht, dass anderer Player nicht auch gewonnen hat;)).
+-> Test, dass man nicht gleiche Position wie Mitspieler belegt ist glaubhaft
+-> Test, dass man Rand nicht ber�hren darf ist glaubhaft.
+
+noch besser f�r Zukunft: 
++ Kurze Ausgabe wie Track aussieht, z.B. durch Randeckpunkte
++ Ausgabe der Aktuellen Position, neuen Position
+
+Zu Testen: 
++ Test, ob Startposition nicht auf Rand oder mitten im Spiel ist
++ Test, ob Reihenfolge der Spieler stimmt, ist nocht nicht 100%ig glaubhaft
++ Test von verschiedenen Kollisionsarten (Kreuzung des Randes, Kreuzung einer Ecke, 
+invalider Spielzug, d.h. zu hohe Steigung in x oder y Richtung, )
+
+
+
+------------------------------
+24/06/2015      
+------------------------------
+
+1. ClientNameMessageServerHandler: Check null (or catch Exception):
+
+int playerId = incomingMessage.getReceiverIds(); 
+String playerName = incomingMessage.getClientName(); 
+ILobbyInformation newLobby = incomingMessage.getLobbyInformaion();
+
+2. ClientNameMessageServerHandler: Refactor Administration lobbyList
+
+3. Use BroadCastSomethingMessage to indicate broadcast. Also discuss relation with Administration. How is such a message broadcast?
+
+4. Discuss the usage of this package: src.main.java.com.messages.handler.client
+
+5. SetupServer: main method? How is the implementation been tested? 
+
+6. Why do you need this Class: src.main.java.gui.costumClasses.Line2D? It is identical to javafx.scene.shape.Line. Is to wrap Point2D ?
+This class is part of the Logic (not part of the gui). 
+
+7. Is RTCanvasGame a class that converts Logic to GUI implementation requirements? 
+
+8. Discuss: Why in multiple places (every class inherits) ?
+
+this.widthProperty().addListener(new InvalidationListener() {
+    @Override
+    public void invalidated(Observable o) {
+        draw();
+    }
+});
+this.heightProperty().addListener(new InvalidationListener() {
+
+    @Override
+    public void invalidated(Observable o) {
+        draw();
+    }
+});
+
+9. Rename costumClasses to utils and costumPane to panes. 
+
+10. Class GameColors is not a Pane. Why don't you move it to utils?
+
+11. The first scene is not the "options" one. Is it on purpose?
+
+12. We didn't manage to find any "central controller" for the gui or any connection to the ComClient.
+
+-- Every action/event-handling should be passed to the central controller 
+in order to be sent to the ComClient in order to send messages to the server.
+
+13.  Still naming problems: gameArea_Canvas
+
+14. How does the gui gets informed about the tracks. Right now only one Track is being drawn: gameArea_Canvas.setTrack(TrackFactory.getSampleTrack(3));
+Note that the Gui doesn't have access to TrackFactory (for the final version).
+
+15. Game: Did you check for bugs the implementation of getCollisionPoint and calculateNewVelocity ?
+
+16. Game: intersection and pointOfIntersection methods: Why are they there? They are also implemented in Line2D. Could be also static? 
+
+-- Where is your inbetween communication? 
+
+17. Administration: Check for null! lobbyMap.get(sessionID).startGame(); || Player p = playerMap.get(id); 
+
+18. TrackMap is not Used at all in the Administration class!
+
+19. General comments:
+
+--- The network is not far enough: There are only very few messages.
+--- The gui is kind of independent implementation. Where are the messages created?
+--- We observed some confusion to the logic. Create a Test class and make several tests. 
+--- Administration: We have to discuss actions on the gui and translate them to:
+------ ................................................. 
+------ Requirements for the Administration
+------ Different message types (both client and server).
+------ Specify all parameters!
+------ .................................................   
+
+
+Note: Usually if one wants to test an implementation of a method, 
+one has to create an instance of the class containing the menthod.
+This is not done in: src.main.java.tests.logic.Intersections 
+        
+        
+
+
+
+------------------------------
+16/06/2015 
+------------------------------
+
+1. There is a compatibility issue between the network and the logik. Point <-> Point2D
+
+2. All classes and interfaces must be commented. Also, check your comments with javadoc.
+
+3. Is the team working on the lobby aware of this: lobbyList.addPlayer(newClient);
+
+-- Do not force a team by compliler errors to implement methods. 
+-- Instead insert the method signature in their implementation with dummy implementation and add TODO.
+
+4. The class RaceTrackMessageHandler must be abstract (abstract method: generateAnswerAndUpdateModel)
+
+5. Rename interface. For example: ListOfLobbyAdministration -> IListOfLobby
+
+6. ControllerServer: Why is this a field: "private boolean canProcessMessage;" ?
+
+7. javafx.geometry.Point2D / java.awt.Point2D / java.awt.Point
+
+8. The Handlers must start to use methods from the administration (ListOfLobby).
+
+9. Find a proper name for: ListOfLobby and refactor.
+
+10. Why two classes for Game? What is firstRound? 
+Before you start a Game, check whether it is started. 
+
+11. ListOfLobby must not provide access to Lobby and Players, otherwise the Handlers can gain 
+access to everything. Imagine ListOfLobby like a wall. 
+
+12. General comment: Checks on fields, whether they are null or not. 
+
+13. Game class: lines 38-39. Discuss at the meeting. Tests? Where is the "loop" ?
+
+------------------------------
+09/06/2014
+------------------------------
+
+1. abstract class RaceTrackMessage: 
+
+Why is it abstract? Why don't you simply make the constructor private?
+Why does this class need to know the receivers? This is the message. Not the class that sends the message.
+
+I would place this line: this.receiverIDs = new ArrayList<Integer>(); to the abstract class (instead for writing to all subclasses).
+
+2. interface Communication: Why there is no receiveMessage method?
+
+3. class ComClient: To discuss while((messageFromServer = (RaceTrackMessage)objectInputStream.readObject()) != null){ Why not while(true){?
+
+4. class ComServer: Right now you have: new HashMap<Integer, ObjectOutputStream>(). Maybe you also need: new HashMap<ObjectOutputStream,Integer>()  
+ 
+5. class Lobby: Improve the way you write comments.
+
+6. class RTTrack: Point2D[] outerBoundary; Why not a list.
+- Updated to Line2D objects
+
+7. Very important: There must exist a class Game, which will be created when the runGame() method is called.
+
+8. class Player: 
+
+- Define visibility of fields (basically everywhere). 
+
+- Why is this in the Player Class: 
+
+public static enum PlayerColor {
+	LIGHTGRAY, GREEN, ORANGE, RED, PURPLE, BLUE;
+}
+
+9. Lobby et al: Not neccesary to have a package for a single or a couple of classes.
+
+10. class SetupServer: Why the setup is from the standart output?
+
+11. class RTCanvasGame: This class must be adjusted to the Logik new classes. Also more comments.
+- Updated RTCanvasGame for using the RTTrack as well as splitting the actual GameCanvas fro the NavigationBackgroundCanvas.
+
+12. class Scene_Game_CreateController: Very bad naming scheme.
+
+13. Also discuss handlers. 

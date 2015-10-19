@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.main.java.gui.scenes.CreateController">
+   <children>
+      <Pane fx:id="gridBaseScenePane" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <StackPane layoutY="400.0" prefHeight="225.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="375.0">
+         <children>
+            <Pane maxWidth="300.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0">
+               <children>
+                  <TextField fx:id="lobbyNameText" layoutX="130.0" layoutY="15.0" prefHeight="26.0" prefWidth="155.0" />
+                  <Label layoutX="65.0" layoutY="16.0" text="Name:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="52.0" layoutY="62.0" text="Players:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="playersChoiceBox" layoutX="130.0" layoutY="60.0" prefHeight="26.0" prefWidth="155.0" />
+                  <ChoiceBox fx:id="aisChoiceBox" layoutX="130.0" layoutY="140.0" prefHeight="26.0" prefWidth="155.0" visible="false" />
+                  <Label layoutX="79.0" layoutY="141.0" text="AIs:" textAlignment="RIGHT" visible="false">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="131.0" layoutY="182.0" mnemonicParsing="false" onAction="#goBack" text="Cancel">
+                     <font>
+                        <Font name="Comic Sans MS" size="13.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="createButton" layoutX="200.0" layoutY="182.0" mnemonicParsing="false" onAction="#createNewGame" prefHeight="26.0" prefWidth="85.0" text="Create">
+                     <font>
+                        <Font name="Comic Sans MS" size="13.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="65.0" layoutY="102.0" text="Mode:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="modeChoiceBox" layoutX="130.0" layoutY="101.0" prefHeight="26.0" prefWidth="155.0" />
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
+      <HBox fx:id="trackHbox" alignment="CENTER" prefHeight="200.0" prefWidth="900.0" style="-fx-border-color: #CCC; -fx-border-width: 2; -fx-background-color: rgba(255, 255, 255, .7);" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="150.0" />
+      <Label layoutX="110.0" layoutY="48.0" prefHeight="65.0" prefWidth="743.0" text="Create new game" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="48.0">
+         <font>
+            <Font name="Comic Sans MS" size="50.0" />
+         </font>
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="51.0" onKeyPressed="#goBack" onMouseClicked="#goBack" prefHeight="60.0" prefWidth="60.0" rotate="180.0" text="➜" textAlignment="CENTER" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="45.0">
+         <font>
+            <Font name="Comic Sans MS" size="40.0" />
+         </font>
+         <padding>
+            <Insets bottom="15.0" left="5.0" right="5.0" />
+         </padding>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <HBox fx:id="gameMenue" alignment="CENTER" layoutX="822.0" layoutY="26.0" prefHeight="45.0" prefWidth="45.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <Label fx:id="helpLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#openHelp" prefHeight="40.0" prefWidth="40.0" text="?">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Comic Sans MS" size="26.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,243 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Filename:           edposter.sty
+%%  Author:             Rob Clark <robert@cstr.ed.ac.uk>
+%%  Date:               June 1997
+%%
+%%  Description:        LaTeX2e style file for Edinburgh University
+%%                      A0 academic posters.
+%%
+%%  Version:            0.1 alpha
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a style file for A0 academic posters. To be used in
+% conjunction with the a0poster document class. Also requires pstricks
+% and multicol packages amongst others.
+%
+% Only Portrait mode is currently supported.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Package options
+%
+% nologos      - no logos at the top
+% cstr         - include CSTR logo top left
+% hcrc         - include HCRC logo top left
+% esrc         - include ESRC logo as footer.
+% sponsorlogo  - include a arbitrary sponsor logo (along with any others)
+%                You must then define \sponsorlogo and \sponsorlogoscale
+%
+% You get an eduni logo in the top right.
+% To override a logo redefine \leftlogo \leftlogoscale  or
+%                             \rightlogo \rightlogoscale
+% 
+%
+% cstr logo is square, hcrc logo is long and thin, if you want to
+% include your own logo in the top left, choose the most apropriate
+% shape match and redefine \leftlogo and \leftlogoscale
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Required preamble definitions are (define empty to omit): 
+%
+% \title{}
+% \author{}, \affiliation{}, \email{}               % Placed in centre of title
+% \authorleft{}, \affiliationleft{}, \emailleft{}   % Placed in left of title
+% \authorright{}, \affiliationright{}, \emailright{}% Placed in right of title
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Option defines are: (to change use: \def\option_name{option_value}
+%
+% Colour options: (I'm using color to be consistent with the color package)
+% \bordercolor  - the outer border
+% \colsepcolor  - rule colour between columns 
+%                 (use \colseprule=0mm to have no rule)
+% \secheadcol   - Section heading colour
+% \authorcol    - Author block colour
+%
+% Logo options (See above)
+% \leftlogo, \rightlogo, \sponsorlogo
+% \leftlogoscale, \rightlogoscale, \sponsorlogoscale
+
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01] \ProvidesPackage{edposter}
+[1997/08/14 v0.1a Ed a0 Poster style]
+% We use rather a lot here.
+\RequirePackage{ifthen,array,multicol,fancyheadings}
+\RequirePackage{colordvi}
+\RequirePackage[usenames]{pstcol}
+\RequirePackage{graphics}
+\RequirePackage{palatino}
+
+\newif\if@toplogos
+\newif\if@bottomlogo
+\newif\if@leftlogo
+\newif\if@sponsorlogo
+\newif\if@hcrc
+\newif\if@esrc
+\@toplogostrue
+\@hcrcfalse
+\@esrcfalse
+\@leftlogofalse
+\@sponsorlogofalse
+
+
+\DeclareOption{nologos}{\@toplogosfalse}
+\DeclareOption{cstr}{\@leftlogotrue%
+                     \def\leftlogo{cstr.eps}%
+                     \def\leftlogoscale{1.5}}
+\DeclareOption{hcrc}{\@leftlogotrue\@hcrctrue%
+                     \def\leftlogo{hcrc.eps}%
+                     \def\leftlogoscale{0.8}}
+\DeclareOption{esrc}{\@esrctrue\@bottomlogotrue}
+\DeclareOption{sponsorlogo}{\@sponsorlogotrue\@bottomlogotrue}
+
+\ProcessOptions
+
+% Definitions
+\newcommand{\Mega}{\fontsize{120}{140}\selectfont}
+
+\pagestyle{fancyplain}
+\cfoot{}
+\rfoot{%
+\if@esrc
+  \scalebox{2}{\includegraphics{esrc.eps}}\hspace{1cm}%
+\fi
+\if@sponsorlogo
+  \scalebox{\sponsorlogoscale}{\includegraphics{\sponsorlogo}}\hspace{1cm}%
+\fi
+\hspace{4cm}}
+
+% eduni logo in right hand corner
+\def\rightlogo{edcrest.eps}
+\def\rightlogoscale{0.8}
+
+\def\affiliation#1{\gdef\@affiliation{#1}}
+\def\email#1{\gdef\@email{#1}}
+
+\def\authorleft#1{\gdef\@authorleft{#1}}
+\def\affiliationleft#1{\gdef\@affiliationleft{#1}}
+\def\emailleft#1{\gdef\@emailleft{#1}}
+
+
+\def\authorright#1{\gdef\@authorright{#1}}
+\def\affiliationright#1{\gdef\@affiliationright{#1}}
+\def\emailright#1{\gdef\@emailright{#1}}
+\def\colsepcolor{edlogored}
+\def\bordercolor{edlogored}
+\def\secheadcol{edblue}
+\def\authorcol{edblue}
+
+
+\columnsep=3cm
+\columnseprule=2mm
+\setlength{\oddsidemargin}{1 cm}
+\setlength{\textwidth}{77.56cm}
+
+\if@bottomlogo
+\setlength{\textheight}{106.5cm} % was 110.5
+\else
+\setlength{\textheight}{110.5cm} % was 110.5
+\fi
+
+\definecolor{unituebingenred}{rgb}{0.647,0.117,0.215}
+\definecolor{edblue}{rgb}{0.131,0.129,0.259}
+
+\def\@maketitle{%
+\if@bottomlogo
+\begin{pspicture}[1](78,105)
+\psframe[linewidth=2mm,linecolor=\bordercolor,framearc=0.1](-1.5,-7.2)(78,104.6)
+\end{pspicture}
+\vspace{-103.5cm}
+\else
+\begin{pspicture}[1](78,108)
+\psframe[linewidth=2mm,linecolor=\bordercolor,framearc=0.1](-1.5,-4.7)(78,107.6)
+\end{pspicture}
+\vspace{-106.5cm}
+\fi
+\begin{center}
+\let \footnote \thanks
+\if@toplogos
+ \if@leftlogo
+   \if@hcrc
+   \begin{tabular}{p{12cm}m{1.5cm}>{\baselineskip=85pt\vskip -200pt}p{43cm}m{1.5cm}m{10cm}}
+   \else
+   \begin{tabular}{m{12cm}p{1.5cm}>{\baselineskip=85pt\vskip -200pt}p{43cm}p{1.5cm}m{10cm}}
+   \fi
+    \\ 
+     \mbox{\scalebox{\leftlogoscale}{\includegraphics{\leftlogo}}} & &
+     \centering {\VeryHuge \bfseries \@title}
+     & &
+     \mbox{\scalebox{\rightlogoscale}{\includegraphics{\rightlogo}}} \\
+     \\
+ \end{tabular}
+ \else
+   \begin{tabular}{m{3cm}>{\baselineskip=85pt\vskip -200pt}p{53cm}m{3cm}m{12cm}}
+    \\ 
+     & \centering {\VeryHuge \bfseries \@title}
+     & &
+     \mbox{\scalebox{\rightlogoscale}{\includegraphics{\rightlogo}}} \\
+    \\
+ \end{tabular}
+ \fi
+\else
+% no logos
+   \begin{tabular}{m{3cm}>{\baselineskip=85pt}p{65cm}m{3cm}}
+    \\ 
+     & \centering {\VeryHuge \bfseries \@title}
+     & \\
+    \\
+ \end{tabular}
+\fi
+\par
+{\huge \bfseries \color{\authorcol}
+\begin{tabular}{*{3}{>{\centering}m{22cm}}}
+\@authorleft & \@author & \@authorright
+\end{tabular}
+} \par
+{\LARGE \color{\authorcol}
+\begin{tabular}{*{3}{>{\centering}p{22cm}}}
+\@affiliationleft & \@affiliation & \@affiliationright
+\end{tabular}
+} \par
+{\LARGE \itshape \color{\authorcol}
+\begin{tabular}{*{3}{>{\centering}p{22cm}}}
+\@emailleft & \@email & \@emailright 
+\end{tabular}
+}
+\end{center}
+\par
+\vspace{3cm}
+} %end maketitle
+
+\def\section{\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\normalfont\LARGE\bfseries\color{\secheadcol}}}
+
+\def\subsection{\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\bfseries\color{\secheadcol}}}
+
+
+
+\def\page@sofar{%
+   \process@cols\mult@rightbox
+       {\ifvoid\count@
+          \setbox\count@\hbox to\hsize{}%
+        \else
+          \wd\count@\hsize
+        \fi}%
+   \mult@info\z@
+    {Column spec:\MessageBreak
+       (\the\multicol@leftmargin\space -->
+        \the\full@width\space = \the\hsize
+        \space x \the\col@number)%
+     }%
+\ifvmode\else\errmessage{Multicol Error}\fi
+   \moveright\multicol@leftmargin
+    \hbox to\full@width{%
+     \process@cols\mult@gfirstbox{\box\count@
+       \hss{\color{\colsepcolor}\vrule\@width\columnseprule}\hss}%
+     \box\mult@rightbox
+      \rlap{\phantom p}%
+}}%
