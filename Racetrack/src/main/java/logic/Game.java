@@ -16,6 +16,7 @@ public class Game {
 	private boolean firstRound;
 	private GameState gameState;
 	private int roundCounter;
+	
 
 	/**
 	 * @return the inGameLobby
@@ -153,10 +154,9 @@ public class Game {
 		for (int i = 0; i < players.length; i++) {
 			if (lobby.getPlayerIDs()[i] != null)
 				players[i] = new Player(lobby.getPlayerIDs()[i],
-						lobby.getPlayerNames()[i], i, false);
+						lobby.getPlayerNames()[i], i);
 			else
-				players[i] = new Player(null, lobby.getPlayerNames()[i], i,
-						false);
+				players[i] = new Player(null, lobby.getPlayerNames()[i], i);
 		}
 
 		this.track = TrackFactory.getSampleTrack(lobby.getTrackId());
@@ -636,6 +636,17 @@ public class Game {
 
 		else {
 			nextRound();
+		}
+		
+		if (playerList[currentPlayerIndex].isAI())
+		{
+			javafx.geometry.Point2D point = ((AI)playerList[currentPlayerIndex]).move();
+			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point)){
+				point = ((AI)playerList[currentPlayerIndex]).move();
+			}
+			//call method from administrration with point:
+			// call moveAI(point)
+			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
 		}
 	}
 

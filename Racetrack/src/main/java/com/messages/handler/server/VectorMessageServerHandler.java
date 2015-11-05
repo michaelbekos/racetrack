@@ -61,6 +61,8 @@ public class VectorMessageServerHandler extends RaceTrackMessageServerHandler{
 			if(administration.checkValidityOfClientMove(playerID, playerVector)){
 
 				DebugOutputHandler.printDebug("Playermove is valid!");
+				
+				DebugOutputHandler.printDebug(playerVector.toString());
 
 				//generate fields for broadcastmove message and inform the game, that the player moved
 

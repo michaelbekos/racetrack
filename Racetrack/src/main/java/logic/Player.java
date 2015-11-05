@@ -20,7 +20,6 @@ public class Player {
 	private boolean isParticipating;
 	private ArrayList<Point2D> memorizeGridPoints = new ArrayList<Point2D>();
 	private boolean crashed;
-	private boolean isAI;
 	private boolean isDisconnected = false;
 
 	private int colorId;
@@ -34,16 +33,12 @@ public class Player {
 		this(playerID, "Unknown");
 	}
 
-	public Player(Integer playerID, String name){
-		this(playerID, name, false);
-	}
-	
-	public Player(Integer playerID, String name, boolean isAI) {
-		this(playerID, name, -1, isAI);
+	public Player(Integer playerID, String name) {
+		this(playerID, name, -1);
 	}
 
-	public Player(Integer playerID, String name, int playerColorId, boolean isAI) {
-		this(playerID, name, playerColorId, -1, isAI);
+	public Player(Integer playerID, String name, int playerColorId) {
+		this(playerID, name, playerColorId, -1);
 	}
 	
 	public Player(){
@@ -68,12 +63,11 @@ public class Player {
 	 * @param isAI
 	 *            A property if it is an AI
 	 */
-	public Player(Integer playerID, String name, int playerColorId, int sessionID, boolean isAI) {
+	public Player(Integer playerID, String name, int playerColorId, int sessionID) {
 		this.PLAYER_ID = playerID;
 		this.name = name;
 		this.colorId = playerColorId;
 		this.sessionID = sessionID;
-		this.isAI = isAI;
 		this.crashed = false;
 	}
 
@@ -195,7 +189,7 @@ public class Player {
 	}
 
 	public boolean isAI() {
-		return isAI;
+		return false;
 	}
 
 	/**
@@ -238,13 +232,6 @@ public class Player {
 	 */
 	public void setCrashed(boolean crashed) {
 		this.crashed = crashed;
-	}
-
-	/**
-	 * @param isAI the isAI to set
-	 */
-	public void setAI(boolean isAI) {
-		this.isAI = isAI;
 	}
 
 	/**

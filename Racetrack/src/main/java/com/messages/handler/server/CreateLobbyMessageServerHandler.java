@@ -52,6 +52,7 @@ public class CreateLobbyMessageServerHandler  extends RaceTrackMessageServerHand
 			if(incomingMessage.getLobbyInformaion() != null){
 				newLobby = incomingMessage.getLobbyInformaion();
 			}
+			//newLobby.setAmountOfAIs(1);
 			
 			DebugOutputHandler.printDebug("Player with ID: "+clientID+" wants to create a Lobby");
 			

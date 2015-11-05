@@ -1,4 +1,4 @@
-package src.main.java.tests;
+/*package src.main.java.tests;
 
 import javafx.geometry.Point2D;
 import src.main.java.logic.Game;
@@ -1147,3 +1147,4 @@ public class Logic_Test {
 		}
 	}
 }
+*/

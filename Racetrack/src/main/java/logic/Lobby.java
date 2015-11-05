@@ -47,15 +47,18 @@ public class Lobby implements ILobby {
 	private int playMode;
 
 	private int lastPlayerDisconnected;
+	
+	private IAdministration admin;
 
-	public Lobby(int lobbyID) {
+	public Lobby(int lobbyID, IAdministration admin) {
 		this.lobbyID = lobbyID;
 		playerList = new Player[5];
 		maxCurrentPlayer = 5;
+		this.admin = admin;
 	}
 
 	public Lobby(int lobbyID, int maxCurrentPlayer, String lobbyName,
-			int currentTrackId) {
+			int currentTrackId, IAdministration admin) {
 
 		// lobby cant be of a bigger size than 5
 		maxCurrentPlayer = maxCurrentPlayer > MAX_LOBBY_SIZE ? MAX_LOBBY_SIZE
@@ -67,10 +70,11 @@ public class Lobby implements ILobby {
 		this.trackId = currentTrackId;
 		this.playerList = new Player[maxCurrentPlayer];
 		isGameRunning = false;
+		this.admin = admin;
 	}
 
 	public Lobby(int lobbyID, int maxCurrentPlayer, String lobbyName,
-			int currentTrackId,int playMode) {
+			int currentTrackId,int playMode, IAdministration admin) {
 
 		// lobby cant be of a bigger size than 5
 		maxCurrentPlayer = maxCurrentPlayer > MAX_LOBBY_SIZE ? MAX_LOBBY_SIZE
@@ -84,6 +88,7 @@ public class Lobby implements ILobby {
 		isGameRunning = false;
 		this.playMode = playMode;
 		lastPlayerDisconnected = -1;
+		this.admin = admin;
 	}
 
 	/*
@@ -153,6 +158,10 @@ public class Lobby implements ILobby {
 		}
 		if(game!=null)
 			game.setPlayerList(playerList);
+	}
+	
+	public IAdministration getAdministration(){
+		return admin;
 	}
 
 	public Player[] getPlayerList() {
@@ -254,6 +263,25 @@ public class Lobby implements ILobby {
 		} else {
 			Point2D newPlayerPosition = player.getCurrentPosition().add(
 					player.getCurrentVelocity());
+			if (game != null){
+				if(isCrashingIntoOtherPlayer(newPlayerPosition, player.getPLAYER_ID())){
+					player.setHasCrashed(true);
+					player.setParticipating(false);
+					return newPlayerPosition;
+				}else{
+					return game.getCollisionPoint(player, newPlayerPosition);
+				}
+			}else
+				return null;
+		}
+	}
+	
+	public Point2D makeAIMoveAt(AI player, javafx.geometry.Point2D point) {
+		if (player.getCurrentPosition() == null) {
+			return null;
+		} else {
+			Point2D speed = point.add(-1*player.getCurrentPosition().getX(),-1*player.getCurrentPosition().getY());
+			Point2D newPlayerPosition = player.getCurrentPosition().add(speed);
 			if (game != null){
 				if(isCrashingIntoOtherPlayer(newPlayerPosition, player.getPLAYER_ID())){
 					player.setHasCrashed(true);

@@ -27,8 +27,8 @@
                      </font>
                   </Label>
                   <ChoiceBox fx:id="playersChoiceBox" layoutX="130.0" layoutY="60.0" prefHeight="26.0" prefWidth="155.0" />
-                  <ChoiceBox fx:id="aisChoiceBox" layoutX="130.0" layoutY="140.0" prefHeight="26.0" prefWidth="155.0" visible="false" />
-                  <Label layoutX="79.0" layoutY="141.0" text="AIs:" textAlignment="RIGHT" visible="false">
+                  <ChoiceBox fx:id="aisChoiceBox" layoutX="130.0" layoutY="140.0" prefHeight="26.0" prefWidth="155.0" visible="true" />
+                  <Label layoutX="79.0" layoutY="141.0" text="AIs:" textAlignment="RIGHT" visible="true">
                      <font>
                         <Font name="Comic Sans MS" size="18.0" />
                      </font>

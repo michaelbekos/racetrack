@@ -163,7 +163,7 @@ public class ComServer implements ICommunication{
 	 * same id
 	 * @return next free id as Integer
 	 */
-	private synchronized int getNextId(){
+	public synchronized int getNextId(){
 		return nextClientId++;
 	}
 

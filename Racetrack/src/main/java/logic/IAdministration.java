@@ -12,13 +12,20 @@ import javafx.geometry.Point2D;
  *
  */
 interface IAdministration {
-	
+
 	/**
 	 * This method creates a new player with a given ID
 	 * and adds him into the list
 	 * @param playerID
 	 */
 	public void createAndAddNewPlayer(int playerID);
+	
+	/**
+	 * This method creates a new ai with a given ID
+	 * and adds him into the list of players
+	 * @return aiID
+	 */
+	public int createAndAddNewAI();
 	
 	/**
 	 * This method removes a player from the playerList in ListOfLobby
@@ -222,6 +229,8 @@ interface IAdministration {
 	 * @param playerID
 	 */
 	public void moveClientDefaultVelocity(int playerID);
+	
+	public void moveAI(int aiID, javafx.geometry.Point2D point);
 	
 	/**
 	 * Sends a message to the client about how much time he has left for his move

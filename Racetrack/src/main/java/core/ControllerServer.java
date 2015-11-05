@@ -65,6 +65,10 @@ public class ControllerServer implements IControllerServer {
 
 	//public methods
 
+	public int getNewAIid(){
+		return com.getNextId();
+	}
+	
 	/**
 	 * informs the lobbylist, that there is a new player.
 	 * sends the lobbylist the new player, with hist id and a default name

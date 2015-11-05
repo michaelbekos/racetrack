@@ -14,6 +14,7 @@ import src.main.java.com.messages.TimeLeftMessage;
 import src.main.java.com.messages.handler.server.VectorMessageServerHandler;
 import src.main.java.core.ControllerServer;
 import src.main.java.core.DebugOutputHandler;
+import src.main.java.gui.Racetracker;
 
 
 public class Administration implements IAdministration{
@@ -70,9 +71,19 @@ public class Administration implements IAdministration{
 	@Override
 	public void createAndAddNewPlayer(int playerID){
 		//add player with default name
-		Player newPlayer = new Player(playerID, "Player_"+playerID, false);
+		Player newPlayer = new Player(playerID, "Player_"+playerID);
 
 		playerMap.put(playerID, newPlayer);
+	}
+
+	@Override
+	public int createAndAddNewAI()
+	{
+		int AIid = controller.getNewAIid();
+		//add player with default name
+		Player newPlayer = new AI(AIid, "AI_"+AIid);
+		playerMap.put(AIid, newPlayer);
+		return AIid;
 	}
 
 	@Override
@@ -128,7 +139,7 @@ public class Administration implements IAdministration{
 						RaceTrackMessage answer = new SendOptionsMessage(info);
 						for(Integer i : playersInSameSession)
 							answer.addClientID(i);
-						controller.sendExtraMessage(answer);
+						sendMessage(answer);
 
 					}
 
@@ -139,7 +150,7 @@ public class Administration implements IAdministration{
 
 				RaceTrackMessage playerDisconnectsMessage = generateDisconnectMessage(playerToDisconnectPosition, session, playersInSameSession);
 
-				controller.sendExtraMessage(playerDisconnectsMessage);
+				sendMessage(playerDisconnectsMessage);
 
 				sendWinnerMessage(playerDisconnectsMessage);
 			}
@@ -181,7 +192,7 @@ public class Administration implements IAdministration{
 				}
 				RaceTrackMessage playerDisconnectsMessage = generateDisconnectMessage(playerToDisconnectPosition, sessionID, playersInSameSession);
 
-				controller.sendExtraMessage(playerDisconnectsMessage);
+				sendMessage(playerDisconnectsMessage);
 
 				deleteEmptyLobbies(sessionID);
 
@@ -213,13 +224,21 @@ public class Administration implements IAdministration{
 		int sessionID = createAndAddLobby(lobbyInformation.getMaxPlayers(),lobbyInformation.getLobbyName(),lobbyInformation.getTrackId());
 
 		if(sessionID == NO_LOBBY_ID)
+		{
 			return;
+		}
 
 		//set new lobby without players but with the right parameters
 		setLobbyParameters(sessionID, lobbyInformation);
 
 		//let the player join set new lobby
 		joinLobby(playerID, sessionID);
+		
+		for (int i=0; i<lobbyInformation.getAmountOfAIs(); i++)
+		{
+			joinLobby(this.createAndAddNewAI(), sessionID);			
+		}
+		DebugOutputHandler.printDebug(lobbyInformation.getAmountOfAIs() + " AIs created for the new Lobby");
 	}
 
 	@Override
@@ -488,7 +507,72 @@ public class Administration implements IAdministration{
 		RaceTrackMessage answer = new TimeLeftMessage(timeLeft);
 
 		answer.addClientID(playerID);
-		controller.sendExtraMessage(answer);
+		sendMessage(answer);
+	}
+	
+
+
+	@Override
+	public void moveAI(int aiID, javafx.geometry.Point2D point) {
+		RaceTrackMessage answer = null;
+
+		int sessionID = getSessionFromClient(aiID);
+
+		//Move player and get collisionpoint if there was one
+		if(lobbyMap.get(sessionID) != null && sessionID != NO_LOBBY_ID && playerMap.get(aiID)!=null){
+
+			if(lobbyMap.get(sessionID).isFirstRound()){
+				setRandomStartingPoint(aiID, sessionID);
+				return;
+			}
+
+			List<Integer> playersInSameSession = null;
+
+			if(getPlayerIdsInSameSession(aiID) != null){
+				playersInSameSession = getPlayerIdsInSameSession(aiID);
+			}
+
+			int playerWhoMoved = getGroupPositionByPlayerID(aiID);
+
+			AI ai = (AI) playerMap.get(aiID);
+
+			if(ai.hasCrashed() || !ai.isParticipating()){
+				return;
+			}
+
+			Point2D collisionPointFromPlayer = lobbyMap.get(sessionID).makeAIMoveAt(ai,point);
+
+			Point2D playerPosition = ai.getCurrentPosition();
+
+			startNextRoundByPlayerID(aiID);
+
+			int nextPlayerToMove = getNextPlayerToMove(aiID);
+
+			int playerWhoWon = getPlayerWhoWonByPlayerID(aiID); 
+
+			boolean didAPlayerWin = playerWhoWon != -1;
+
+			int round = getPlayerRoundByPlayerID(aiID);
+
+			Point2D playerVelocity = getCurrentPlayerVelocityByPlayerID(aiID);
+
+			if(didAPlayerWin){
+				DebugOutputHandler.printDebug("AI "+playerWhoWon+" did win the game.");
+
+				answer = VectorMessageServerHandler.generatePlayerWonMessage(playerWhoMoved,playerWhoWon, playerPosition);
+				closeGameByPlayerID(aiID);
+
+			}else{
+				answer = VectorMessageServerHandler.generateBroadcastMoveMessage(playerWhoMoved,playerPosition,
+						collisionPointFromPlayer,nextPlayerToMove, playerVelocity, round);
+			}
+
+			for(int p : playersInSameSession)
+				answer.addClientID(p);	
+			//method on lobby and game which just moves the player by his velocity again! not just by a specific point
+		}		
+
+		sendMessage(answer);
 	}
 
 	@Override
@@ -551,7 +635,7 @@ public class Administration implements IAdministration{
 			//method on lobby and game which just moves the player by his velocity again! not just by a specific point
 		}		
 
-		controller.sendExtraMessage(answer);
+		sendMessage(answer);
 	}
 
 	/*
@@ -592,7 +676,7 @@ public class Administration implements IAdministration{
 	private int createAndAddLobby(int maxPlayers, String lobbyName, int trackID){
 
 		DebugOutputHandler.printDebug("A new Lobby has been created");
-		Lobby newLobby = new Lobby(++lobbyIdCounter, maxPlayers, lobbyName, trackID);
+		Lobby newLobby = new Lobby(++lobbyIdCounter, maxPlayers, lobbyName, trackID, this);
 		if(lobbyMap.get(lobbyIdCounter) == null){
 			lobbyMap.put(lobbyIdCounter,  newLobby);
 			return lobbyIdCounter;
@@ -725,7 +809,7 @@ public class Administration implements IAdministration{
 
 					answer.addClientID(playerWhoWonID);
 
-					controller.sendExtraMessage(answer);
+					sendMessage(answer);
 
 				}
 			}catch(ClassCastException e){
@@ -796,7 +880,24 @@ public class Administration implements IAdministration{
 		for(int p : playersInSameSession)
 			answer.addClientID(p);	
 
-		controller.sendExtraMessage(answer);
+		sendMessage(answer);
+	}
+	
+	private void sendMessage(RaceTrackMessage message){
+		List<Integer> idsToRemove = new ArrayList<Integer>();
+		List<Integer> receivers = message.getReceiverIds();
+		for (Integer i : receivers)
+		{
+			if (playerMap.get(i).isAI())
+			{
+				idsToRemove.add(i);
+			}				
+		}
+		for (Integer id : idsToRemove)
+		{
+			receivers.remove(id);
+		}
+		controller.sendExtraMessage(message);		
 	}
 
 }
