@@ -1,6 +1,7 @@
 package src.main.java.logic;
 
 import java.util.List;
+import java.util.Map;
 
 import javafx.geometry.Point2D;
 
@@ -255,4 +256,6 @@ interface IAdministration {
 	 * @return the player who won in sessionID of player playerID
 	 */
 	public int getPlayerIDWhoWonByPlayerID(int playerID);
+
+	public Map<Integer,Player> getPlayerMap();
 	}

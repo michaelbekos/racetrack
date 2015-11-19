@@ -34,6 +34,10 @@ public class RaceTrackMessage implements java.io.Serializable,IRaceTrackMessage{
 		return receiverIDs;
 	}
 	
+	public void setReceiverIDs(List<Integer> receiverIDs){
+		this.receiverIDs = receiverIDs;
+	}
+	
 	/**
 	 * adds a receiver client to the list
 	 * @param clientId

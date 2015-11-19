@@ -193,20 +193,24 @@ public class Administration implements IAdministration{
 				RaceTrackMessage playerDisconnectsMessage = generateDisconnectMessage(playerToDisconnectPosition, sessionID, playersInSameSession);
 
 				sendMessage(playerDisconnectsMessage);
-
+				DebugOutputHandler.printDebug("Up to the first occurence I am happy");
 				deleteEmptyLobbies(sessionID);
-
+				DebugOutputHandler.printDebug("After to the first occurence I am still happy");
+				
 				sendWinnerMessage(playerDisconnectsMessage);
 
 				return;
 			}
-
+			
+			DebugOutputHandler.printDebug("Are we here rights");
 			lobbyMap.get(sessionID).deletePlayer(playerMap.get(playerID));
 			resetPlayer(playerID);
 
 		}
 		//check if a lobby is empty now. if it is, delete it
+		DebugOutputHandler.printDebug("Up to the second occurence I am happy");
 		deleteEmptyLobbies(sessionID);
+		DebugOutputHandler.printDebug("After to the second occurence I am still happy");
 
 	}
 
@@ -455,7 +459,9 @@ public class Administration implements IAdministration{
 			lobbyMap.get(sessionID).closeGame();
 			lobbyMap.get(sessionID).resetPlayers();
 			for(Integer i : playersInSameSession){
+				
 				leaveLobby(i);
+				
 			}
 		}
 
@@ -500,6 +506,11 @@ public class Administration implements IAdministration{
 				moveTimerMap.get(sessionID).start();
 			}
 		}
+	}
+	
+	public Map<Integer,Player> getPlayerMap()
+	{
+		return this.playerMap;
 	}
 
 	@Override
@@ -557,7 +568,7 @@ public class Administration implements IAdministration{
 			Point2D playerVelocity = getCurrentPlayerVelocityByPlayerID(aiID);
 
 			if(didAPlayerWin){
-				DebugOutputHandler.printDebug("AI "+playerWhoWon+" did win the game.");
+				DebugOutputHandler.printDebug((playerMap.get(playerWhoWon).isAI() ? "AI" : "Player") +" "+playerWhoWon+" did win the game.");
 
 				answer = VectorMessageServerHandler.generatePlayerWonMessage(playerWhoMoved,playerWhoWon, playerPosition);
 				closeGameByPlayerID(aiID);
@@ -568,7 +579,9 @@ public class Administration implements IAdministration{
 			}
 
 			for(int p : playersInSameSession)
-				answer.addClientID(p);	
+			{
+				answer.addClientID(p);
+			}
 			//method on lobby and game which just moves the player by his velocity again! not just by a specific point
 		}		
 
@@ -806,10 +819,11 @@ public class Administration implements IAdministration{
 
 					closeGameByPlayerID(playerWhoWon);
 
-
 					answer.addClientID(playerWhoWonID);
 
 					sendMessage(answer);
+					
+					//inform the AIs that game is over!!
 
 				}
 			}catch(ClassCastException e){
@@ -897,6 +911,7 @@ public class Administration implements IAdministration{
 		{
 			receivers.remove(id);
 		}
+		message.setReceiverIDs(receivers);
 		controller.sendExtraMessage(message);		
 	}
 

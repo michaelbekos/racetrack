@@ -125,7 +125,7 @@ public class ComServer implements ICommunication{
 					objectOutputStreams.get(clientId).reset();
 				}
 			}catch(IOException e){
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
 
 		}

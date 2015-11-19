@@ -99,7 +99,11 @@ public class VectorMessageServerHandler extends RaceTrackMessageServerHandler{
 				}
 
 				for(int p : playersInSameSession)
-					answer.addClientID(p);	
+				{
+					//if (!didAPlayerWin && !administration.getPlayerMap().get(p).isAI())
+					answer.addClientID(p);
+				}
+						
 
 			}//No Valid move :
 			else{
