@@ -53,6 +53,7 @@ public class StackPaneController extends AnchorPane implements IStackPaneControl
     public boolean loadScene(String name, String resource) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
+            Racetracker.printInDebugMode("----- |GUI| ----- Resource Scene: "+getClass().getResource(resource).toString());
             Parent root = (Parent) loader.load();
             IMultiSceneBase sceneController = ((IMultiSceneBase) loader.getController());
             sceneController.setScreenParent(this);
@@ -60,6 +61,7 @@ public class StackPaneController extends AnchorPane implements IStackPaneControl
             addScene(name, root);
             return true;
         } catch (Exception e) {
+        	Racetracker.printInDebugMode(e.toString());
         	Racetracker.printInDebugMode(name + " : " + resource + " : " + e.getMessage());
             return false;
         }
@@ -67,7 +69,8 @@ public class StackPaneController extends AnchorPane implements IStackPaneControl
     
     public boolean setScene(final String name) {
     	// If scene has been previously loaded
-        if (scenes.get(name) != null) {
+    	Racetracker.printInDebugMode("----- |GUI| ----- Set Scene: "+(name)+" -----");
+    	if (scenes.get(name) != null) {
             final DoubleProperty opacity = opacityProperty();
             
             if (!getChildren().isEmpty()) {

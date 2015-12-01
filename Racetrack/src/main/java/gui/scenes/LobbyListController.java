@@ -72,11 +72,14 @@ public class LobbyListController extends NavigationSceneBase {
 	// MARK: FXML Buttons
 	@FXML
 	private void goBack(MouseEvent event) {
+		Racetracker.printInDebugMode("----- |GUI| ----- Go Back -----");
 		stackPaneController.setScene(Racetracker.sceneStart_name);
 	}
 
 	@FXML
 	private void createNewGame(ActionEvent event) {
+		Racetracker.printInDebugMode("----- |GUI| ----- Create new Game -----");
+		Racetracker.printInDebugMode("----- |GUI| ----- Set Scene on: "+Racetracker.sceneCreateNewGame_name+" -----");
 		stackPaneController.setScene(Racetracker.sceneCreateNewGame_name);
 	}
 
@@ -123,7 +126,7 @@ public class LobbyListController extends NavigationSceneBase {
 	// MARK: Button
 	@FXML
 	private void reloadLobbyList(ActionEvent event) {
-		Racetracker.printInDebugMode("Reload");
+		Racetracker.printInDebugMode("----- |GUI| ----- Reload -----");
 
 		boolean shouldUseDemoSamples = false;
 

@@ -61,7 +61,7 @@
             <Font name="Comic Sans MS" size="13.0" />
          </font>
          <graphic>
-            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView disable="true" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@resources/add.png" />
                </image>
@@ -72,7 +72,8 @@
          </graphic>
          <padding>
             <Insets bottom="-5.0" left="-5.0" right="-5.0" top="-5.0" />
-         </padding></Button>
+         </padding>
+      </Button> 
       <Button fx:id="refreshListOfGamesButton" contentDisplay="CENTER" layoutX="655.0" layoutY="67.0" mnemonicParsing="false" onAction="#reloadLobbyList" prefHeight="40.0" prefWidth="40.0" style="-fx-border-color: AAA; -fx-background-color: #FEFEFE; -fx-border-radius: 4;" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="70.0">
          <font>
             <Font name="Comic Sans MS" size="13.0" />

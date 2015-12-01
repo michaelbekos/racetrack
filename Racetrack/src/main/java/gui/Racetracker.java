@@ -23,7 +23,7 @@ import javafx.stage.WindowEvent;
  */
 public class Racetracker extends Application {
 
-	private static boolean debugMode = false;
+	private static boolean debugMode = true;
 
 	private static ModelExchange model;
 	
