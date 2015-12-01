@@ -5,7 +5,7 @@ import src.main.java.core.DebugOutputHandler;
 public class MoveTimer extends Thread{
 
 
-	private static final long NO_TIME_LEFT = 0L;
+	private static final long NO_TIME_LEFT = 0L; 
 
 	private static final long ONE_SECOND = 1000L;
 

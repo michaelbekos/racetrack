@@ -13,7 +13,7 @@ import src.main.java.core.ControllerClient;
 import src.main.java.gui.Racetracker;
 
 /**
- * ComClient handles the connection to the Racetrack server, receives messages
+ * ComClient handles the connection to the Racetrack server, receives messages 
  * propagates them to the controller and sends answers from the controller to
  * the server.
  * 

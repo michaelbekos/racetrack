@@ -20,7 +20,7 @@ import src.main.java.gui.Racetracker;
 public class Administration implements IAdministration{
 
 	/**
-	 * Determines the value if a player is not in a lobby.
+	 * Determines the value if a player is not in a lobby. 
 	 * He is in the lobbyList if his sessionID = NO_LOBBY_ID
 	 */
 	private static final int NO_LOBBY_ID = -1;
