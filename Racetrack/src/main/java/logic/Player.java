@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  */
 public class Player {
 	private final Integer PLAYER_ID;
-	private Integer sessionID;
+	protected Integer sessionID;
 	private String name;
 	private Point2D currentVelocity;
 	private Point2D currentPosition;

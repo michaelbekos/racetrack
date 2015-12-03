@@ -100,7 +100,7 @@ public class Administration implements IAdministration{
 			DebugOutputHandler.printDebug("Player "+playerMap.get(playerID).getName()+" now is in lobby " + playerMap.get(playerID).getSessionID());
 		}
 	}
-
+	
 	@Override
 	public void playerDisconnects(int playerToDisconnect){
 
