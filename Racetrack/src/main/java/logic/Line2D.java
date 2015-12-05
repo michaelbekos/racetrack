@@ -19,6 +19,17 @@ public class Line2D extends Line {
 	 * @param p2
 	 *            end point
 	 */
+	public Line2D(Line l) {
+		super(l.getStartX(), l.getStartX(), l.getEndX(), l.getEndX());
+	}
+	/**
+	 * Costum constructor using two points
+	 * 
+	 * @param p1
+	 *            start point
+	 * @param p2
+	 *            end point
+	 */
 	public Line2D(Point2D p1, Point2D p2) {
 		super(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 	}

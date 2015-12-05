@@ -81,7 +81,22 @@ public class Administration implements IAdministration{
 	{
 		int AIid = controller.getNewAIid();
 		//add player with default name
-		Player newPlayer = new AI(AIid, "AI_"+AIid);
+		Player newPlayer;
+		switch( AIid )
+		{
+		case 1:
+			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
+			//newPlayer= new AI_Puckie( AIid, "Puckie" );
+			break;
+		case 2:
+			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
+			//newPlayer= new AI( AIid, "AI_"+AIid );
+			break;
+		default:
+			newPlayer= new AI_Random( AIid, "Random" );
+			//newPlayer= new AI( AIid, "AI_"+AIid );
+			break;
+		}
 		playerMap.put(AIid, newPlayer);
 		return AIid;
 	}

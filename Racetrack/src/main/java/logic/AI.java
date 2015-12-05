@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.sun.glass.ui.Application;
 
-public class AI extends Player implements IAI {
+public abstract class AI extends Player implements IAI {
 	
 	public static Random random = new Random(System.currentTimeMillis());
 
@@ -14,11 +14,7 @@ public class AI extends Player implements IAI {
 	}
 	
 	@Override
-	public  javafx.geometry.Point2D move(Game g) {
-		// TODO Auto-generated method stub
-		//g.
-		return new  javafx.geometry.Point2D(random.nextInt(100), random.nextInt(100));
-	}
+	public abstract javafx.geometry.Point2D move(Game g);
 	
 	public boolean isAI() {
 		return true;

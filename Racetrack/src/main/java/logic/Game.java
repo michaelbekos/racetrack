@@ -640,9 +640,9 @@ public class Game {
 		
 		if (playerList[currentPlayerIndex].isAI())
 		{
-			javafx.geometry.Point2D point = ((AI)playerList[currentPlayerIndex]).move(this);
+			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move(this);
 			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point)){
-				point = ((AI)playerList[currentPlayerIndex]).move(this);
+				point = ((IAI)playerList[currentPlayerIndex]).move(this);
 			}
 			//call method from administrration with point:
 			// call moveAI(point)

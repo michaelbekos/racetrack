@@ -107,6 +107,7 @@ public class Lobby implements ILobby {
 	 */
 	@Override
 	public void addPlayer(Player playerEnteringLobby) {
+		System.out.println( "ADDED PLAYER" );
 		for (int i = 0; i < maxCurrentPlayer; i++) {
 
 			// Cancel, if the player is already in the lobby
