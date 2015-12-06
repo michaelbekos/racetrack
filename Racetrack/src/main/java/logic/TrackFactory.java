@@ -236,12 +236,53 @@ public class TrackFactory {
 			);
 
 
+	// Indianapolis Indy(l,h,w) - see Trello for usage of l,h,w
+		private static int l = 150;
+		private static int h = 10;
+		private static int w = 5;
+		private static Point2D[] getIndianapolisStartingPositions()
+		{
+			Point2D[] startingPositions = new Point2D[w];
+			for (int i = 0; i < w; i++)
+			{
+				startingPositions[i] = new Point2D(5+w+l/2+1,6+i);
+			}
+			return startingPositions;
+		}
+		private static Track indianapolis = new Track(
+				
+				new Point2D[] {	
+						new Point2D(5+w+l/2+1,5),
+						new Point2D(5,5),
+						new Point2D(5,6+2*w+h),
+						new Point2D(6+l+2*w,6+2*w+h),
+						new Point2D(6+l+2*w,5),
+						new Point2D(5+w+l/2+1,5)
+				}, 
+				new Point2D[] {
+						new Point2D(5+w+l/2+1,6+w),
+						new Point2D(6+w,6+w),
+						new Point2D(6+w,5+w+h),
+						new Point2D(5+w+l,5+w+h),
+						new Point2D(5+w+l,6+w),
+						new Point2D(5+w+l/2,6+w),
+						new Point2D(5+w+l/2,5),
+						new Point2D(5+w+l/2,6+w),
+						new Point2D(5+w+l/2+1,6+w)
+				}, 
+				new Point2D(10 + 2*w + l, 10 + 2*w + h), 
+				5, 
+				getIndianapolisStartingPositions(),
+				new Line2D(new Point2D(5+w+l/2-1,5),new Point2D(5+w+l/2-1,6+w))
+		);	
+		
 	private static Track[] allTracks = new Track[] {
 		nTrack,
 		mTrack,
 		dTrack,
 		oTrack,
-		pTrack
+		pTrack,
+		indianapolis
 	};
 
 	/*
