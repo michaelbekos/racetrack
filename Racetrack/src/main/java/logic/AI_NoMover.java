@@ -11,7 +11,7 @@ public class AI_NoMover extends AI
 	}
 	
 	@Override
-	public  javafx.geometry.Point2D move(Game g)
+	public  javafx.geometry.Point2D move()
 	{
 		int x=((int)getCurrentPosition().getX());
 		int y=((int)getCurrentPosition().getY());

@@ -15,6 +15,7 @@ import src.main.java.com.messages.handler.server.VectorMessageServerHandler;
 import src.main.java.core.ControllerServer;
 import src.main.java.core.DebugOutputHandler;
 import src.main.java.gui.Racetracker;
+import src.main.java.logic.AIstar.AIstar;
 
 
 public class Administration implements IAdministration{
@@ -84,11 +85,15 @@ public class Administration implements IAdministration{
 		Player newPlayer;
 		switch( AIid )
 		{
-		case 1:
-			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
-			//newPlayer= new AI_Puckie( AIid, "Puckie" );
-			break;
 		case 2:
+			newPlayer= new AIstar( AIid, "AIstar" );
+			//newPlayer= new AI( AIid, "AI_"+AIid );
+			break;
+		case 1:
+			//newPlayer= new AI_NoMover( AIid, "Not-Mover" );
+			newPlayer= new AI_Puckie( AIid, "Puckie" );
+			break;
+		case 3:
 			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
 			//newPlayer= new AI( AIid, "AI_"+AIid );
 			break;

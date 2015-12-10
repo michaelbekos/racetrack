@@ -20,7 +20,7 @@ public class Line2D extends Line {
 	 *            end point
 	 */
 	public Line2D(Line l) {
-		super(l.getStartX(), l.getStartX(), l.getEndX(), l.getEndX());
+		super(l.getStartX(), l.getStartY(), l.getEndX(), l.getEndY());
 	}
 	/**
 	 * Costum constructor using two points

@@ -144,6 +144,8 @@ public class Game {
 				playerList[i].setParticipating(true);
 				playerList[i].setHasCrashed(false);
 				playerList[i].setCurrentVelocity(new Point2D(0.0d, 0.0d));
+				if(playerList[i].isAI())
+					((AI)playerList[i]).setGameInformation(this);
 			}
 		}
 		this.roundCounter = 0;
@@ -640,9 +642,9 @@ public class Game {
 		
 		if (playerList[currentPlayerIndex].isAI())
 		{
-			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move(this);
+			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
 			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point)){
-				point = ((IAI)playerList[currentPlayerIndex]).move(this);
+				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
 			//call method from administrration with point:
 			// call moveAI(point)
