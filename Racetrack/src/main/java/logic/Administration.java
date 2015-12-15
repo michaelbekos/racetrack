@@ -920,18 +920,16 @@ public class Administration implements IAdministration{
 	private void sendMessage(RaceTrackMessage message){
 		List<Integer> idsToRemove = new ArrayList<Integer>();
 		List<Integer> receivers = message.getReceiverIds();
-		for (int i=0 ; i<receivers.size(); i++ )
-		//for (Integer i : receivers)
+		for (Integer i : receivers)
 		{
-			if (playerMap.get(receivers.get(i)).isAI())
+			if (playerMap.get(i).isAI())
 			{
-				idsToRemove.add(receivers.get(i));
+				idsToRemove.add(i);
 			}				
 		}
-		for ( int i=0 ; i<idsToRemove.size() ; i++ )
-		//for (Integer id : idsToRemove)
+		for (Integer id : idsToRemove)
 		{
-			receivers.remove(idsToRemove.get(i));
+			receivers.remove(id);
 		}
 		message.setReceiverIDs(receivers);
 		controller.sendExtraMessage(message);		
