@@ -1,14 +1,19 @@
 package src.main.java.logic;
 
+import java.util.PriorityQueue;
+
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
 import src.main.java.logic.AIstar.AIstar;
 import src.main.java.logic.AIstar.LineSegment;
+import src.main.java.logic.AIstar.State;
+import src.main.java.logic.AIstar.StateComparator;
 
 public class AI_Puckie extends AI
 {
 	private boolean mGridCreated;
 	private boolean [][] mGrid;
+	private int [][] mDijkstaDistances;
 	private int mWidth;
 	private int mHeight;
 	public AI_Puckie(Integer playerID, String name)
@@ -20,13 +25,16 @@ public class AI_Puckie extends AI
 	@Override
 	public  javafx.geometry.Point2D move()
 	{	
-		if( !mGridCreated )
-		{
-			mGridCreated=createGrid();
-		}
-		
 		int x=((int)getCurrentPosition().getX());
 		int y=((int)getCurrentPosition().getY());
+		
+		if( !mGridCreated )
+		{
+			mGridCreated=createGrid( x, y );
+			doDijkstra( x, y );
+		}
+		
+		
 		return new javafx.geometry.Point2D( x, y );
 		//return new javafx.geometry.Point2D(random.nextInt(100), random.nextInt(100));
 	}
@@ -82,15 +90,15 @@ public class AI_Puckie extends AI
 		}
 	}
 	
-	private boolean createGrid()
+	private boolean createGrid( int sX, int sY )
 	{
 		mWidth=((int)mGame.getTrack().getDimension().getX());
 		mHeight=((int)mGame.getTrack().getDimension().getY());
 		mGrid=new boolean[mWidth][mHeight];
 		boolean [][] considered=new boolean[mWidth][mHeight];
 
-		int sX=(int)mGame.getTrack().getStartingPoints()[0].getX();
-		int sY=(int)mGame.getTrack().getStartingPoints()[0].getY();
+		sX=(int)mGame.getTrack().getStartingPoints()[0].getX();
+		sY=(int)mGame.getTrack().getStartingPoints()[0].getY();
 		tryFill( sX, sY, sX, sY, considered );
 		
 		System.out.println( "Grid created!" );
@@ -107,18 +115,111 @@ public class AI_Puckie extends AI
 		}
 		return true;
 	}
-
-	void setGrid( Point2D pos, Point2D intesection )
+	private void doDijkstra( int sX, int sY )
 	{
-		if( intesection!=pos )
+		mDijkstaDistances=new int[mWidth][mHeight];
+		PriorityQueue<Dijkstra2DEntry> list=new PriorityQueue<Dijkstra2DEntry>( 10,new Dijkstra2DEntryComparator() );
+		
+		for( int j=mHeight-1 ; j>=0 ; j-- )
 		{
-			int i=((int)pos.getX() );
-			int j=((int)pos.getY() );
-			mGrid[i][j]=!mGrid[i][j];
-			if( !mGrid[i][j]&&intesection==new Point2D( i-1, j ) )
+			for( int i=0 ; i<mWidth ; i++ )
 			{
-				mGrid[i-1][j]=false;
+				if( mGrid[i][j] )
+				{
+					if( i==sX && j==sY )
+					{
+						list.add( new Dijkstra2DEntry( i, j, 0 ) );
+					}
+					else
+					{
+						list.add( new Dijkstra2DEntry( i, j, -1 ) );
+					}
+					mDijkstaDistances[i][j]=-1;
+				}
+				else
+				{
+					mDijkstaDistances[i][j]=-2;
+				}					
 			}
 		}
+		
+		mDijkstaDistances[sX][sY]=0;
+		System.out.println( "Start position: ( " + sX + ", " + sY + " )" );
+//		 1  Funktion Dijkstra(Graph, Startknoten):
+//		 2      initialisiere(Graph,Startknoten,abstand[],vorgänger[],Q)
+//		 3      solange Q nicht leer:                       // Der eigentliche Algorithmus
+//		 4          u:= Knoten in Q mit kleinstem Wert in abstand[]
+//		 5          entferne u aus Q                                // für u ist der kürzeste Weg nun bestimmt
+//		 6          für jeden Nachbarn v von u:
+//		 7              falls v in Q:
+//		 8                 distanz_update(u,v,abstand[],vorgänger[])   // prüfe Abstand vom Startknoten zu v'
+//		 9      return vorgänger[]
+					 
+		while( !list.isEmpty() )
+		{
+			Dijkstra2DEntry n=list.poll();
+			System.out.println( "" );
+			System.out.println( "PQ removed: " + n );
+
+			dijkstraWriteEntry( n.x()  , n.y()+1, n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()+1, n.y()+1, n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()+1, n.y()  , n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()+1, n.y()-1, n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()  , n.y()-1, n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()-1, n.y()-1, n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()-1, n.y()  , n.getValue()+1, list );
+			dijkstraWriteEntry( n.x()-1, n.y()+1, n.getValue()+1, list );
+		}
+
+		// Output
+		for( int j=mHeight-1 ; j>=0 ; j-- )
+		{
+			for( int i=0 ; i<mWidth ; i++ )
+			{
+				System.out.format( "%3d", mDijkstaDistances[i][j] );
+			}
+			System.out.println( " " );
+		}
+	}
+
+	private void dijkstraWriteEntry( int x, int y, int newValue, PriorityQueue<Dijkstra2DEntry> list )
+	{
+		System.out.println( "" );
+		System.out.println( "   Considering position: ( " + x + ", " + y + " )" );
+		if( x<0 || y<0 || x>=mWidth || y>=mHeight )
+		{
+			System.out.println( "   Rejected (bounderies)" );
+			return;
+		}
+		if( !mGrid[x][y] )
+		{
+			System.out.println( "   Rejected (track)" );
+			return;
+		}
+
+		int v=0;
+		for (Dijkstra2DEntry e : list)
+		{
+			if( x==e.x() && y==e.y() )
+			{
+				v=e.getValue();
+				System.out.println( "   old value: " + v + "; new value:" + newValue );
+				if( v==-1||newValue<v )
+				{
+					if( list.remove( e ) )
+					{
+						System.out.println( "   removed:" +e );
+						list.add( new Dijkstra2DEntry( x, y, newValue ) );
+						mDijkstaDistances[x][y]=newValue;
+					}
+					else
+					{
+						System.out.println( "   remove failed" );
+					}
+				}
+				return;
+			}
+		}
+		System.out.println( "   Not in PQ" );
 	}
 }
