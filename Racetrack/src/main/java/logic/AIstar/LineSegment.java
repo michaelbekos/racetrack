@@ -1,8 +1,6 @@
 package src.main.java.logic.AIstar;
 
 import java.util.HashMap;
-
-import javafx.geometry.Point2D;
 import src.main.java.logic.Line2D;
 
 public class LineSegment {
@@ -37,11 +35,6 @@ public class LineSegment {
 	{
 		return p2;
 	}
-	public String toString()
-	{
-		return "p1:( x=" + p1.X() + "; y=" + p1.Y() + " )  p2:( x=" + p2.X() + ", y=" + p2.Y() + " )";
-	}
-	                             
 	private LineSegment (Point q1, Point q2)
 	{
 		p1 = q1;
@@ -110,13 +103,8 @@ public class LineSegment {
 	{
 		return GetLineSegment(Point.GetPoint(line2D.getStartPoint()),Point.GetPoint(line2D.getEndPoint()));
 	}
-
-	
-	
 	public boolean IntersectWith(LineSegment ls)
 	{
-		// TODO: Consider making local variables for all 8 x/y values for p1/p2 of line segment ls1/ls2
-		//       this._._() really bloas the code.
 		double xi = 0;
 		double yi = 0;
 		if (this.aIsInf)
@@ -191,41 +179,21 @@ public class LineSegment {
 			}
 			else
 			{
-				if( this.a==ls.A() && this.a==0 /* && ls.A()==0 */ )
+				if (this.a == ls.A())
 				{
-					if( this.p1.Y()==ls.P1().Y() )
-					{
-						//***
-						if( this.p1.X() < ls.P1().X() && this.p1.X() < ls.P2().X() && this.p2.X() < ls.P1().X() && this.p2.X() < ls.P2().X() )
-						{
-							return false;
-						}
-						if( this.p1.X() > ls.P1().X() && this.p1.X() > ls.P2().X() && this.p2.X() > ls.P1().X() && this.p2.X() > ls.P2().X() )
-						{
-							return false;
-						}
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}	
-				else if (this.a == ls.A() /* && this.a != 0 */ )
-				{
-					// TODO:
-					// Testen ob einer der Punkte von ls1 auf der Geraden von ls2 liegt
-					// Falls nein: Return false;
-					// Falls ja, vergleiche X oder Y nach normalen Schema: (Einer der Punkte liegt im Interval oder nicht.). 
-					// TODO: 
-					// Der Bereich kann auf vollstaendig innen liegen. (//*** loest das)
 					if ((this.p1.Y() <= ls.P1().Y() && this.p1.Y() >= ls.P2().Y()) || (this.p1.Y() >= ls.P1().Y() && this.p1.Y() <= ls.P2().Y()))
 					{
-						return true;
+						if ((this.p1.X() <= ls.P1().X() && this.p1.X() >= ls.P2().X()) || (this.p1.X() >= ls.P1().X() && this.p1.X() <= ls.P2().X()))
+						{
+							return true;
+						}
 					}
 					if ((this.p2.Y() <= ls.P1().Y() && this.p2.Y() >= ls.P2().Y()) || (this.p2.Y() >= ls.P1().Y() && this.p2.Y() <= ls.P2().Y()))
 					{
-						return true;
+						if ((this.p2.X() <= ls.P1().X() && this.p2.X() >= ls.P2().X()) || (this.p2.X() >= ls.P1().X() && this.p2.X() <= ls.P2().X()))
+						{
+							return true;
+						}
 					}
 					return false;
 				}
@@ -311,24 +279,6 @@ public class LineSegment {
 		}
 		return false;
 	}
-	
-	public Point2D getIntersectionPoint( LineSegment l )
-	{
-		if( l.p1.equals( p1 ) && l.p2.equals( p2 ) || 
-			l.p2.equals( p1 ) && l.p1.equals( p2 ) )
-			return null;
-
-		if( l.p1.equals( p1 ) || l.p1.equals( p2 ) )
-			return new Point2D( l.p1.X(), l.p1.Y() );
-		
-		if( l.p2.equals( p1 ) || l.p2.equals( p2 ) )
-			return new Point2D( l.p2.X(), l.p2.Y() );
-		
-		//TODO: These are not all cases =)
-		
-		return new Point2D( 0.0, 0.0 );
-	}
-	
 	public double GetIntersectionDistance(LineSegment ls, Point referencePoint)
 	{
 		double xi = 0;

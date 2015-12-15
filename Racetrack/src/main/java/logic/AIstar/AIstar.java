@@ -24,6 +24,7 @@ public class AIstar extends AI {
 	private Point startingPosition;
 	private boolean pathComputed;
 	private Point lastPosition;
+	private HashSet<Point> forbiddenPositions;
 	private State[] path;
 	private int turn;
 	
@@ -36,12 +37,13 @@ public class AIstar extends AI {
 		startingPosition = null;
 		goal = null;
 		pathComputed = false;
+		forbiddenPositions = new HashSet<Point>();
 	}
 	
 	@Override
 	public  javafx.geometry.Point2D move() {
 		// TODO Auto-generated method stub
-		Game g = mGame;
+		Game g=mGame;
 		if(!pathComputed)
 		{
 			startingPosition = Point.GetPoint(this.getCurrentPosition());
@@ -55,6 +57,10 @@ public class AIstar extends AI {
 			for (int i = 0; i < boundaries.length; i++)
 			{
 				borders.add(LineSegment.GetLineSegment(boundaries[i]));
+			}
+			for (int i = 0; i < g.getPlayerList().length; i++)
+			{
+				forbiddenPositions.add(Point.GetPoint(g.getPlayerList()[i].getCurrentPosition()));
 			}
 			State state = A_star(0,0);
 			path = new State[state.TurnsToReach()];
@@ -83,6 +89,11 @@ public class AIstar extends AI {
 				closedList = new HashSet<State>();
 				openList = new PriorityQueue<State>(11,new StateComparator());
 				Data.Clear();
+				forbiddenPositions = new HashSet<Point>();
+				for (int i = 0; i < g.getPlayerList().length; i++)
+				{
+					forbiddenPositions.add(Point.GetPoint(g.getPlayerList()[i].getCurrentPosition()));
+				}
 				State state = A_star((int)this.getCurrentVelocity().getX(),(int)this.getCurrentVelocity().getY());
 				path = new State[state.TurnsToReach()];
 				turn = state.TurnsToReach()-1;
@@ -158,6 +169,10 @@ public class AIstar extends AI {
 				boolean reachesGoal = false;
 				double goalDistance = 0;
 				State successor = State.GetState(currentState,accelerationX,accelerationY);
+				if (forbiddenPositions.contains(successor.Position()))
+				{
+					continue;
+				}
 				LineSegment nextMove = LineSegment.GetLineSegment(currentState.Position(), successor.Position());
 				if (nextMove.IntersectWith(goal))
 				{
