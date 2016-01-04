@@ -447,7 +447,6 @@ public class TrackFactory {
 		{
 			System.out.println("No tracks found!");
 		}
-		tracks.add(indianapolis);
 		Track[] trackArray = new Track[1]; 
 		return tracks.toArray(trackArray);
 	}
