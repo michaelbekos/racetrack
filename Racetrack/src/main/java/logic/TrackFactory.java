@@ -1,8 +1,16 @@
 package src.main.java.logic;
 
-import java.util.Random;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;	
 import javafx.geometry.Point2D;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 /**
  * Class for all predefined maps
@@ -239,7 +247,6 @@ public class TrackFactory {
 	// Indianapolis Indy(l,h,w) - see Trello for usage of l,h,w
 		private static int l = 150;
 		private static int h = 10;
-		private static int w = 5;
 		private static Point2D[] getIndianapolisStartingPositions()
 		{
 			Point2D[] startingPositions = new Point2D[w];
@@ -249,6 +256,7 @@ public class TrackFactory {
 			}
 			return startingPositions;
 		}
+		private static int w = 5;
 		private static Track indianapolis = new Track(
 				
 				new Point2D[] {	
@@ -276,15 +284,162 @@ public class TrackFactory {
 				new Line2D(new Point2D(5+w+l/2-1,5),new Point2D(5+w+l/2-1,6+w))
 		);	
 		
-	private static Track[] allTracks = new Track[] {
-		nTrack,
-		mTrack,
-		dTrack,
-		oTrack,
-		pTrack,
-		indianapolis
-	};
+	private static Track[] allTracks = createTracks();
 
+	private static Track[] createTracks()
+	{
+		ArrayList<Track> tracks = new ArrayList<Track>();
+		File trackDirectory = new File(System.getProperty("user.dir") + "\\Tracks");
+		File[] trackFiles = trackDirectory.listFiles();
+		int trackID = 0;
+		if (trackFiles != null)
+		{
+			for (File trackFile : trackFiles)
+			{
+				try
+				{
+					//Open XML file
+					Document trackXML = new SAXBuilder().build( trackFile.getAbsolutePath() );
+					Element trackElement = trackXML.getRootElement();
+					if (trackElement != null)
+					{
+						//Save trackType - either Circuit or Sprint
+						String trackType = trackElement.getAttributeValue("type");
+					
+						//Parse outer boundaries
+						Element outerBoundariesElement = trackElement.getChild("OuterBoundaries");
+						ArrayList<Point2D> outerBoundaries = new ArrayList<Point2D>();
+						if (outerBoundariesElement != null)
+						{
+							List<Element> outerBoundaryPointElements = outerBoundariesElement.getChildren("Point");
+							if (outerBoundaryPointElements != null)
+							{
+								int nextIDToFind = 0;
+								boolean newElementFound = true;
+								while (newElementFound)
+								{
+									newElementFound = false;
+									for (Element outerBoundaryPointElement : outerBoundaryPointElements)
+									{
+										if (Integer.parseInt(outerBoundaryPointElement.getAttributeValue("id")) == nextIDToFind)
+										{
+											int x = Integer.parseInt(outerBoundaryPointElement.getAttributeValue("x"));
+											int y = Integer.parseInt(outerBoundaryPointElement.getAttributeValue("y"));
+											nextIDToFind++;
+											newElementFound = true;
+											outerBoundaries.add(new Point2D(x,y));
+										}
+									}
+								}
+							}
+						}
+						
+						//Parse inner boundaries
+						Element innerBoundariesElement = trackElement.getChild("InnerBoundaries");
+						ArrayList<Point2D> innerBoundaries = new ArrayList<Point2D>();
+						if (innerBoundariesElement != null)
+						{
+							List<Element> innerBoundaryPointElements = innerBoundariesElement.getChildren("Point");
+							if (innerBoundaryPointElements != null)
+							{
+								int nextIDToFind = 0;
+								boolean newElementFound = true;
+								while (newElementFound)
+								{
+									newElementFound = false;
+									for (Element innerBoundaryPointElement : innerBoundaryPointElements)
+									{
+										if (Integer.parseInt(innerBoundaryPointElement.getAttributeValue("id")) == nextIDToFind)
+										{
+											int x = Integer.parseInt(innerBoundaryPointElement.getAttributeValue("x"));
+											int y = Integer.parseInt(innerBoundaryPointElement.getAttributeValue("y"));
+											nextIDToFind++;
+											newElementFound = true;
+											innerBoundaries.add(new Point2D(x,y));
+										}
+									}
+								}
+							}
+						}
+						
+						//Parse dimensions
+						Element dimensionsElement = trackElement.getChild("Dimension");
+						Point2D dimensions = null;
+						if (dimensionsElement != null)
+						{
+							int width = Integer.parseInt(dimensionsElement.getAttributeValue("width"));
+							int height = Integer.parseInt(dimensionsElement.getAttributeValue("height"));
+							dimensions = new Point2D(width, height);
+						}
+						
+						//Parse starting positions
+						Element startingPositionsElement = trackElement.getChild("StartingPositions");
+						ArrayList<Point2D> startingPositions = new ArrayList<Point2D>();
+						if (startingPositionsElement != null)
+						{
+							List<Element> startingPositionPointElements = startingPositionsElement.getChildren("Point");
+							if (startingPositionPointElements != null)
+							{
+								for (Element startingPositionPointElement : startingPositionPointElements)
+								{
+									int x = Integer.parseInt(startingPositionPointElement.getAttributeValue("x"));
+									int y = Integer.parseInt(startingPositionPointElement.getAttributeValue("y"));
+									startingPositions.add(new Point2D(x,y));
+								}
+							}
+						}
+						
+						//Parse finish line
+						Element finishLineElement = trackElement.getChild("FinishLine");
+						Line2D finishLine = null;
+						if (finishLineElement != null)
+						{
+						
+						}
+						
+						//Create an Track object and add it to the list
+						Point2D[] point2DArray = new Point2D[1]; 
+						if (trackType.equals("Sprint"))
+						{
+							if (outerBoundaries.isEmpty() || innerBoundaries.isEmpty() || dimensions == null || startingPositions.isEmpty())
+							{
+								System.out.println("Invalid track description in file " + trackFile.getAbsolutePath() + "!");
+							}
+							else
+							{
+								tracks.add(new Track(outerBoundaries.toArray(point2DArray),innerBoundaries.toArray(point2DArray),dimensions,trackID,startingPositions.toArray(point2DArray)));
+							}
+						}
+						else
+						{
+							if (trackType.equals("Circuit"))
+							{
+								
+							}
+							else
+							{
+								System.out.println("Unknown track type in file " + trackFile.getAbsolutePath() + "!");
+							}
+						}
+					}
+				} catch (JDOMException e)
+				{
+					e.printStackTrace();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		else
+		{
+			System.out.println("No tracks found!");
+		}
+		tracks.add(indianapolis);
+		Track[] trackArray = new Track[1]; 
+		return tracks.toArray(trackArray);
+	}
+	
 	/*
 	private static Track mTrack = new Track(
 			outerPoints, 
