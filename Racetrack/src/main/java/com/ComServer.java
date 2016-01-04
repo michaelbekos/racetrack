@@ -122,6 +122,14 @@ public class ComServer implements ICommunication{
 				if(objectOutputStreams.get(clientId) != null){
 					objectOutputStreams.get(clientId).writeObject(message);
 					//				objectOutputStreams.get(clientId).flush();
+					try
+					{
+						Thread.sleep(100L);
+					}
+					catch(InterruptedException e)
+					{
+						e.printStackTrace();
+					}
 					objectOutputStreams.get(clientId).reset();
 				}
 			}catch(IOException e){
