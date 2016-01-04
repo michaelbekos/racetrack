@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<Track name="oTrack" type="Circuit">
+	<OuterBoundaries>
+		<Point id="0" x="20" y="2" />
+		<Point id="1" x="10" y="2" />
+		<Point id="2" x="2" y="10" />
+		<Point id="3" x="2" y="22" />
+		<Point id="4" x="10" y="30" />
+		<Point id="5" x="30" y="30" />
+		<Point id="6" x="38" y="22" />
+		<Point id="7" x="38" y="10" />
+		<Point id="8" x="30" y="2" />
+		<Point id="9" x="20" y="2" />
+	</OuterBoundaries>
+	<InnerBoundaries>
+		<Point id="0" x="20" y="8" />
+		<Point id="1" x="13" y="8" />
+		<Point id="2" x="8" y="13" />
+		<Point id="3" x="8" y="19" />
+		<Point id="4" x="13" y="24" />
+		<Point id="5" x="27" y="24" />
+		<Point id="6" x="32" y="19" />
+		<Point id="7" x="32" y="13" />
+		<Point id="8" x="27" y="8" />
+		<Point id="9" x="20" y="8" />
+	</InnerBoundaries>
+	<Dimension width="40" height="32"/>
+	<StartingPositions>
+		<Point x="20" y="3" />
+		<Point x="20" y="4" />
+		<Point x="20" y="5" />
+		<Point x="20" y="6" />
+		<Point x="20" y="7" />
+	</StartingPositions>
+	<FinishLine x1="20" y1="24" x2="20" y2="30" />
+</Track>

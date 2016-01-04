@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<Track name="dTrack" type="Sprint">
+	<OuterBoundaries>
+		<Point id="0" x="5" y="2" />
+		<Point id="1" x="2" y="2" />
+		<Point id="2" x="2" y="10" />
+		<Point id="3" x="14" y="10" />
+		<Point id="4" x="14" y="12" />
+		<Point id="5" x="6" y="18" />
+		<Point id="6" x="6" y="27" />
+		<Point id="7" x="29" y="27" />
+		<Point id="8" x="29" y="18" />
+		<Point id="9" x="35" y="16" />
+		<Point id="10" x="35" y="6" />
+		<Point id="11" x="29" y="4" />
+		<Point id="12" x="29" y="2" />
+	</OuterBoundaries>
+	<InnerBoundaries>
+		<Point id="0" x="5" y="2" />
+		<Point id="1" x="8" y="2" />
+		<Point id="2" x="8" y="4" />
+		<Point id="3" x="14" y="4" />
+		<Point id="4" x="20" y="8" />
+		<Point id="5" x="20" y="14" />
+		<Point id="6" x="13" y="19" />
+		<Point id="7" x="13" y="21" />
+		<Point id="8" x="23" y="21" />
+		<Point id="9" x="23" y="15" />
+		<Point id="10" x="29" y="13" />
+		<Point id="11" x="29" y="9" />
+		<Point id="12" x="23" y="7" />
+		<Point id="13" x="23" y="2" />
+	</InnerBoundaries>
+	<Dimension width="37" height="29"/>
+	<StartingPositions>
+		<Point x="3" y="3" />
+		<Point x="4" y="3" />
+		<Point x="5" y="3" />
+		<Point x="6" y="3" />
+		<Point x="7" y="3" />
+	</StartingPositions>
+</Track>

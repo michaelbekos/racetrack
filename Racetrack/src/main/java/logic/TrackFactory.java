@@ -394,7 +394,11 @@ public class TrackFactory {
 						Line2D finishLine = null;
 						if (finishLineElement != null)
 						{
-						
+							int x1 = Integer.parseInt(finishLineElement.getAttributeValue("x1"));
+							int y1 = Integer.parseInt(finishLineElement.getAttributeValue("y1"));
+							int x2 = Integer.parseInt(finishLineElement.getAttributeValue("x2"));
+							int y2 = Integer.parseInt(finishLineElement.getAttributeValue("y2"));
+							finishLine = new Line2D(new Point2D(x1,y1), new Point2D(x2,y2));
 						}
 						
 						//Create an Track object and add it to the list
@@ -414,7 +418,14 @@ public class TrackFactory {
 						{
 							if (trackType.equals("Circuit"))
 							{
-								
+								if (outerBoundaries.isEmpty() || innerBoundaries.isEmpty() || dimensions == null || startingPositions.isEmpty() || finishLine == null)
+								{
+									System.out.println("Invalid track description in file " + trackFile.getAbsolutePath() + "!");
+								}
+								else
+								{
+									tracks.add(new Track(outerBoundaries.toArray(point2DArray),innerBoundaries.toArray(point2DArray),dimensions,trackID,startingPositions.toArray(point2DArray),finishLine));
+								}
 							}
 							else
 							{
@@ -424,6 +435,7 @@ public class TrackFactory {
 					}
 				} catch (JDOMException e)
 				{
+					System.out.print("Invalid file format in file " + trackFile.getAbsolutePath() + "!");
 					e.printStackTrace();
 				} catch (IOException e)
 				{
