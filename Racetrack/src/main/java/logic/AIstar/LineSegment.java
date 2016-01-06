@@ -35,7 +35,7 @@ public class LineSegment {
 	{
 		return p2;
 	}
-	private LineSegment (Point q1, Point q2)
+	public LineSegment (Point q1, Point q2)
 	{
 		p1 = q1;
 		p2 = q2;

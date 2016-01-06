@@ -13,7 +13,7 @@ public class Point {
 	{
 		return y;
 	}
-	private Point(int _x,int _y)
+	public Point(int _x,int _y)
 	{
 		this.x = _x;
 		this.y = _y;		
