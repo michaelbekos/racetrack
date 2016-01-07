@@ -8,7 +8,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
-import javafx.geometry.Point2D;
 
 public class IndianapolisCreator
 {
