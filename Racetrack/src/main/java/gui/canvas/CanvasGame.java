@@ -268,14 +268,21 @@ public class CanvasGame extends CanvasResizable implements ICanvasGame {
 		}
 
 		gc.setFill(fillColor);
-
+		
+		//Check how many additional nodes are needed for completing the background polygon
+		int extraElements = 5;
+		if (xValuesOuterBoundary[0] != xValuesInnerBoundary[0] || yValuesOuterBoundary[0] != yValuesInnerBoundary[0])
+		{
+			extraElements = 6;
+		}
+		
 		for (int i = 0; i < xValuesOuterBoundary.length / 2; i++) {
 			double tmp = xValuesOuterBoundary[i];
 			xValuesOuterBoundary[i] = xValuesOuterBoundary[xValuesOuterBoundary.length - i - 1];
 			xValuesOuterBoundary[xValuesOuterBoundary.length - i - 1] = tmp;
 		}
-
-		double[] xInnerValues = new double[xValuesInnerBoundary.length + xValuesOuterBoundary.length + 6];
+		
+		double[] xInnerValues = new double[xValuesInnerBoundary.length + xValuesOuterBoundary.length + extraElements];
 		System.arraycopy(xValuesInnerBoundary, 0, xInnerValues, 0, xValuesInnerBoundary.length);
 		System.arraycopy(xValuesOuterBoundary, 0, xInnerValues, xValuesInnerBoundary.length,
 				xValuesOuterBoundary.length);
@@ -286,19 +293,25 @@ public class CanvasGame extends CanvasResizable implements ICanvasGame {
 			yValuesOuterBoundary[yValuesOuterBoundary.length - i - 1] = tmp;
 		}
 
-		double[] yInnerValues = new double[yValuesInnerBoundary.length + yValuesOuterBoundary.length + 6];
+		double[] yInnerValues = new double[yValuesInnerBoundary.length + yValuesOuterBoundary.length + extraElements];
 		System.arraycopy(yValuesInnerBoundary, 0, yInnerValues, 0, yValuesInnerBoundary.length);
 		System.arraycopy(yValuesOuterBoundary, 0, yInnerValues, yValuesInnerBoundary.length,
 				yValuesOuterBoundary.length);
-
-		xInnerValues[xInnerValues.length - 1 - 5] = xValuesOuterBoundary[0];
+		if (extraElements == 6)
+		{
+			xInnerValues[xInnerValues.length - 1 - 5] = xValuesOuterBoundary[0];
+		}
 		xInnerValues[xInnerValues.length - 1 - 4] = 0;
 		xInnerValues[xInnerValues.length - 1 - 3] = 0;
 		xInnerValues[xInnerValues.length - 1 - 2] = width;
 		xInnerValues[xInnerValues.length - 1 - 1] = width;
 		xInnerValues[xInnerValues.length - 1 - 0] = 0;
-
-		yInnerValues[yInnerValues.length - 1 - 5] = yValuesInnerBoundary[0];
+		
+		if (extraElements == 6)
+		{
+			//if the track is an circuit, go back to first node of inner bound for forming a connection between the inner part and the outer part of the background polygon
+			yInnerValues[yInnerValues.length - 1 - 5] = yValuesInnerBoundary[0];
+		}
 		yInnerValues[yInnerValues.length - 1 - 4] = height;
 		yInnerValues[yInnerValues.length - 1 - 3] = 0;
 		yInnerValues[yInnerValues.length - 1 - 2] = 0;
