@@ -289,7 +289,16 @@ public class TrackFactory {
 	private static Track[] createTracks()
 	{
 		ArrayList<Track> tracks = new ArrayList<Track>();
-		File trackDirectory = new File(System.getProperty("user.dir") + "\\Tracks");
+		System.out.println( System.getProperty("os.name") + ";" );
+		File trackDirectory;
+		if( System.getProperty("os.name").equalsIgnoreCase( "Linux" ) )
+		{
+			trackDirectory = new File(System.getProperty("user.dir") + "/Tracks");
+		}
+		else
+		{
+			trackDirectory = new File(System.getProperty("user.dir") + "\\Tracks");
+		}
 		File[] trackFiles = trackDirectory.listFiles();
 		int trackID = 0;
 		if (trackFiles != null)
