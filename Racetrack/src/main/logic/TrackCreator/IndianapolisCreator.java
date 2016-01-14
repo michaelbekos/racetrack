@@ -152,7 +152,16 @@ public class IndianapolisCreator
 		XMLOutputter out = new XMLOutputter();
 		try
 		{
-			out.output( indyFile, new FileOutputStream(System.getProperty("user.dir") + String.format("\\Tracks\\Indianapolis-%d-%d-%d.xml",l,h,w)));
+			if( System.getProperty("os.name").equalsIgnoreCase( "Linux" ) )
+			{
+				out.output( indyFile, new FileOutputStream(System.getProperty("user.dir") + String.format("/Tracks/Indianapolis-%d-%d-%d.xml",l,h,w)));
+			
+			}
+			else
+			{
+				out.output( indyFile, new FileOutputStream(System.getProperty("user.dir") + String.format("\\Tracks\\Indianapolis-%d-%d-%d.xml",l,h,w)));
+
+			}
 		} catch (FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block

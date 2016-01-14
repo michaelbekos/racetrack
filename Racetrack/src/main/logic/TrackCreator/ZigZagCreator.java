@@ -149,7 +149,15 @@ public class ZigZagCreator
 		boolean countOkay = false;
 		while (!countOkay)
 		{
-			File file = new File(System.getProperty("user.dir") + String.format("\\Tracks\\RandomZigZag-%d.xml",randomTrackCount));
+			File file;
+			if (  System.getProperty("os.name").equalsIgnoreCase( "Linux" ) )
+			{
+				file = new File(System.getProperty("user.dir") + String.format("/Tracks/RandomZigZag-%d.xml",randomTrackCount));
+			}
+			else
+			{
+				file = new File(System.getProperty("user.dir") + String.format("\\Tracks\\RandomZigZag-%d.xml",randomTrackCount));
+			}
 			if (file.exists()) 
 			{
 				randomTrackCount++;
@@ -210,7 +218,14 @@ public class ZigZagCreator
 		XMLOutputter out = new XMLOutputter();
 		try
 		{
-			out.output( trackFile, new FileOutputStream(System.getProperty("user.dir") + String.format("\\Tracks\\RandomZigZag-%d.xml",randomTrackCount)));
+			if( System.getProperty("os.name").equalsIgnoreCase( "Linux" ) )
+			{
+				out.output( trackFile, new FileOutputStream(System.getProperty("user.dir") + String.format("/Tracks/RandomZigZag-%d.xml",randomTrackCount)));
+			}
+			else
+			{
+				out.output( trackFile, new FileOutputStream(System.getProperty("user.dir") + String.format("\\Tracks\\RandomZigZag-%d.xml",randomTrackCount)));
+			}
 		} catch (FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block
