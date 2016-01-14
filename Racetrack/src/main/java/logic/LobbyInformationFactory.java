@@ -48,6 +48,27 @@ public class LobbyInformationFactory {
 		}
 	};
 	
+	private static Integer[][] typeIDs = new Integer[][]{
+		new Integer[] {
+				1,
+				0,
+				1,
+				0
+		},
+		new Integer[] {
+				1,
+				1,
+				0,
+				0
+		},
+		new Integer[] {
+				1,
+				1,
+				0,
+				0
+		}
+	};
+	
 	private static boolean[][] playerParticipating = new boolean[][] {
 		new boolean[] {
 				true,
@@ -77,7 +98,7 @@ public class LobbyInformationFactory {
 	public static LobbyInformation getSampleLobby(int i) {
 		int index = i % lobbyNames.length;
 		
-		LobbyInformation lobby = new LobbyInformation(playerNames[index], playerIDs[index], playerParticipating[index], index, lobbyNames[index], false, index);
+		LobbyInformation lobby = new LobbyInformation(playerNames[index], playerIDs[index], playerParticipating[index], typeIDs[index], index, lobbyNames[index], false, index);
 		
 		return lobby;
 	}

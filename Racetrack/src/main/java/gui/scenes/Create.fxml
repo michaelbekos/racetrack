@@ -13,42 +13,60 @@
       <Pane fx:id="gridBaseScenePane" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <StackPane layoutY="400.0" prefHeight="225.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="375.0">
          <children>
-            <Pane maxWidth="300.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0">
+            <Pane maxWidth="600.0" minWidth="300.0" prefHeight="200.0" prefWidth="600.0">
                <children>
-                  <TextField fx:id="lobbyNameText" layoutX="130.0" layoutY="15.0" prefHeight="26.0" prefWidth="155.0" />
-                  <Label layoutX="65.0" layoutY="16.0" text="Name:" textAlignment="RIGHT">
+                  <Label layoutX="115.0" layoutY="16.0" text="Name:" textAlignment="RIGHT">
                      <font>
                         <Font name="Comic Sans MS" size="18.0" />
                      </font>
                   </Label>
-                  <Label layoutX="52.0" layoutY="62.0" text="Players:" textAlignment="RIGHT">
+                  <TextField fx:id="lobbyNameText" layoutX="180.0" layoutY="15.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Label layoutX="102.0" layoutY="62.0" text="Mode:" textAlignment="RIGHT">
                      <font>
                         <Font name="Comic Sans MS" size="18.0" />
                      </font>
                   </Label>
-                  <ChoiceBox fx:id="playersChoiceBox" layoutX="130.0" layoutY="60.0" prefHeight="26.0" prefWidth="155.0" />
-                  <ChoiceBox fx:id="aisChoiceBox" layoutX="130.0" layoutY="140.0" prefHeight="26.0" prefWidth="155.0" visible="true" />
-                  <Label layoutX="79.0" layoutY="141.0" text="AIs:" textAlignment="RIGHT" visible="true">
+                  <ChoiceBox fx:id="modeChoiceBox" layoutX="180.0" layoutY="60.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Label layoutX="10.0" layoutY="107.0" text="Slot 2:" textAlignment="RIGHT">
                      <font>
                         <Font name="Comic Sans MS" size="18.0" />
                      </font>
                   </Label>
-                  <Button layoutX="131.0" layoutY="182.0" mnemonicParsing="false" onAction="#goBack" text="Cancel">
+                  <ChoiceBox fx:id="slot2ChoiceBox" layoutX="10.0" layoutY="127.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Label layoutX="170.0" layoutY="107.0" text="Slot 3:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="slot3ChoiceBox" layoutX="170.0" layoutY="127.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Label layoutX="330.0" layoutY="107.0" text="Slot 4:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="slot4ChoiceBox" layoutX="330.0" layoutY="127.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Label layoutX="490.0" layoutY="107.0" text="Slot 5:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="slot5ChoiceBox" layoutX="490.0" layoutY="127.0" prefHeight="26.0" prefWidth="155.0" />
+
+                  <Button layoutX="181.0" layoutY="182.0" mnemonicParsing="false" onAction="#goBack" text="Cancel">
                      <font>
                         <Font name="Comic Sans MS" size="13.0" />
                      </font>
                   </Button>
-                  <Button fx:id="createButton" layoutX="200.0" layoutY="182.0" mnemonicParsing="false" onAction="#createNewGame" prefHeight="26.0" prefWidth="85.0" text="Create">
+                  <Button fx:id="createButton" layoutX="250.0" layoutY="182.0" mnemonicParsing="false" onAction="#createNewGame" prefHeight="26.0" prefWidth="85.0" text="Create">
                      <font>
                         <Font name="Comic Sans MS" size="13.0" />
                      </font>
                   </Button>
-                  <Label layoutX="65.0" layoutY="102.0" text="Mode:" textAlignment="RIGHT">
-                     <font>
-                        <Font name="Comic Sans MS" size="18.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox fx:id="modeChoiceBox" layoutX="130.0" layoutY="101.0" prefHeight="26.0" prefWidth="155.0" />
                </children>
             </Pane>
          </children>

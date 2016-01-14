@@ -26,7 +26,7 @@ interface IAdministration {
 	 * and adds him into the list of players
 	 * @return aiID
 	 */
-	public int createAndAddNewAI();
+	public int createAndAddNewAI( int ai_type );
 	
 	/**
 	 * This method removes a player from the playerList in ListOfLobby

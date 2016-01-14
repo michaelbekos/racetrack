@@ -18,6 +18,14 @@ public class Point {
 		this.x = _x;
 		this.y = _y;		
 	}
+	public void setX(int _x)
+	{
+		this.x = _x;		
+	}
+	public void setY(int _y)
+	{
+		this.y = _y;		
+	}
 	public boolean equals(Point q)
 	{
 		if (this.x == q.X() && this.y == q.Y())

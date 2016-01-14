@@ -78,31 +78,31 @@ public class Administration implements IAdministration{
 	}
 
 	@Override
-	public int createAndAddNewAI()
+	public int createAndAddNewAI( int ai_type )
 	{
+		// "Free", "Human", "No Mover", "Random", "Puckie", "AIStar"
 		int AIid = controller.getNewAIid();
 		//add player with default name
 		Player newPlayer;
-		switch( AIid )
+		switch( ai_type )
 		{
 		case 2:
-			newPlayer= new AIstar( AIid, "AIstar" );
-			//newPlayer= new AI( AIid, "AI_"+AIid );
-			break;
-		case 1:
-			//newPlayer= new AI_NoMover( AIid, "Not-Mover" );
-			newPlayer= new AI_Puckie( AIid, "Puckie" );
+			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
 			break;
 		case 3:
-			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
-			//newPlayer= new AI( AIid, "AI_"+AIid );
+			newPlayer= new AI_Random( AIid, "Random" );
+			break;
+		case 4:
+			newPlayer= new AI_Puckie( AIid, "Puckie" );
+			break;
+		case 5:
+			newPlayer= new AIstar( AIid, "AIstar" );
 			break;
 		default:
-			newPlayer= new AI_Random( AIid, "Random" );
-			//newPlayer= new AI( AIid, "AI_"+AIid );
-			break;
+			return 0;
 		}
-		playerMap.put(AIid, newPlayer);
+		//newPlayer.setSessionID( ... );
+		playerMap.put( AIid, newPlayer );
 		return AIid;
 	}
 
@@ -258,9 +258,18 @@ public class Administration implements IAdministration{
 		//let the player join set new lobby
 		joinLobby(playerID, sessionID);
 		
-		for (int i=0; i<lobbyInformation.getAmountOfAIs(); i++)
+		// for every player in the lobby
+		for (int i=0; i<lobbyInformation.getPlayerIDs().length; i++)
 		{
-			joinLobby(this.createAndAddNewAI(), sessionID);			
+			// Get the type
+			int AI_type=lobbyInformation.getTypeIDs()[i];
+			if( AI_type!=0 && AI_type!=1 )
+			{
+				// 0==Free
+				// 1==Human
+				// => Only AIs get here.
+				joinLobby(this.createAndAddNewAI(AI_type), sessionID);
+			}
 		}
 		DebugOutputHandler.printDebug(lobbyInformation.getAmountOfAIs() + " AIs created for the new Lobby");
 	}

@@ -1,5 +1,6 @@
 package src.main.java.logic;
 
+import java.util.List;
 import src.main.java.gui.Racetracker;
 
 public class LobbyInformation implements ILobbyInformation, java.io.Serializable {
@@ -30,7 +31,7 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 	 * @param isGameRunning    Is the game running?
 	 * @param lobbyID          The LobbyID
 	 */
-	public LobbyInformation(String[] playerNames, Integer[] playerIDs, boolean[] isParticipating,
+	public LobbyInformation(String[] playerNames, Integer[] playerIDs, boolean[] isParticipating, Integer[] typeIDs,
 			int trackId, String lobbyName, boolean isGameRunning, int lobbyID) {
 		super();
 		
@@ -41,7 +42,7 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		
 		// Setup playerMap
 		for(int i = 0; i < playerNames.length; i++){
-			PlayerKey player = new PlayerKey(playerNames[i], playerIDs[i], isParticipating[i]);
+			PlayerKey player = new PlayerKey(playerNames[i], playerIDs[i], isParticipating[i], typeIDs[i]);
 			arrayOfPlayers[i] = player;
 		}
 		
@@ -52,7 +53,7 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		maxPlayers = playerNames.length;
 	}
 	
-	public LobbyInformation(String[] playerNames, Integer[] playerIDs, boolean[] isParticipating,
+	public LobbyInformation(String[] playerNames, Integer[] playerIDs, boolean[] isParticipating, Integer[] typeIDs,
 			int trackId, String lobbyName, boolean isGameRunning, int lobbyID,int playMode) {
 		super();
 		
@@ -62,8 +63,9 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		arrayOfPlayers = new PlayerKey[playerNames.length];
 		
 		// Setup playerMap
-		for(int i = 0; i < playerNames.length; i++){
-			PlayerKey player = new PlayerKey(playerNames[i], playerIDs[i], isParticipating[i]);
+		for(int i = 0; i < playerNames.length; i++)
+		{
+			PlayerKey player = new PlayerKey(playerNames[i], playerIDs[i], isParticipating[i], typeIDs[i] );
 			arrayOfPlayers[i] = player;
 		}
 		
@@ -212,6 +214,24 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 	}
 
 	@Override
+	public void setAIs(List<Integer> settings) {
+		this.amountOfAIs = 0;
+		for( int i=0 ; i<settings.size() ; i++ )
+		{
+			switch( settings.get( i ) )
+			{
+			case 0://Free
+				break;
+			case 1://Human
+				break;
+			default://AIs (or errors)
+				this.amountOfAIs++;
+				break;
+			}
+		}
+	}
+	
+	@Override
 	public void toggleParticipating(int index) {
 		this.arrayOfPlayers[index].isParticipating = !this.arrayOfPlayers[index].isParticipating;
 	}
@@ -229,11 +249,16 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		public String name;
 		public Integer playerID;
 		public boolean isParticipating;
+
+		// Human: typeID==1
+		// AI:    typeID==2-X
+		public Integer typeID;
 		
-		public PlayerKey(String name, Integer playerID, boolean isParticipating) {
+		public PlayerKey(String name, Integer playerID, boolean isParticipating, Integer typeID) {
 		    this.name = name;
 		    this.isParticipating = isParticipating;
 		    this.playerID = playerID;
+		    this.typeID=typeID;
 		}
 	}
 
@@ -250,6 +275,20 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		
 		return playerIDs;
 	}
+	
+	public Integer[] getTypeIDs() {
+		if(arrayOfPlayers == null)
+			return null;
+
+		Integer[] typeIDs = new Integer[arrayOfPlayers.length];
+		for(int i = 0; i < typeIDs.length; i++)
+			if(arrayOfPlayers[i] != null)
+				if(arrayOfPlayers[i].name != null)
+					typeIDs[i] = arrayOfPlayers[i].typeID;
+		
+		return typeIDs;
+	}
+	
 	
 	/**
 	 * This prints all the Lobby Information to the console

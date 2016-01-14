@@ -1,5 +1,7 @@
 package src.main.java.logic;
 
+import java.util.List;
+
 public interface ILobbyInformation {
 
 	/**
@@ -19,6 +21,12 @@ public interface ILobbyInformation {
 	 * @return all the playerIDs in the lobby
 	 */
 	public Integer[] getPlayerIDs();
+	
+	/**
+	 * 
+	 * @return all the typeIDs in the lobby ( i.e AI types / Human )
+	 */
+	public Integer[] getTypeIDs();
 	
 	/**
 	 * 
@@ -99,4 +107,5 @@ public interface ILobbyInformation {
 	 * Prints the lobby to the console (only if debug is on)
 	 */
 	public void printLobby();
+	void setAIs(List<Integer> settings);
 }

@@ -642,6 +642,7 @@ public class Lobby implements ILobby {
 	public LobbyInformation generateLobbyInformation() {
 		String[] playerNames = new String[maxCurrentPlayer];
 		Integer[] playerIDs = new Integer[maxCurrentPlayer];
+		Integer[] typeIDs = new Integer[maxCurrentPlayer];
 		boolean[] isParticipating = new boolean[maxCurrentPlayer];
 		for (int i = 0; i < maxCurrentPlayer; i++) {
 			if (playerList[i] != null) {
@@ -655,7 +656,7 @@ public class Lobby implements ILobby {
 			}
 
 		}
-		return new LobbyInformation(playerNames, playerIDs, isParticipating,
+		return new LobbyInformation(playerNames, playerIDs, isParticipating, typeIDs,
 				trackId, lobbyName, isGameRunning, lobbyID,playMode);
 	}
 

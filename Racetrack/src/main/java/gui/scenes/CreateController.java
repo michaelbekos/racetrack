@@ -4,12 +4,16 @@
 package src.main.java.gui.scenes;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -40,19 +44,28 @@ public class CreateController extends NavigationSceneBase {
 	@FXML
 	private TextField lobbyNameText;
 	@FXML
-	private ChoiceBox<String> playersChoiceBox;
-	@FXML
-	private ChoiceBox<String> aisChoiceBox;
-	@FXML
 	private ChoiceBox<String> modeChoiceBox;
+	@FXML
+	private ChoiceBox<String> slot2ChoiceBox;
+	@FXML
+	private ChoiceBox<String> slot3ChoiceBox;
+	@FXML
+	private ChoiceBox<String> slot4ChoiceBox;
+	@FXML
+	private ChoiceBox<String> slot5ChoiceBox;
 	@FXML
 	private Button createButton;
 
 	private CanvasGame[] trackCanvases;
-
-	private int playersCount;
+	private ObservableList<String> playerOptions;
+	
+	//TODO: Write playersCount properly!
+	//private int playersCount;
 	@SuppressWarnings("unused")
-	private int botsCount;
+	//TODO: Write botsCount properly!
+	//private int botsCount;
+	private List<Integer> playerSlotsSettings;
+	
 	private int playMode;
 	private int selectedTrack;
 	
@@ -69,19 +82,17 @@ public class CreateController extends NavigationSceneBase {
 		super.initialize(url, rb);
 		Racetracker.printInDebugMode("----- |GUI| ----- Init CreateController -----");
 		loadHelpFileAtResource("/help/newGame/index.html");
-		
-		// Add listener to player choice box
-		playersChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value) {
-				playersCount = new_value.intValue() + 2;
-			}
-		});
-
-		// Set player choice box items
-		playersChoiceBox.setItems(
-				FXCollections.observableArrayList("2 Players", "3 Players", "4 Players", "5 Players"));
-		
+		playerOptions=FXCollections.observableArrayList ("Free", "Human", "No Mover", "Random", "Puckie", "AIStar" );
+		playerSlotsSettings=new ArrayList<Integer>();
+		playerSlotsSettings.add( new Integer(1) );
+		playerSlotsSettings.add( new Integer(0) );
+		playerSlotsSettings.add( new Integer(0) );
+		playerSlotsSettings.add( new Integer(0) );
+		playerSlotsSettings.add( new Integer(0) );
+		initSlot2Coice();
+		initSlot3Coice();
+		initSlot4Coice();
+		initSlot5Coice();
 		modeChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -90,20 +101,6 @@ public class CreateController extends NavigationSceneBase {
 		});
 		modeChoiceBox.setItems(FXCollections.observableArrayList("Easy", "Medium", "Hard"));
 		
-
-		aisChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value) { 
-				botsCount = new_value.intValue();
-			} 
-		});
-		
-
-		aisChoiceBox.setItems(FXCollections.observableArrayList("No Bot", "1 Bot", "2 Bots", "3 Bots", "4 Bots"));
-		aisChoiceBox.getSelectionModel().select(0);
-
-		//aisChoiceBox.setDisable(true);
-
 		// Set array of RTCanvasGame with one item per sample track
 		trackCanvases = new CanvasGame[TrackFactory.getSampleTrackCount()];
 
@@ -158,8 +155,6 @@ public class CreateController extends NavigationSceneBase {
 	protected void sceneWillShow() {
 		super.sceneWillShow();
 		
-		// Select 2 player option
-		playersChoiceBox.getSelectionModel().select(0);
 		// Set medium play mode
 		modeChoiceBox.getSelectionModel().select(1);
 		
@@ -175,8 +170,10 @@ public class CreateController extends NavigationSceneBase {
 
 	// MARK: Button
 	@FXML
-	private void createNewGame(ActionEvent event) {
-		if (!hasSendCreateMessageToServer) {
+	private void createNewGame(ActionEvent event)
+	{
+		if (!hasSendCreateMessageToServer)
+		{
 			hasSendCreateMessageToServer = true;
 			sendNewGameToServer();
 		}
@@ -188,20 +185,63 @@ public class CreateController extends NavigationSceneBase {
 		stackPaneController.setScene(Racetracker.sceneLobbyList_name);
 	}
 
-	private void sendNewGameToServer() {
+	private int countPlayers()
+	{
+		int playersCount=0;
+		for( int i=0 ; i<playerSlotsSettings.size() ; i++ )
+		{
+			// Free is not a player
+			// Human is a player
+			// Any AI is a player
+			if( 0!=playerSlotsSettings.get( i ) )
+				playersCount++;
+		}
+		return playersCount;
+	}
+	
+	private String makeLobbyName()
+	{
+		return lobbyNameText.getText() == null || lobbyNameText.getText().isEmpty()
+				|| lobbyNameText.getText().equals(" ") ? "Unnamed game" : lobbyNameText.getText();
+	}
+	
+	private void sendNewGameToServer()
+	{
+		int playersCount=countPlayers();
+		
 		String[] names = new String[playersCount];
-		names[0] = ModelExchange.GameOptions.getUserName();
+		
+		// This is currently not used.
 		boolean[] participating = new boolean[playersCount];
 		Integer[] playerIDs = new Integer[playersCount];
+		Integer[] typeIDs = new Integer[playersCount];
+		
+		names[0] = ModelExchange.GameOptions.getUserName();
 		playerIDs[0] = ModelExchange.GameOptions.getPlayerID();
-
-		String lobbyName = lobbyNameText.getText() == null || lobbyNameText.getText().isEmpty()
-				|| lobbyNameText.getText().equals(" ") ? "Unnamed game" : lobbyNameText.getText();
-
-		LobbyInformation lobbyInformation = new LobbyInformation(names, playerIDs, participating, selectedTrack,
-				lobbyName, false, 0, playMode);
-		lobbyInformation.setAmountOfAIs(botsCount);
-
+		typeIDs[0] = 1; // 1 => Human
+		
+		// First thought is `i<playersCount´, but we need to check every slot.
+		for( int i=1, j=1; i<playerSlotsSettings.size(); i++ )
+		{
+			if( 0==playerSlotsSettings.get( i ) )
+			{	// This is an empty slot, so we skip it.
+				continue;
+			}
+			typeIDs[j]=playerSlotsSettings.get( i );
+			names[j] = playerOptions.get(playerSlotsSettings.get( i ));
+			
+			// This stay's the way it got constructed.
+			// playerIDs[j];
+			// participating[j];
+			
+			// This should be next to i++; but then we would update it even if we continue
+			j++;
+		}			
+		
+		LobbyInformation lobbyInformation = new LobbyInformation(names, playerIDs, participating, typeIDs, selectedTrack,
+				makeLobbyName(), false, 0, playMode);
+		lobbyInformation.setAIs(playerSlotsSettings);
+		
 		Racetracker.printInDebugMode("----- |CCM| ----- Send Create Lobby Message -----");
 		ModelExchange.getController().sendCreateLobbyMessage(lobbyInformation);
 	}
@@ -243,5 +283,79 @@ public class CreateController extends NavigationSceneBase {
 		
 		resetScene();
 		stackPaneController.setScene(Racetracker.sceneLobby_name);
+	}
+	private void initSlot2Coice()
+	{
+		slot2ChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+			new ChangeListener<Number>()
+			{
+				@Override
+				public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value)
+				{
+					playerSlotsSettings.set( 1, new_value.intValue() );
+				}
+			});
+
+		// Set player choice box items
+		slot2ChoiceBox.setItems(
+				FXCollections.observableArrayList( playerOptions ) );
+
+		slot2ChoiceBox.getSelectionModel().select(0);
+	}
+	
+	private void initSlot3Coice()
+	{
+		slot3ChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+				new ChangeListener<Number>()
+				{
+					@Override
+					public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value)
+					{
+						playerSlotsSettings.set( 2, new_value.intValue() );
+					}
+				});
+
+		// Set player choice box items
+		slot3ChoiceBox.setItems(
+					FXCollections.observableArrayList( playerOptions ) );
+
+		slot3ChoiceBox.getSelectionModel().select(0);		
+	}
+	
+	private void initSlot4Coice()
+	{
+		slot4ChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+				new ChangeListener<Number>()
+				{
+					@Override
+					public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value)
+					{
+						playerSlotsSettings.set( 3, new_value.intValue() );
+					}
+				});
+
+		// Set player choice box items
+		slot4ChoiceBox.setItems(
+					FXCollections.observableArrayList( playerOptions ) );
+
+		slot4ChoiceBox.getSelectionModel().select(0);	
+	}
+	private void initSlot5Coice()
+	{
+		slot5ChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+				new ChangeListener<Number>()
+				{
+					@Override
+					public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value)
+					{
+						playerSlotsSettings.set( 4, new_value.intValue() );
+					}
+				});
+
+		// Set player choice box items
+		slot5ChoiceBox.setItems(
+					FXCollections.observableArrayList( playerOptions ) );
+
+		slot5ChoiceBox.getSelectionModel().select(0);
 	}
 }

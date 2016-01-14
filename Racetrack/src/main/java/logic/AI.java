@@ -12,7 +12,7 @@ public abstract class AI extends Player implements IAI {
 	public AI(Integer playerID, String name) {
 		super(playerID, name);
 		super.setParticipating(true);
-		System.out.println( ""+ name + " - AI generates!" );
+		System.out.println( ""+ name + " - AI generated!" );
 	}
 	
 	@Override
