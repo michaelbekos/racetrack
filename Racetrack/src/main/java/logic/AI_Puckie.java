@@ -48,23 +48,25 @@ public class AI_Puckie extends AI
 		
 		if( !mGridCreated )
 		{
+			//System.out.println( this.getName()+ " is creating a grid." ); 
 			mGridCreated=createGrid( x, y );
+			//System.out.println( this.getName()+ " is calculating dijkstra." );
 			doDijkstra( x, y );
+			//System.out.println( this.getName()+ " is creating the path list." );
 			createPathList();
+			//System.out.println( this.getName()+ " is pimping the path list." );
 			createMovePath();
 		}
 		else
 		{
-			int q=0;
-			for( int i=0 ; i<100000000 ; i++ )
-			{int t=0;
-				for( int j=0 ; j<100000000 ; j++ )
-				{
-					if(0==i%2){t+=j;}else{t-=1;}
-					if(q>0){q-=t;}else{q+=t;}
-				}
+			try {
+				synchronized(this) {
+			        this.wait( 1500 );
+			      }
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			System.out.println( "Puckie like the number:" + q );
 		}
 		currentIndexPosition++;
 		
