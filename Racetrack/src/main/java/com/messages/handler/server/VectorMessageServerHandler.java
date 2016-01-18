@@ -70,6 +70,12 @@ public class VectorMessageServerHandler extends RaceTrackMessageServerHandler{
 
 				//Move player and get collisionpoint if there was one
 				Point2D collisionPointFromPlayer = administration.updatePlayerPositionByID(playerID, playerVector);
+				
+				if (collisionPointFromPlayer != null)
+				{
+					playerVector = collisionPointFromPlayer;
+					collisionPointFromPlayer = null;
+				}
 
 				administration.startNextRoundByPlayerID(playerID);
 				

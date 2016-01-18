@@ -18,6 +18,7 @@ public class Player {
 	private Point2D currentPosition;
 	private boolean isHost;
 	private boolean isParticipating;
+	private boolean hasToWait;
 	private ArrayList<Point2D> memorizeGridPoints = new ArrayList<Point2D>();
 	private boolean crashed;
 	private boolean isDisconnected = false;
@@ -47,6 +48,7 @@ public class Player {
 		crashed = true;
 		isDummyPlayer = true;
 		isParticipating = false;
+		hasToWait = false;
 	}
 
 	/**
@@ -69,6 +71,7 @@ public class Player {
 		this.colorId = playerColorId;
 		this.sessionID = sessionID;
 		this.crashed = false;
+		hasToWait = false;
 	}
 
 	public Point2D getCurrentVelocity() {
@@ -258,5 +261,20 @@ public class Player {
 	
 	public boolean isDummyPlayer(){
 		return isDummyPlayer;
+	}
+	
+	public boolean HasToWait()
+	{
+		return hasToWait;
+	}
+	
+	public void AddPenaltyWait()
+	{
+		hasToWait = true;
+	}
+	
+	public void WaitAsPenalty()
+	{
+		hasToWait = false;
 	}
 }
