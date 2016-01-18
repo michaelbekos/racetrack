@@ -71,7 +71,7 @@
             </Pane>
          </children>
       </StackPane>
-      <HBox fx:id="trackHbox" alignment="CENTER" prefHeight="200.0" prefWidth="900.0" style="-fx-border-color: #CCC; -fx-border-width: 2; -fx-background-color: rgba(255, 255, 255, .7);" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="150.0" />
+      <HBox fx:id="trackHbox" alignment="CENTER" prefHeight="250.0" prefWidth="900.0" style="-fx-border-color: #CCC; -fx-border-width: 2; -fx-background-color: rgba(255, 255, 255, .7);" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="130.0" />
       <Label layoutX="110.0" layoutY="48.0" prefHeight="65.0" prefWidth="743.0" text="Create new game" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="48.0">
          <font>
             <Font name="Comic Sans MS" size="50.0" />

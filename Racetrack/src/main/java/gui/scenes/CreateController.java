@@ -5,6 +5,7 @@ package src.main.java.gui.scenes;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -20,6 +21,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -55,6 +58,8 @@ public class CreateController extends NavigationSceneBase {
 	private ChoiceBox<String> slot5ChoiceBox;
 	@FXML
 	private Button createButton;
+	
+	private HashMap<StackPane,Integer> trackPreviewWrappers = new HashMap<StackPane,Integer>();
 
 	private CanvasGame[] trackCanvases;
 	private ObservableList<String> playerOptions;
@@ -103,10 +108,19 @@ public class CreateController extends NavigationSceneBase {
 		
 		// Set array of RTCanvasGame with one item per sample track
 		trackCanvases = new CanvasGame[TrackFactory.getSampleTrackCount()];
+		ScrollPane trackPreviewWrapperWrapperWrapper = new ScrollPane();
+		HBox trackPreviewWrapperWrapper = new HBox();
+		trackPreviewWrapperWrapperWrapper.setContent(trackPreviewWrapperWrapper);
+		trackPreviewWrapperWrapper.setPrefSize(200*trackCanvases.length, 200);
+		trackPreviewWrapperWrapper.setMinSize(200*trackCanvases.length, 200);
+		trackPreviewWrapperWrapperWrapper.setVbarPolicy(ScrollBarPolicy.NEVER);
+		trackPreviewWrapperWrapperWrapper.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		trackHbox.getChildren().add(trackPreviewWrapperWrapperWrapper);
 
 		// Setup sample tracks
 		for (int i = 0; i < trackCanvases.length; i++) {
 			StackPane trackPreviewWrapper = new StackPane();
+			trackPreviewWrappers.put(trackPreviewWrapper, i);
 			trackPreviewWrapper.setPrefSize(200, 200);
 			trackPreviewWrapper.setMinSize(100, 200);
 
@@ -117,11 +131,16 @@ public class CreateController extends NavigationSceneBase {
 			trackPreview.heightProperty().bind(trackPreviewWrapper.heightProperty());
 			trackPreview.updateView();
 			trackPreview.setTrackBackgroundColor(Colors.Track.grasBackground);
+			trackPreviewWrapper.setTranslateX(i * trackPreview.widthProperty().doubleValue());
 
 			trackPreviewWrapper.getChildren().add(trackPreview);
+			trackPreviewWrapperWrapper.getChildren().add(trackPreviewWrapper);
+			HBox.setHgrow(trackPreviewWrapperWrapper, Priority.ALWAYS);
+			trackPreviewWrapperWrapper.setPadding(new Insets(10));
+			
 
 			trackHbox.setPadding(new Insets(10));
-			trackHbox.getChildren().add(trackPreviewWrapper);
+			//trackHbox.getChildren().add(trackPreviewWrapper);
 			HBox.setHgrow(trackPreviewWrapper, Priority.ALWAYS);
 
 			trackCanvases[i] = trackPreview;
@@ -130,8 +149,10 @@ public class CreateController extends NavigationSceneBase {
 
 				@Override
 				public void handle(MouseEvent event) {
+					/*System.out.println(event.getSource().toString());
 					int newTrackId = (int) (event.getSceneX() / (gridBaseScenePane.getWidth() / trackCanvases.length));
-					setSelectedTrack(newTrackId);
+					setSelectedTrack(newTrackId);*/
+					setSelectedTrack(trackPreviewWrappers.get(event.getSource()));
 				}
 			});
 		}
