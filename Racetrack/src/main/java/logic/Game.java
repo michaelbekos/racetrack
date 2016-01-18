@@ -377,14 +377,36 @@ public class Game {
 								.pointOfIntersection(boundary);
 						System.out.println("IntersectionPoint: "
 								+ intersectionPoint);
-						player.setParticipating(false);
+						//player.setParticipating(false);
+						float xDirection;
+						float yDirection;
+						if (player.getCurrentPosition().getX() < intersectionPoint.getX())
+						{
+							xDirection = 1.0f;
+						}
+						else
+						{
+							xDirection = -1.0f;
+						}
+						if (player.getCurrentPosition().getY() < intersectionPoint.getY())
+						{
+							yDirection = 1.0f;
+						}
+						else
+						{
+							yDirection = -1.0f;
+						}
+						Point2D newPosition = new Point2D((int) intersectionPoint.getX() - xDirection, (int) intersectionPoint.getY() - yDirection);
 						RTField[(int) oldPosition.getX()][(int) oldPosition
 						                                  .getY()] = null;
-						player.setHasCrashed(true);
-						player.setCurrentPosition(intersectionPoint);
-						player.storeGridPoint(intersectionPoint);
+						//player.setHasCrashed(true);
+						player.AddPenaltyWait();
+						player.setCurrentPosition(newPosition);
+						player.setCurrentVelocity(new Point2D (0,0));
+						player.storeGridPoint(newPosition);
+						RTField[(int) newPosition.getX()][(int) newPosition.getY()] = player;
 
-						return intersectionPoint;
+						return newPosition;
 
 					}
 				}
@@ -403,14 +425,36 @@ public class Game {
 								.pointOfIntersection(boundary);
 						System.out.println("IntersectionPoint: "
 								+ intersectionPoint);
-						player.setParticipating(false);
+						//player.setParticipating(false);
+						float xDirection;
+						float yDirection;
+						if (player.getCurrentPosition().getX() < intersectionPoint.getX())
+						{
+							xDirection = 1.0f;
+						}
+						else
+						{
+							xDirection = -1.0f;
+						}
+						if (player.getCurrentPosition().getY() < intersectionPoint.getY())
+						{
+							yDirection = 1.0f;
+						}
+						else
+						{
+							yDirection = -1.0f;
+						}
+						Point2D newPosition = new Point2D((int) intersectionPoint.getX() - xDirection, (int) intersectionPoint.getY() - yDirection);
 						RTField[(int) oldPosition.getX()][(int) oldPosition
 						                                  .getY()] = null;
-						player.setHasCrashed(true);
-						player.setCurrentPosition(intersectionPoint);
-						player.storeGridPoint(intersectionPoint);
+						//player.setHasCrashed(true);
+						player.AddPenaltyWait();
+						player.setCurrentPosition(newPosition);
+						player.setCurrentVelocity(new Point2D (0,0));
+						player.storeGridPoint(newPosition);
+						RTField[(int) newPosition.getX()][(int) newPosition.getY()] = player;
 
-						return intersectionPoint;
+						return newPosition;
 					}
 				}
 
@@ -620,6 +664,11 @@ public class Game {
 	 * @return The next playerID
 	 */
 	public int getNextPlayer() {
+		if (playerList[currentPlayerIndex].HasToWait())
+		{
+			playerList[currentPlayerIndex].WaitAsPenalty();
+			currentPlayerIndex = (currentPlayerIndex + 1) % playerList.length;
+		}
 		return currentPlayerIndex;
 	}
 
@@ -642,12 +691,24 @@ public class Game {
 		
 		if (playerList[currentPlayerIndex].isAI())
 		{
+			long start_time=System.currentTimeMillis();
 			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
-			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point)){
+			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
+			{
 				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
-			//call method from administrration with point:
-			// call moveAI(point)
+			long time_needed=start_time-System.currentTimeMillis();
+			if( time_needed > 1500 )
+			{
+				try {
+					synchronized(this) {
+				        this.wait( 1500-time_needed );
+				      }
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
 			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
 		}
 	}
