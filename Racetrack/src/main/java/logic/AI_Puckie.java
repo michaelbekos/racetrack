@@ -57,17 +57,6 @@ public class AI_Puckie extends AI
 			//System.out.println( this.getName()+ " is pimping the path list." );
 			createMovePath();
 		}
-		else
-		{
-			try {
-				synchronized(this) {
-			        this.wait( 1500 );
-			      }
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		currentIndexPosition++;
 		
 		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition ).getX() + ", "+ movePath.get( currentIndexPosition ).getY() +" )" ); 

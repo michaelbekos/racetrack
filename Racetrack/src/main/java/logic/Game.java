@@ -642,12 +642,24 @@ public class Game {
 		
 		if (playerList[currentPlayerIndex].isAI())
 		{
+			long start_time=System.currentTimeMillis();
 			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
-			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point)){
+			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
+			{
 				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
-			//call method from administrration with point:
-			// call moveAI(point)
+			long time_needed=start_time-System.currentTimeMillis();
+			if( time_needed > 1500 )
+			{
+				try {
+					synchronized(this) {
+				        this.wait( 1500-time_needed );
+				      }
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
 			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
 		}
 	}
