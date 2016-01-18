@@ -3,6 +3,7 @@ package src.main.java.logic;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;	
 import javafx.geometry.Point2D;
@@ -300,11 +301,13 @@ public class TrackFactory {
 			trackDirectory = new File(System.getProperty("user.dir") + "\\Tracks");
 		}
 		File[] trackFiles = trackDirectory.listFiles();
+		Arrays.sort(trackFiles, new TrackFilesComparator());
 		int trackID = 0;
 		if (trackFiles != null)
 		{
-			for (File trackFile : trackFiles)
+			for (int i = 0; i < trackFiles.length; i++)
 			{
+				File trackFile = trackFiles[i];
 				try
 				{
 					//Open XML file
