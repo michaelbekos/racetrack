@@ -664,7 +664,7 @@ public class Game {
 	 * @return The next playerID
 	 */
 	public int getNextPlayer() {
-		if (playerList[currentPlayerIndex].HasToWait())
+		while (playerList[currentPlayerIndex].HasToWait())
 		{
 			playerList[currentPlayerIndex].WaitAsPenalty();
 			currentPlayerIndex = (currentPlayerIndex + 1) % playerList.length;
