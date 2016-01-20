@@ -454,4 +454,139 @@ public class AI_Puckie extends AI
 		}
 		//System.out.println( "   Not in PQ" );
 	}
+	private ArrayList<ArrayList<Point2D> > searchLandingRegions()
+	{
+		ArrayList<ArrayList<Point2D> > ret= new ArrayList<ArrayList<Point2D> >();
+		ArrayList<Point2D> tmpLandingRegion;
+		int w=0;
+		int landingRegionWidth;
+		int landingRegionAdditionalHeight;
+		for( int i=0 ; i<mWidth-1 ; i++ )
+		{
+			for( int j=0 ; j<mHeight-1 ; j++ )
+			{
+				boolean horizontalDirectionRight=false;
+				Point2D start;
+				Point2D end;
+				if( !mGrid[i][j]   && mGrid[i+1][j]   &&
+			        mGrid[i][j-1]  && mGrid[i+1][j-1] )
+				{
+					//#.
+					//..
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j+1 ), true );
+					if( 0==w )
+					{
+						w=calcWidth( new Point2D( i, j+1 ), true );
+						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
+						// s_max=landingRegionWidth+1
+						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+					}
+					start=new Point2D( i+1, j+1 );
+					
+					if( horizontalDirectionRight )
+					{
+						start.add( new Point2D( 0, landingRegionAdditionalHeight ) );
+						end=new Point2D( i+1, 0 );
+					}
+					else
+					{
+						start.add( new Point2D( landingRegionAdditionalHeight, 0 ) );	
+					}
+					tmpLandingRegion=new ArrayList<Point2D>( mGrid[i+1][j+1] );
+				}
+				else if( mGrid[i][j]   && !mGrid[i+1][j]   &&
+				         mGrid[i][j-1] &&  mGrid[i+1][j-1] )
+				{
+					//.#
+					//..
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j+1 ), true );
+					if( 0==w )
+					{
+						w=calcWidth( new Point2D( i+1, j+1 ), true );
+						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
+						// s_max=landingRegionWidth+1
+						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+					}
+				}
+				else if( mGrid[i][j]    && mGrid[i+1][j]   &&
+				         !mGrid[i][j-1] && mGrid[i+1][j-1] )
+				{ 
+					//..
+					//#.
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j ), false );
+					if( 0==w )
+					{
+						w=calcWidth( new Point2D( i, j ), false );
+						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
+						// s_max=landingRegionWidth+1
+						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+					}
+				}
+				else if( mGrid[i][j]   &&  mGrid[i+1][j]   &&
+				         mGrid[i][j-1] && !mGrid[i+1][j-1] )
+				{ 
+					//..
+					//.#
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j ), false );
+					if( 0==w )
+					{
+						w=calcWidth( new Point2D( i+1, j ), false );
+						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
+						// s_max=landingRegionWidth+1
+						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+					}
+				}
+			}
+		}
+		
+		return ret;
+	}
+
+	private boolean isHorizontalDirectionRight( Point2D p, boolean searchDown )
+	{
+		while( this.mGrid[(int)p.getX()][(int)p.getY()] )
+		{
+			for( int i=0; i<shortestPath.size(); i++ )
+			{
+				if( shortestPath.get(i).getX()==p.getX() &&
+					shortestPath.get(i).getY()==p.getY() )
+				{
+					double dx=shortestPath.get(i+1).getX()-shortestPath.get(i-1).getX();
+					double dy=shortestPath.get(i+1).getY()-shortestPath.get(i-1).getY();
+					if( dy>0 )
+						return true;
+					else
+						return false;
+				}
+			}
+			if( searchDown )
+			{
+				p.add( 0, 1 );
+			}
+			else
+			{
+				p.add( 0, -1 );
+			}
+		}
+		System.exit( -666 );// == Suicide!
+		return false;
+	}
+	
+	private int calcWidth( Point2D p, boolean searchDown )
+	{
+		int i=0;
+		while( this.mGrid[(int)p.getX()][(int)p.getY()] )
+		{
+			i++;
+			if( searchDown )
+			{
+				p.add( 0, 1 );
+			}
+			else
+			{
+				p.add( 0, -1 );
+			}
+		}
+		return i;
+	}
 }
