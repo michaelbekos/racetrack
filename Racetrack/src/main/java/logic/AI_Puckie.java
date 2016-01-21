@@ -54,8 +54,20 @@ public class AI_Puckie extends AI
 			doDijkstra( x, y );
 			//System.out.println( this.getName()+ " is creating the path list." );
 			createPathList();
-			//System.out.println( this.getName()+ " is pimping the path list." );
+			//System.out.println( this.getName()+ " is enhancing the path list." );
 			createMovePath();
+			//System.out.println( this.getName()+ " is extracting all landing regions." );
+			
+			ArrayList<ArrayList<Point2D> > lrl=searchLandingRegions();
+			
+			for( int i=0 ; i<lrl.size() ; i++ )
+			{
+				System.out.println( "Region " + (i+1) + ". :"  );
+				for( int j=0 ; j<lrl.get(i).size() ; j++ )
+				{
+					System.out.println( "( x=" + lrl.get(i).get(j).getX() + "; y=" + lrl.get(i).get(j).getY()+ " )" );
+				}
+			}
 		}
 		currentIndexPosition++;
 		
@@ -648,15 +660,38 @@ public class AI_Puckie extends AI
 					}
 				}
 				
-				boolean foundSlot=false;
-				int k=0;
-				for( k=0 ; k<idOfDijkstraShortestPathForSorting.size()-1 ; k++ )
+				if( idOfDijkstraShortestPathForSorting.size() == 0 )
 				{
-					if( idOfDijkstraShortestPathForSorting.get( k )<idForSorting &&
-						idOfDijkstraShortestPathForSorting.get( k+1 )>idForSorting )
+					idOfDijkstraShortestPathForSorting.add( idForSorting );
+					ret.add( tmpLandingRegion );					
+				}
+				else
+				{
+					boolean foundSlot=false;
+					int k=0;
+					for( k=0 ; k<idOfDijkstraShortestPathForSorting.size()-1 ; k++ )
 					{
-						foundSlot=true;
-						idOfDijkstraShortestPathForSorting.add( k, idForSorting );
+						if( idOfDijkstraShortestPathForSorting.get( k )<idForSorting &&
+							idOfDijkstraShortestPathForSorting.get( k+1 )>idForSorting )
+						{
+							foundSlot=true;
+							idOfDijkstraShortestPathForSorting.add( k, idForSorting );
+							ret.add( k, tmpLandingRegion );
+							break;
+						}
+					}
+					if( !foundSlot )
+					{
+						if( idForSorting < idOfDijkstraShortestPathForSorting.get( 0 ) )
+						{
+							idOfDijkstraShortestPathForSorting.add( 0, idForSorting );
+							ret.add( 0, tmpLandingRegion );
+						}
+						else
+						{
+							idOfDijkstraShortestPathForSorting.add( idForSorting );
+							ret.add( tmpLandingRegion );
+						}
 					}
 				}
 				
