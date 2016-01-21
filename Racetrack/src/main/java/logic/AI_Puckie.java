@@ -737,11 +737,6 @@ public class AI_Puckie extends AI
 						}
 					}
 				}
-				
-				ret.add(i, tmpLandingRegion );
-				
-				
-				
 			}
 		}
 		
