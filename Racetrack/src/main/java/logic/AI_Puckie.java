@@ -660,7 +660,7 @@ public class AI_Puckie extends AI
 					}
 				}
 				
-				ret.add(index, tmpLandingRegion );
+				ret.add(i, tmpLandingRegion );
 				
 				
 				
