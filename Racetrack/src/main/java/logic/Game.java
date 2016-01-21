@@ -691,32 +691,25 @@ public class Game {
 		
 		if (playerList[currentPlayerIndex].isAI())
 		{
-			if (!playerList[currentPlayerIndex].HasToWait())
+			long start_time=System.currentTimeMillis();
+			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
+			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
 			{
-				long start_time=System.currentTimeMillis();
-				javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
-				while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
-				{
-					point = ((IAI)playerList[currentPlayerIndex]).move();
-				}
-				long time_needed=start_time-System.currentTimeMillis();
-				if( time_needed > 1500 )
-				{
-					try {
-						synchronized(this) {
-							this.wait( 1500-time_needed );
-						}
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}	
-				}
-				inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
+				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
-			else
+			long time_needed=start_time-System.currentTimeMillis();
+			if( time_needed > 1500 )
 			{
-				playerList[currentPlayerIndex].WaitAsPenalty();
+				try {
+					synchronized(this) {
+						this.wait( 1500-time_needed );
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			}
+			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
 		}
 	}
 

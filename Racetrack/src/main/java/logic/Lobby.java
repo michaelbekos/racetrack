@@ -284,6 +284,11 @@ public class Lobby implements ILobby {
 			Point2D speed = point.add(-1*player.getCurrentPosition().getX(),-1*player.getCurrentPosition().getY());
 			Point2D newPlayerPosition = player.getCurrentPosition().add(speed);
 			if (game != null){
+				if (player.HasToWait())
+				{
+					player.WaitAsPenalty();
+					return null;
+				}
 				if(isCrashingIntoOtherPlayer(newPlayerPosition, player.getPLAYER_ID())){
 					player.setHasCrashed(true);
 					player.setParticipating(false);
