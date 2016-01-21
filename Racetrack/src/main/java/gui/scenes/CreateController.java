@@ -87,7 +87,7 @@ public class CreateController extends NavigationSceneBase {
 		super.initialize(url, rb);
 		Racetracker.printInDebugMode("----- |GUI| ----- Init CreateController -----");
 		loadHelpFileAtResource("/help/newGame/index.html");
-		playerOptions=FXCollections.observableArrayList ("Free", "Human", "No Mover", "Random", "Puckie", "AIStar" );
+		playerOptions=FXCollections.observableArrayList ("Free", "Human", "No Mover", "Random", "Puckie", "AIStar", "Crasher" );
 		playerSlotsSettings=new ArrayList<Integer>();
 		playerSlotsSettings.add( new Integer(1) );
 		playerSlotsSettings.add( new Integer(0) );

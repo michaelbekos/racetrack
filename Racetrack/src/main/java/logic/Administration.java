@@ -77,6 +77,20 @@ public class Administration implements IAdministration{
 		playerMap.put(playerID, newPlayer);
 	}
 
+	/*
+	 * HOWTO ADD AN AI.
+	 * 
+	 * 1. Write the AI:
+	 *    Take an existing AI, like "AI_NoMover.java" and copy it.
+	 *    Then add your changes and write it as desired.
+	 * 2. Add the AI with an own / new number below.
+	 * 3. List your AI for the GUI:
+	 *    In the file "CreateController.java" in the method "initialize(...)"
+	 *    there is member variable that gets initialised: playerOptions.
+	 *    At the end of this list, you must add the name of the AI as you want it 
+	 *    to be listed for the player.
+	 * 
+	 */
 	@Override
 	public int createAndAddNewAI( int ai_type )
 	{
@@ -87,7 +101,7 @@ public class Administration implements IAdministration{
 		switch( ai_type )
 		{
 		case 2:
-			newPlayer= new AI_Crasher( AIid, "Crasher" );
+			newPlayer= new AI_NoMover( AIid, "No Mover" );
 			break;
 		case 3:
 			newPlayer= new AI_Random( AIid, "Random" );
@@ -97,6 +111,9 @@ public class Administration implements IAdministration{
 			break;
 		case 5:
 			newPlayer= new AIstar( AIid, "AIstar" );
+			break;
+		case 6:
+			newPlayer= new AI_Crasher( AIid, "Crasher" );
 			break;
 		default:
 			return 0;

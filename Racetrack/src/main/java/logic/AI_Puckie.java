@@ -69,34 +69,6 @@ public class AI_Puckie extends AI
 					System.out.println( "( x=" + lrl.get(i).get(j).getX() + "; y=" + lrl.get(i).get(j).getY()+ " )" );
 				}
 			}
-
-			for( int j=mHeight-1 ; j>=0 ; j-- )
-			{
-				for( int i=0 ; i<mWidth ; i++ )
-				{
-					int landingRegionId=0;
-					for( int k=0 ; k<lrl.size()&&0==landingRegionId ; k++ )
-					{
-						for( int l=0 ; l<lrl.get(k).size() ; l++ )
-						{
-							if( j==lrl.get(k).get(l).getY() && i==lrl.get(k).get(l).getX() ) 
-							{
-								landingRegionId=k;
-								break;
-							}
-						}
-					}
-					if( 0==landingRegionId )
-					{
-						System.out.print( (mGrid[i][j])?" ":"X" );
-					}
-					else
-					{
-						System.out.print( ""+landingRegionId );
-					}
-				}
-				System.out.println( " " );
-			}
 		}
 		currentIndexPosition++;
 		
@@ -500,30 +472,23 @@ public class AI_Puckie extends AI
 		ArrayList<ArrayList<Point2D> > ret= new ArrayList<ArrayList<Point2D> >();
 		ArrayList<Integer> idOfDijkstraShortestPathForSorting=new ArrayList<Integer>();
 		ArrayList<Point2D> tmpLandingRegion;
-		//Integer w=0;
-		//Integer landingRegionWidth=0;
-		//Integer landingRegionAdditionalHeight=0;
-		//Integer idForSorting=0;
-		AtomicReference<Integer> w 								= new AtomicReference<Integer>( 0 );
-		AtomicReference<Integer> landingRegionWidth 			= new AtomicReference<Integer>( 0 );
-		AtomicReference<Integer> landingRegionAdditionalHeight 	= new AtomicReference<Integer>( 0 );
-		AtomicReference<Integer> idForSorting 					= new AtomicReference<Integer>( 0 );
-				
+		AtomicReference<Integer> w=new AtomicReference<Integer>( 0 );
+		AtomicReference<Integer> landingRegionWidth=new AtomicReference<Integer>( 0 );
+		AtomicReference<Integer> landingRegionAdditionalHeight=new AtomicReference<Integer>( 0 );
+		AtomicReference<Integer> idForSorting=new AtomicReference<Integer>( 0 );
 		for( int i=0 ; i<mWidth-1 ; i++ )
 		{
 			for( int j=0 ; j<mHeight-1 ; j++ )
 			{
-				boolean foundCorner=false;
 				boolean horizontalDirectionRight=false;
-				Point2D origin=new Point2D( 0, 0 );
 				Point2D start=new Point2D( 0, 0 );
 				Point2D end=new Point2D( 0, 0 );
+				Point2D origin=new Point2D( 0, 0 );
 				if(    false==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
 					    true==mGrid[i][j]     &&   true==mGrid[i+1][j]     )
 				{
 					//#.
 					//..
-					foundCorner=true;
 					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j ), true, idForSorting );
 					if( 0==w.get() ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 
@@ -541,9 +506,8 @@ public class AI_Puckie extends AI
 						//....oo...#
 						//....oo...#
 						//##########
-						System.out.println(  );
-						start=start.add( new Point2D( 0, landingRegionAdditionalHeight.get() ) );
-						end=end.add(   new Point2D( landingRegionWidth.get()-1, -w.get()+1 ) );
+						start=origin.add( new Point2D( 0, landingRegionAdditionalHeight.get() ) );
+						end=origin.add(   new Point2D( landingRegionWidth.get()-1, -w.get()+1 ) );
 					}
 					else
 					{
@@ -557,8 +521,8 @@ public class AI_Puckie extends AI
 						//.........#
 						//.........#
 						//##########
-						start=start.add( new Point2D( -landingRegionAdditionalHeight.get(), 0 ) );
-						end=end.add(   new Point2D( w.get()-1, -landingRegionWidth.get()+1 ) );
+						start=origin.add( new Point2D( -landingRegionAdditionalHeight.get(), 0 ) );
+						end=origin.add(   new Point2D( w.get()-1, -landingRegionWidth.get()+1 ) );
 					}
 				}
 				else if(     true==mGrid[i][j+1]   &&  false==mGrid[i+1][j+1]   &&
@@ -566,12 +530,10 @@ public class AI_Puckie extends AI
 				{
 					//.#
 					//..
-					foundCorner=true;
 					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j ), true, idForSorting );
 					if( 0==w.get() ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i+1, j, true );
 
-					start=new Point2D( i, j );// i.e. O
-					end=new Point2D( i, j );// i.e. O
+					origin=new Point2D( i+1, j );// i.e. O
 					
 					if( horizontalDirectionRight )
 					{
@@ -585,8 +547,8 @@ public class AI_Puckie extends AI
 						//#.........
 						//#.........
 						//##########
-						start=start.add( new Point2D( -w.get()+1, 0 ) );
-						end=end.add(   new Point2D( landingRegionAdditionalHeight.get(), landingRegionWidth.get()-1 ) );
+						start=origin.add( new Point2D( -w.get()+1, 0 ) );
+						end=origin.add(   new Point2D( landingRegionAdditionalHeight.get(), landingRegionWidth.get()-1 ) );
 					}
 					else
 					{
@@ -600,8 +562,8 @@ public class AI_Puckie extends AI
 						//#...oo....
 						//#...oo....
 						//##########
-						start=start.add( new Point2D( -landingRegionWidth.get()+1, landingRegionAdditionalHeight.get() ) );
-						end=end.add(   new Point2D( 0, -w.get()+1 ) );
+						start=origin.add( new Point2D( -landingRegionWidth.get()+1, landingRegionAdditionalHeight.get() ) );
+						end=origin.add(   new Point2D( 0, -w.get()+1 ) );
 					}
 				}
 				else if(     true==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
@@ -609,12 +571,10 @@ public class AI_Puckie extends AI
 				{ 
 					//..
 					//#.
-					foundCorner=true;
 					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j+1 ), false, idForSorting );
 					if( 0==w.get() ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j+1, false );
 
-					start=new Point2D( i+1, j+1 );// i.e. O
-					end=new Point2D( i+1, j+1 );// i.e. O
+					origin=new Point2D( i+1, j );// i.e. O
 					
 					if( horizontalDirectionRight )
 					{
@@ -628,8 +588,8 @@ public class AI_Puckie extends AI
 						//####oo...#
 						//####oo...#
 						//####.....#
-						start=start.add( new Point2D( 0, w.get()-1 ) );
-						end=end.add(   new Point2D( landingRegionWidth.get()-1, -landingRegionAdditionalHeight.get() ) );
+						start=origin.add( new Point2D( 0, w.get()-1 ) );
+						end=origin.add(   new Point2D( landingRegionWidth.get()-1, -landingRegionAdditionalHeight.get() ) );
 					}
 					else
 					{
@@ -643,8 +603,8 @@ public class AI_Puckie extends AI
 						//####.....#
 						//####.....#
 						//####.....#
-						start=start.add( new Point2D( -landingRegionAdditionalHeight.get(), w.get()-1 ) );
-						end=end.add(   new Point2D( w.get()-1, 0 ) );
+						start=origin.add( new Point2D( -landingRegionAdditionalHeight.get(), w.get()-1 ) );
+						end=origin.add(   new Point2D( w.get()-1, 0 ) );
 					}
 				}
 				else if(     true==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
@@ -652,12 +612,10 @@ public class AI_Puckie extends AI
 				{ 
 					//..
 					//.#
-					foundCorner=true;
 					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j+1 ), false, idForSorting );
 					if( 0==w.get() ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i+1, j+1, false );
 
-					start=new Point2D( i, j+1 );// i.e. O
-					end=new Point2D( i, j+1 );// i.e. O
+					origin=new Point2D( i+1, j );// i.e. O
 					
 					if( horizontalDirectionRight )
 					{
@@ -671,8 +629,8 @@ public class AI_Puckie extends AI
 						//#.....####
 						//#.....####
 						//#.....####
-						start=start.add( new Point2D( -w.get()+1, landingRegionWidth.get()-1 ) );
-						end=end.add(   new Point2D( landingRegionAdditionalHeight.get(), 0 ) );
+						start=origin.add( new Point2D( -w.get()+1, landingRegionWidth.get()-1 ) );
+						end=origin.add(   new Point2D( landingRegionAdditionalHeight.get(), 0 ) );
 					}
 					else
 					{
@@ -686,54 +644,51 @@ public class AI_Puckie extends AI
 						//#...oo####
 						//#...oo####
 						//#.....####
-						start=start.add( new Point2D( -landingRegionWidth.get()+1, w.get()-1 ) );
-						end=end.add(   new Point2D( 0, -landingRegionAdditionalHeight.get() ) );
+						start=origin.add( new Point2D( -landingRegionWidth.get()+1, w.get()-1 ) );
+						end=origin.add(   new Point2D( 0, -landingRegionAdditionalHeight.get() ) );
 					}
 				}
 
-				if( foundCorner )
+				tmpLandingRegion=new ArrayList<Point2D>(  );
+				for( int k=(int)start.getX() ; k<=(int)end.getX() ; k++ )
 				{
-					tmpLandingRegion=new ArrayList<Point2D>(  );
-					for( int k=(int)start.getX() ; k<=(int)end.getX() ; k++ )
+					for( int l=(int)start.getY() ; l>=(int)end.getY() ; l-- )
 					{
-						for( int l=(int)start.getY() ; l>=(int)end.getY() ; l-- )
+						tmpLandingRegion.add( new Point2D( k, l ) );
+					}
+				}
+				
+				if( idOfDijkstraShortestPathForSorting.size() == 0 )
+				{
+					idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
+					ret.add( tmpLandingRegion );					
+				}
+				else
+				{
+					boolean foundSlot=false;
+					int k=0;
+					for( k=0 ; k<idOfDijkstraShortestPathForSorting.size()-1 ; k++ )
+					{
+						if( idOfDijkstraShortestPathForSorting.get( k )<idForSorting.get() &&
+							idOfDijkstraShortestPathForSorting.get( k+1 )>idForSorting.get() )
 						{
-							tmpLandingRegion.add( new Point2D( k, l ) );
+							foundSlot=true;
+							idOfDijkstraShortestPathForSorting.add( k, idForSorting.get() );
+							ret.add( k, tmpLandingRegion );
+							break;
 						}
 					}
-					
-					if( idOfDijkstraShortestPathForSorting.size() == 0 )
+					if( !foundSlot )
 					{
-						idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-						ret.add( tmpLandingRegion );					
-					}
-					else
-					{
-						boolean foundSlot=false;
-						int k=0;
-						for( k=0 ; k<idOfDijkstraShortestPathForSorting.size()-1 ; k++ )
+						if( idForSorting.get() < idOfDijkstraShortestPathForSorting.get( 0 ) )
 						{
-							if( idOfDijkstraShortestPathForSorting.get( k )<idForSorting.get() &&
-								idOfDijkstraShortestPathForSorting.get( k+1 )>idForSorting.get() )
-							{
-								foundSlot=true;
-								idOfDijkstraShortestPathForSorting.add( k, idForSorting.get() );
-								ret.add( k, tmpLandingRegion );
-								break;
-							}
+							idOfDijkstraShortestPathForSorting.add( 0, idForSorting.get() );
+							ret.add( 0, tmpLandingRegion );
 						}
-						if( !foundSlot )
+						else
 						{
-							if( idForSorting.get() < idOfDijkstraShortestPathForSorting.get( 0 ) )
-							{
-								idOfDijkstraShortestPathForSorting.add( 0, idForSorting.get() );
-								ret.add( 0, tmpLandingRegion );
-							}
-							else
-							{
-								idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-								ret.add( tmpLandingRegion );
-							}
+							idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
+							ret.add( tmpLandingRegion );
 						}
 					}
 				}
@@ -790,11 +745,11 @@ public class AI_Puckie extends AI
 			i++;
 			if( searchDown )
 			{
-				p=p.add( 0, -1 );
+				p.add( 0, 1 );
 			}
 			else
 			{
-				p=p.add( 0, 1 );
+				p.add( 0, -1 );
 			}
 		}
 		return i;
