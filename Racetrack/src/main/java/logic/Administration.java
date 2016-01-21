@@ -87,7 +87,7 @@ public class Administration implements IAdministration{
 		switch( ai_type )
 		{
 		case 2:
-			newPlayer= new AI_NoMover( AIid, "Not-Mover" );
+			newPlayer= new AI_Crasher( AIid, "Crasher" );
 			break;
 		case 3:
 			newPlayer= new AI_Random( AIid, "Random" );
@@ -604,7 +604,7 @@ public class Administration implements IAdministration{
 
 			}else{
 				answer = VectorMessageServerHandler.generateBroadcastMoveMessage(playerWhoMoved,playerPosition,
-						collisionPointFromPlayer,nextPlayerToMove, playerVelocity, round);
+						null,nextPlayerToMove, playerVelocity, round);
 			}
 
 			for(int p : playersInSameSession)
