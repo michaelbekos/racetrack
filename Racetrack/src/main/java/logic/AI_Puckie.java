@@ -457,92 +457,228 @@ public class AI_Puckie extends AI
 	private ArrayList<ArrayList<Point2D> > searchLandingRegions()
 	{
 		ArrayList<ArrayList<Point2D> > ret= new ArrayList<ArrayList<Point2D> >();
+		ArrayList<Integer> idOfDijkstraShortestPathForSorting=new ArrayList<Integer>();
 		ArrayList<Point2D> tmpLandingRegion;
-		int w=0;
-		int landingRegionWidth;
-		int landingRegionAdditionalHeight;
+		Integer w=0;
+		Integer landingRegionWidth=0;
+		Integer landingRegionAdditionalHeight=0;
+		Integer idForSorting=0;
 		for( int i=0 ; i<mWidth-1 ; i++ )
 		{
 			for( int j=0 ; j<mHeight-1 ; j++ )
 			{
 				boolean horizontalDirectionRight=false;
-				Point2D start;
-				Point2D end;
-				if( !mGrid[i][j]   && mGrid[i+1][j]   &&
-			        mGrid[i][j-1]  && mGrid[i+1][j-1] )
+				Point2D start=new Point2D( 0, 0 );
+				Point2D end=new Point2D( 0, 0 );
+				if(    false==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
+					    true==mGrid[i][j]     &&   true==mGrid[i+1][j]     )
 				{
 					//#.
 					//..
-					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j+1 ), true );
-					if( 0==w )
-					{
-						w=calcWidth( new Point2D( i, j+1 ), true );
-						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
-						// s_max=landingRegionWidth+1
-						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
-					}
-					start=new Point2D( i+1, j+1 );
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j ), true, idForSorting );
+					if( 0==w ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
+
+					start=new Point2D( i+1, j );// i.e. O
+					end=new Point2D( i+1, j );// i.e. O
 					
 					if( horizontalDirectionRight )
 					{
+						//####.....#
+						//####oo...#
+						//####oo...#
+						//####oo...#
+						//....Oo...#
+						//....oo...#
+						//-->.oo...#
+						//....oo...#
+						//....oo...#
+						//##########
 						start.add( new Point2D( 0, landingRegionAdditionalHeight ) );
-						end=new Point2D( i+1, 0 );
+						end.add(   new Point2D( landingRegionWidth-1, -w+1 ) );
 					}
 					else
 					{
-						start.add( new Point2D( landingRegionAdditionalHeight, 0 ) );	
+						//####.....#
+						//####.....#
+						//####.....#
+						//####.....#
+						//.oooOoooo#
+						//.oooooooo#
+						//<--......#
+						//.........#
+						//.........#
+						//##########
+						start.add( new Point2D( -landingRegionAdditionalHeight, 0 ) );
+						end.add(   new Point2D( w-1, -landingRegionWidth+1 ) );
 					}
-					tmpLandingRegion=new ArrayList<Point2D>( mGrid[i+1][j+1] );
 				}
-				else if( mGrid[i][j]   && !mGrid[i+1][j]   &&
-				         mGrid[i][j-1] &&  mGrid[i+1][j-1] )
+				else if(     true==mGrid[i][j+1]   &&  false==mGrid[i+1][j+1]   &&
+					         true==mGrid[i][j]     &&   true==mGrid[i+1][j]     )
 				{
 					//.#
 					//..
-					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j+1 ), true );
-					if( 0==w )
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j ), true, idForSorting );
+					if( 0==w ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i+1, j, true );
+
+					start=new Point2D( i, j );// i.e. O
+					end=new Point2D( i, j );// i.e. O
+					
+					if( horizontalDirectionRight )
 					{
-						w=calcWidth( new Point2D( i+1, j+1 ), true );
-						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
-						// s_max=landingRegionWidth+1
-						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+						//#.....####
+						//#.....####
+						//#.....####
+						//#.....####
+						//#ooooOooo.
+						//#oooooooo.
+						//#-->......
+						//#.........
+						//#.........
+						//##########
+						start.add( new Point2D( -w+1, 0 ) );
+						end.add(   new Point2D( landingRegionAdditionalHeight, landingRegionWidth-1 ) );
+					}
+					else
+					{
+						//#.....####
+						//#...oo####
+						//#...oo####
+						//#...oo####
+						//#...oO....
+						//#...oo....
+						//#...oo.<--
+						//#...oo....
+						//#...oo....
+						//##########
+						start.add( new Point2D( -landingRegionWidth+1, landingRegionAdditionalHeight ) );
+						end.add(   new Point2D( 0, -w+1 ) );
 					}
 				}
-				else if( mGrid[i][j]    && mGrid[i+1][j]   &&
-				         !mGrid[i][j-1] && mGrid[i+1][j-1] )
+				else if(     true==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
+				         	false==mGrid[i][j]     &&   true==mGrid[i+1][j]     )
 				{ 
 					//..
 					//#.
-					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j ), false );
-					if( 0==w )
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i, j+1 ), false, idForSorting );
+					if( 0==w ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j+1, false );
+
+					start=new Point2D( i+1, j+1 );// i.e. O
+					end=new Point2D( i+1, j+1 );// i.e. O
+					
+					if( horizontalDirectionRight )
 					{
-						w=calcWidth( new Point2D( i, j ), false );
-						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
-						// s_max=landingRegionWidth+1
-						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+						//##########
+						//....oo...#
+						//....oo...#
+						//-->.oo...#
+						//....oo...#
+						//....Oo...#
+						//####oo...#
+						//####oo...#
+						//####oo...#
+						//####.....#
+						start.add( new Point2D( 0, w-1 ) );
+						end.add(   new Point2D( landingRegionWidth-1, -landingRegionAdditionalHeight ) );
+					}
+					else
+					{
+						//##########
+						//.........#
+						//.........#
+						//<--......#
+						//.oooooooo#
+						//.oooOoooo#
+						//####.....#
+						//####.....#
+						//####.....#
+						//####.....#
+						start.add( new Point2D( -landingRegionAdditionalHeight, w-1 ) );
+						end.add(   new Point2D( w-1, 0 ) );
 					}
 				}
-				else if( mGrid[i][j]   &&  mGrid[i+1][j]   &&
-				         mGrid[i][j-1] && !mGrid[i+1][j-1] )
+				else if(     true==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
+						     true==mGrid[i][j]     &&  false==mGrid[i+1][j]     )
 				{ 
 					//..
 					//.#
-					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j ), false );
-					if( 0==w )
+					horizontalDirectionRight=isHorizontalDirectionRight( new Point2D( i+1, j+1 ), false, idForSorting );
+					if( 0==w ) calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i+1, j+1, false );
+
+					start=new Point2D( i, j+1 );// i.e. O
+					end=new Point2D( i, j+1 );// i.e. O
+					
+					if( horizontalDirectionRight )
 					{
-						w=calcWidth( new Point2D( i+1, j ), false );
-						landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
-						// s_max=landingRegionWidth+1
-						landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt((w*2-1.75)-0.5))+1;
+						//##########
+						//#.........
+						//#.........
+						//#......-->
+						//#oooooooo.
+						//#ooooOooo.
+						//#.....####
+						//#.....####
+						//#.....####
+						//#.....####
+						start.add( new Point2D( -w+1, landingRegionWidth-1 ) );
+						end.add(   new Point2D( landingRegionAdditionalHeight, 0 ) );
+					}
+					else
+					{
+						//##########
+						//#...oo....
+						//#...oo....
+						//#...oo.<--
+						//#...oo....
+						//#...oO....
+						//#...oo####
+						//#...oo####
+						//#...oo####
+						//#.....####
+						start.add( new Point2D( -landingRegionWidth+1, w-1 ) );
+						end.add(   new Point2D( 0, -landingRegionAdditionalHeight ) );
 					}
 				}
+
+				tmpLandingRegion=new ArrayList<Point2D>(  );
+				for( int k=(int)start.getX() ; k<=(int)end.getX() ; k++ )
+				{
+					for( int l=(int)start.getY() ; l>=(int)end.getY() ; l-- )
+					{
+						tmpLandingRegion.add( new Point2D( k, l ) );
+					}
+				}
+				
+				boolean foundSlot=false;
+				int k=0;
+				for( k=0 ; k<idOfDijkstraShortestPathForSorting.size()-1 ; k++ )
+				{
+					if( idOfDijkstraShortestPathForSorting.get( k )<idForSorting &&
+						idOfDijkstraShortestPathForSorting.get( k+1 )>idForSorting )
+					{
+						foundSlot=true;
+						idOfDijkstraShortestPathForSorting.add( k, idForSorting );
+					}
+				}
+				
+				ret.add(index, tmpLandingRegion );
+				
+				
+				
 			}
 		}
 		
 		return ret;
 	}
+	
+	private void calcWidthAndLandingRegion( Integer w, Integer landingRegionWidth, Integer landingRegionAdditionalHeight, int i, int j, boolean searchDownwards )
+	{
+		w=calcWidth( new Point2D( i, j ), searchDownwards );
+		landingRegionWidth=(int) Math.floor(Math.sqrt(w*2+0.25)-0.5);
+		// s_max=landingRegionWidth+1
+		landingRegionAdditionalHeight=(int) Math.floor(Math.sqrt(w*2-1.75)-0.5)+1;
+	}
 
-	private boolean isHorizontalDirectionRight( Point2D p, boolean searchDown )
+	private boolean isHorizontalDirectionRight( Point2D p, boolean searchDown, Integer idForSorting )
 	{
 		while( this.mGrid[(int)p.getX()][(int)p.getY()] )
 		{
@@ -553,6 +689,7 @@ public class AI_Puckie extends AI
 				{
 					double dx=shortestPath.get(i+1).getX()-shortestPath.get(i-1).getX();
 					double dy=shortestPath.get(i+1).getY()-shortestPath.get(i-1).getY();
+					idForSorting=i;
 					if( dy>0 )
 						return true;
 					else
