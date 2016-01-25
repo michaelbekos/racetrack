@@ -712,7 +712,7 @@ public class Game {
 				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
 			long time_needed=start_time-System.currentTimeMillis();
-			if( time_needed > 1500 )
+			if( time_needed < 1500 )
 			{
 				try {
 					synchronized(this) {
