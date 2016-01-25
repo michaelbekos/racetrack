@@ -386,7 +386,14 @@ public class Game {
 						}
 						else
 						{
-							xDirection = -1.0f;
+							if (player.getCurrentPosition().getX() > intersectionPoint.getX())
+							{
+								xDirection = -1.0f;
+							}
+							else
+							{
+								xDirection = 0.0f;
+							}
 						}
 						if (player.getCurrentPosition().getY() < intersectionPoint.getY())
 						{
@@ -394,7 +401,14 @@ public class Game {
 						}
 						else
 						{
-							yDirection = -1.0f;
+							if (player.getCurrentPosition().getY() > intersectionPoint.getY())
+							{
+								yDirection = -1.0f;
+							}
+							else
+							{
+								yDirection = 0.0f;
+							}
 						}
 						Point2D newPosition = new Point2D((int) intersectionPoint.getX() - xDirection, (int) intersectionPoint.getY() - yDirection);
 						RTField[(int) oldPosition.getX()][(int) oldPosition
