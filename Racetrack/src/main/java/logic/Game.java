@@ -255,7 +255,15 @@ public class Game {
 			currentPlayerIndex = (currentPlayerIndex + 1) % playerList.length;
 			// this.gameState = GameState.values()[7 + currentPlayerIndex];
 			if (playerList[currentPlayerIndex].isParticipating() == true) {
-				checkIfParticipating = false;
+				if (playerList[currentPlayerIndex].HasToWait())
+				{
+					playerList[currentPlayerIndex].WaitAsPenalty();
+				}
+				else
+				{
+					checkIfParticipating = false;
+			
+				}
 			}
 		}
 		if (isLastPlayerOfArray())
@@ -678,11 +686,6 @@ public class Game {
 	 * @return The next playerID
 	 */
 	public int getNextPlayer() {
-		while (playerList[currentPlayerIndex].HasToWait())
-		{
-			playerList[currentPlayerIndex].WaitAsPenalty();
-			currentPlayerIndex = (currentPlayerIndex + 1) % playerList.length;
-		}
 		return currentPlayerIndex;
 	}
 
@@ -712,7 +715,7 @@ public class Game {
 				point = ((IAI)playerList[currentPlayerIndex]).move();
 			}
 			long time_needed=start_time-System.currentTimeMillis();
-			if( time_needed > 1500 )
+			if( time_needed < 1500 )
 			{
 				try {
 					synchronized(this) {

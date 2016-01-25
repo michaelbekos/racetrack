@@ -76,12 +76,6 @@ public class AIstar extends AI {
 		}
 		else 
 		{
-			try {
-				Thread.sleep(1000L);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			turn++;
 			if (lastPosition.X() == (int)this.getCurrentPosition().getX() && lastPosition.Y() == (int)this.getCurrentPosition().getY() && ((int)this.getCurrentVelocity().getX() != 0 || (int)this.getCurrentVelocity().getY() != 0))
 			{
