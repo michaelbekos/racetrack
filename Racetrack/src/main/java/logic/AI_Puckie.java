@@ -1,6 +1,8 @@
 package src.main.java.logic;
 
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.geometry.Point2D;
@@ -11,6 +13,7 @@ import src.main.java.logic.AIstar.LineSegment;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class AI_Puckie extends AI
@@ -306,53 +309,165 @@ public class AI_Puckie extends AI
 		return retDistance;
 	}
 	
-	private void tryFill( int x, int y, int xOld, int yOld, boolean [][] considered )
-	{
-		considered[x][y]=true;
-		LineSegment l=LineSegment.GetLineSegment( new Line2D( new Point2D( x, y ), new Point2D( xOld, yOld ) ) );
+//	private void tryFill( int x, int y, int xOld, int yOld, boolean [][] considered )
+//	{
+//		considered[x][y]=true;
+//		LineSegment l=LineSegment.GetLineSegment( new Line2D( new Point2D( x, y ), new Point2D( xOld, yOld ) ) );
+//
+//		Track t=mGame.getTrack();
+//		for( int k=0 ; k<t.getInnerBoundary().length ; k++ )
+//		{
+//			LineSegment b=LineSegment.GetLineSegment( t.getInnerBoundary()[k] );
+//			if( b.IntersectWith(l) )
+//				return;
+//		}
+//		for( int k=0 ; k<t.getOuterBoundary().length ; k++ )
+//		{
+//			LineSegment b=LineSegment.GetLineSegment( t.getOuterBoundary()[k] );
+//			if( b.IntersectWith(l) )
+//				return;
+//		}
+//		
+//		LineSegment b=LineSegment.GetLineSegment( t.getFinishLine() );
+//		if( b.IntersectWith(l) )
+//		{
+//			goalPoints.add( new Point2D( x, y ) );
+//			return;
+//		}
+//		
+//		mGrid[x][y]=true;
+//		if( x>0 )
+//		{
+//			if( !considered[x-1][y] )
+//				tryFill( x-1, y, x, y, considered );
+//		}
+//		if( x<mWidth-1  )
+//		{
+//			if( !considered[x+1][y] )
+//				tryFill( x+1, y, x, y, considered );
+//		}
+//		if( y>0  )
+//		{
+//			if( !considered[x][y-1] )
+//				tryFill( x, y-1, x, y, considered );
+//		}
+//		if( y<mHeight-1  )
+//		{
+//			if( !considered[x][y+1] )
+//				tryFill( x, y+1, x, y, considered );
+//		}
+//	}
 
-		Track t=mGame.getTrack();
-		for( int k=0 ; k<t.getInnerBoundary().length ; k++ )
-		{
-			LineSegment b=LineSegment.GetLineSegment( t.getInnerBoundary()[k] );
-			if( b.IntersectWith(l) )
-				return;
-		}
-		for( int k=0 ; k<t.getOuterBoundary().length ; k++ )
-		{
-			LineSegment b=LineSegment.GetLineSegment( t.getOuterBoundary()[k] );
-			if( b.IntersectWith(l) )
-				return;
-		}
+	
+	private HashSet<Point2D> iterativeTryFill()
+	{
 		
-		LineSegment b=LineSegment.GetLineSegment( t.getFinishLine() );
-		if( b.IntersectWith(l) )
-		{
-			goalPoints.add( new Point2D( x, y ) );
-			return;
-		}
+		Queue<Point2D> openList=new LinkedBlockingQueue<Point2D>();
+		HashSet<Point2D> closedList=new HashSet<Point2D>();
+		int x=(int)mGame.getTrack().getStartingPoints()[0].getX();
+		int y=(int)mGame.getTrack().getStartingPoints()[0].getY();
+		openList.add( new Point2D( x, y ) );
 		
-		mGrid[x][y]=true;
-		if( x>0 )
+		Point2D cP=openList.poll();
+		while( null!=cP )
 		{
-			if( !considered[x-1][y] )
-				tryFill( x-1, y, x, y, considered );
+			closedList.add( cP );
+			LineSegment l_right=null;
+			LineSegment l_left=null;
+			LineSegment l_down=null;
+			LineSegment l_up=null;
+			Point2D p_right=new Point2D( cP.getX()+1, cP.getY()   );
+			Point2D p_left=new Point2D(  cP.getX()-1, cP.getY()   );
+			Point2D p_up=new Point2D(    cP.getX(),   cP.getY()+1   );
+			Point2D p_down=new Point2D(  cP.getX(),   cP.getY()-1   );
+			
+			if( x<mWidth-1 )
+			{
+				l_right=LineSegment.GetLineSegment( new Line2D( cP, p_right ) );
+			}
+			if( x>0 )
+			{
+				l_left=LineSegment.GetLineSegment(  new Line2D( cP, p_left  ) );
+			}
+			if( y<mHeight-1 )
+			{
+				l_up=LineSegment.GetLineSegment(    new Line2D( cP, p_up    ) );
+			}
+			if( y>0 )
+			{
+				l_down=LineSegment.GetLineSegment(  new Line2D( cP, p_down  ) );
+			}
+			
+			Track t=mGame.getTrack();
+			for( int k=0 ; k<t.getInnerBoundary().length ; k++ )
+			{
+				LineSegment b=LineSegment.GetLineSegment( t.getInnerBoundary()[k] );
+				if( null!=l_right && b.IntersectWith(l_right) )
+					l_right=null;
+				if( null!=l_left && b.IntersectWith(l_left) )
+					l_left=null;
+				if( null!=l_up && b.IntersectWith(l_up) )
+					l_up=null;
+				if( null!=l_down && b.IntersectWith(l_down) )
+					l_down=null;
+			}
+			for( int k=0 ; k<t.getOuterBoundary().length ; k++ )
+			{
+				LineSegment b=LineSegment.GetLineSegment( t.getOuterBoundary()[k] );
+				if( null!=l_right && b.IntersectWith(l_right) )
+					l_right=null;
+				if( null!=l_left && b.IntersectWith(l_left) )
+					l_left=null;
+				if( null!=l_up && b.IntersectWith(l_up) )
+					l_up=null;
+				if( null!=l_down && b.IntersectWith(l_down) )
+					l_down=null;
+			}
+			
+			LineSegment b=LineSegment.GetLineSegment( t.getFinishLine() );
+			if( null!=l_right && b.IntersectWith(l_right) )
+			{
+				l_right=null;
+				goalPoints.add( p_right );
+			}
+			if( null!=l_left && b.IntersectWith(l_left) )
+			{
+				l_left=null;
+				goalPoints.add( p_left );
+			}
+			if( null!=l_up && b.IntersectWith(l_up) )
+			{
+				l_up=null;
+				goalPoints.add( p_up );
+			}
+			if( null!=l_down && b.IntersectWith(l_down) )
+			{
+				l_down=null;
+				goalPoints.add( p_down );
+			}
+			if( null!=l_right && !closedList.contains( p_right ) )
+			{
+				openList.add( p_right );
+				closedList.add( p_right );
+			}
+			if( null!=l_left && !closedList.contains( p_left ) )
+			{
+				openList.add( p_left );
+				closedList.add( p_left );
+			}
+			if( null!=l_up && !closedList.contains( p_up ) )
+			{
+				openList.add( p_up );
+				closedList.add( p_up );
+			}
+			if( null!=l_down && !closedList.contains( p_down ) )
+			{
+				openList.add( p_down );
+				closedList.add( p_down );
+			}
+			cP=openList.poll();
 		}
-		if( x<mWidth-1  )
-		{
-			if( !considered[x+1][y] )
-				tryFill( x+1, y, x, y, considered );
-		}
-		if( y>0  )
-		{
-			if( !considered[x][y-1] )
-				tryFill( x, y-1, x, y, considered );
-		}
-		if( y<mHeight-1  )
-		{
-			if( !considered[x][y+1] )
-				tryFill( x, y+1, x, y, considered );
-		}
+		return closedList;
 	}
 	
 	private boolean createGrid( int sX, int sY )
@@ -364,7 +479,9 @@ public class AI_Puckie extends AI
 
 		sX=(int)mGame.getTrack().getStartingPoints()[0].getX();
 		sY=(int)mGame.getTrack().getStartingPoints()[0].getY();
-		tryFill( sX, sY, sX, sY, considered );
+	
+		HashSet<Point2D> grid = iterativeTryFill();
+		//tryFill( sX, sY, sX, sY, considered );
 		
 		if( mVerbose )
 		{
@@ -376,7 +493,16 @@ public class AI_Puckie extends AI
 			{
 				for( int i=0 ; i<mWidth ; i++ )
 				{
-					System.out.print( (mGrid[i][j])?" ":"X" );
+					if( grid.contains( new Point2D( i, j ) ) )
+					{
+						System.out.print( " " );
+						mGrid[i][j]=true;	
+					}
+					else
+					{
+						System.out.print( "X" );
+						mGrid[i][j]=false;
+					}
 				}
 				System.out.println( " " );
 			}
@@ -880,5 +1006,21 @@ public class AI_Puckie extends AI
 			}
 		}
 		return i;
+	}
+	
+	private void makeViewMap()
+	{
+		int [][] mViewMap;
+		mViewMap=new int[mWidth][mHeight];
+		for( int j=mHeight-1 ; j>=0 ; j-- )
+		{
+			for( int i=0 ; i<mWidth ; i++ )
+			{
+				mViewMap[i][j]=mLandingRegions[i][j];
+			}
+		}
+		
+		
+		
 	}
 }
