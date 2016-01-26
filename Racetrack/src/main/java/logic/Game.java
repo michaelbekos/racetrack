@@ -258,11 +258,12 @@ public class Game {
 				if (playerList[currentPlayerIndex].HasToWait())
 				{
 					playerList[currentPlayerIndex].WaitAsPenalty();
+					if (isLastPlayerOfArray())
+						roundCounter++;
 				}
 				else
 				{
 					checkIfParticipating = false;
-			
 				}
 			}
 		}

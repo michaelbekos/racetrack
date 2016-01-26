@@ -18,7 +18,7 @@ public class Player {
 	private Point2D currentPosition;
 	private boolean isHost;
 	private boolean isParticipating;
-	private boolean hasToWait;
+	private boolean hasToWait = false;
 	private ArrayList<Point2D> memorizeGridPoints = new ArrayList<Point2D>();
 	private boolean crashed;
 	private boolean isDisconnected = false;
@@ -36,6 +36,7 @@ public class Player {
 
 	public Player(Integer playerID, String name) {
 		this(playerID, name, -1);
+		hasToWait = false;
 	}
 
 	public Player(Integer playerID, String name, int playerColorId) {
