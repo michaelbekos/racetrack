@@ -22,6 +22,12 @@ public class AIUtilsTest
 		Point2D sa = new Point2D(1,1);
 		Point2D sb = new Point2D(-1,1);*/
 		
+		/*//Test Case 3
+		Point2D a = new Point2D(4,13);
+		Point2D b = new Point2D(6,2);
+		Point2D sa = new Point2D(2,-1);
+		Point2D sb = new Point2D(-1,-1);*/
+		
 		List<Point2D> accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
 		for (int i = 0; i < accelerations.size(); i++)
 		{
