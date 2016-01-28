@@ -381,9 +381,11 @@ public class AIUtils
 										if (Math.signum(ay) == Math.signum(Dy))
 										{
 											skippedY += 2;
+											doNotAccelerateY -=1;
+											additionalPointsSkippedY += 1;
 										}
 									}
-									if (skippedY >= doNotAccelerateY)
+									if (skippedY > doNotAccelerateY)
 									{
 										sy = sy - ay;
 										ay = (int)Math.signum(sy2 - sy1);
@@ -439,9 +441,11 @@ public class AIUtils
 										if (Math.signum(ax) == Math.signum(Dx))
 										{
 											skippedX += 2;
+											doNotAccelerateX -=1;
+											additionalPointsSkippedX += 1;
 										}
 									}
-									if (skippedX >= doNotAccelerateX)
+									if (skippedX > doNotAccelerateX)
 									{
 										sx = sx - ax;
 										ax = (int)Math.signum(sx2 - sx1);
@@ -607,9 +611,11 @@ public class AIUtils
 										if (Math.signum(ay) == Math.signum(Dy))
 										{
 											skippedY += 2;
+											doNotAccelerateY -=1;
+											additionalPointsSkippedY += 1;
 										}
 									}
-									if (skippedY >= doNotAccelerateY)
+									if (skippedY > doNotAccelerateY)
 									{
 										sy = sy - ay;
 										ay = (int)Math.signum(sy2 - sy1);
@@ -665,9 +671,11 @@ public class AIUtils
 										if (Math.signum(ax) == Math.signum(Dx))
 										{
 											skippedX += 2;
+											doNotAccelerateX -=1;
+											additionalPointsSkippedX += 1;
 										}
 									}
-									if (skippedX >= doNotAccelerateX)
+									if (skippedX > doNotAccelerateX)
 									{
 										sx = sx - ax;
 										ax = (int)Math.signum(sx2 - sx1);
