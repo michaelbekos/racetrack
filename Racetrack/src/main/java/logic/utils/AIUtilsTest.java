@@ -5,6 +5,11 @@ import java.util.List;
 import javafx.geometry.Point2D;
 import src.main.java.logic.utils.AIUtils;
 
+/**
+ * Applicable class with test cases for CalculateAccelerations.
+ * 
+ * @author Henry
+ */
 public class AIUtilsTest
 {
 
@@ -17,7 +22,7 @@ public class AIUtilsTest
 		Point2D sa = new Point2D(1,1);
 		Point2D sb = new Point2D(-2,1);
 		
-		List<Point2D> accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		List<Point2D> accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -34,7 +39,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(-1,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -51,7 +56,7 @@ public class AIUtilsTest
 		sa = new Point2D(2,-1);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -68,7 +73,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,-1);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -85,7 +90,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(-2,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -102,7 +107,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(-2,1);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -119,7 +124,7 @@ public class AIUtilsTest
 		sa = new Point2D(2,-1);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -136,7 +141,7 @@ public class AIUtilsTest
 		sa = new Point2D(2,-1);
 		sb = new Point2D(-1,-1);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -153,7 +158,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(2,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -170,7 +175,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(2,1);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -187,7 +192,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(-2,2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -204,7 +209,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(-2,3);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -221,7 +226,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,2);
 		sb = new Point2D(-2,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -238,7 +243,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,3);
 		sb = new Point2D(-2,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -255,7 +260,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -272,7 +277,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -289,7 +294,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -306,7 +311,7 @@ public class AIUtilsTest
 		sa = new Point2D(-1,2);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -323,7 +328,7 @@ public class AIUtilsTest
 		sa = new Point2D(-1,1);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -340,7 +345,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -357,7 +362,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,-2);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -374,7 +379,7 @@ public class AIUtilsTest
 		sa = new Point2D(-1,2);
 		sb = new Point2D(-1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -391,7 +396,7 @@ public class AIUtilsTest
 		sa = new Point2D(-1,2);
 		sb = new Point2D(-1,-1);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -408,7 +413,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -425,7 +430,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(1,2);
 				
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -442,7 +447,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(2,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -459,7 +464,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(3,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -476,7 +481,7 @@ public class AIUtilsTest
 		sa = new Point2D(2,1);
 		sb = new Point2D(1,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -493,7 +498,7 @@ public class AIUtilsTest
 		sa = new Point2D(3,1);
 		sb = new Point2D(1,-2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -510,7 +515,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(3,2);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -527,7 +532,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,1);
 		sb = new Point2D(2,3);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
@@ -544,7 +549,7 @@ public class AIUtilsTest
 		sa = new Point2D(1,-1);
 		sb = new Point2D(1,-1);
 		
-		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,0);
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 		System.out.println("--------------------------");
 		System.out.println(String.format("Test Case %d",testCase++));
 		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
