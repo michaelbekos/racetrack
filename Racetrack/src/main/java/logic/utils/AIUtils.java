@@ -171,7 +171,15 @@ public class AIUtils
 				{
 					if(!smaxXReached)
 					{
-						ax = (int)Math.signum(smaxReachedX-sx);
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
+						{
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
 						sx = sx + ax;
 						if (sx == smaxReachedX)
 						{
@@ -406,7 +414,15 @@ public class AIUtils
 				{
 					if(!smaxXReached)
 					{
-						ax = (int)Math.signum(smaxReachedX-sx);
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < t_new)
+						{
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
 						sx = sx + ax;
 						if (sx == smaxReachedX)
 						{
@@ -619,7 +635,15 @@ public class AIUtils
 					{
 						if(!smaxYReached)
 						{
-							ay = (int)Math.signum(smaxReachedY-sy);
+							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
+							{
+								ay = 0;
+								skippedY += 1;
+							}
+							else
+							{
+								ay = (int)Math.signum(smaxReachedY-sy);
+							}
 							sy = sy + ay;
 							if (sy == smaxReachedY)
 							{
@@ -854,7 +878,15 @@ public class AIUtils
 					{
 						if(!smaxYReached)
 						{
-							ay = (int)Math.signum(smaxReachedY-sy);
+							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < t_new)
+							{
+								ay = 0;
+								skippedY += 1;
+							}
+							else
+							{
+								ay = (int)Math.signum(smaxReachedY-sy);
+							}
 							sy = sy + ay;
 							if (sy == smaxReachedY)
 							{
@@ -1046,7 +1078,15 @@ public class AIUtils
 				{
 					if(!smaxYReached)
 					{
-						ay = (int)Math.signum(smaxReachedY-sy);
+						if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
+						{
+							ay = 0;
+							skippedY += 1;
+						}
+						else
+						{
+							ay = (int)Math.signum(smaxReachedY-sy);
+						}
 						sy = sy + ay;
 						if (sy == smaxReachedY)
 						{
@@ -1106,7 +1146,15 @@ public class AIUtils
 					}
 					if(!smaxXReached)
 					{
-						ax = (int)Math.signum(smaxReachedX-sx);
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
+						{
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
 						sx = sx + ax;
 						if (sx == smaxReachedX)
 						{
