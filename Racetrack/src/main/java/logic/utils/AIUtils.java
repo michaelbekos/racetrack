@@ -22,14 +22,14 @@ public class AIUtils
 		//contains one even number in multiplication -> result is integer
 		int Ax = (int)Math.abs(sx2-sx1) * sx1 + (int)Math.signum(sx2 - sx1)*(int)Math.abs(sx2 - sx1)*((int)Math.abs(sx2 - sx1) + 1)/2;				
 		boolean overshootX = false;
-		if (Math.signum(sx2)*(Dx-Ax) < 0)
+		if (Math.signum(sx2)*(Dx-Ax) <= 0)
 		{
 			overshootX = true;
 		}
 		int Dy = y2 - y1;
 		int Ay = (int)Math.abs(sy2-sy1) * sy1 + (int)Math.signum(sy2 - sy1)*(int)Math.abs(sy2 - sy1)*((int)Math.abs(sy2 - sy1) + 1)/2;	
 		boolean overshootY = false;
-		if (Math.signum(sy2)*(Dy-Ay) < 0)
+		if (Math.signum(sy2)*(Dy-Ay) <= 0)
 		{
 			overshootY = true;
 		}
@@ -90,7 +90,8 @@ public class AIUtils
 		{
 			double sminY_double = (sy1  + sy2 - Math.signum(sy2)*tx)/2.0f;
 			int sminY;
-			if (Math.signum(sy2)>0)
+			boolean sminYHoldForTwoTurns = ((int) Math.floor(sminY_double) != (int) Math.ceil(sminY_double));
+			if (Math.signum(sminY_double)>0)
 			{
 				sminY = (int) Math.floor(sminY_double);
 			}
@@ -98,27 +99,70 @@ public class AIUtils
 			{
 				sminY = (int) Math.ceil(sminY_double);
 			}
-			int dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy2)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + Math.abs(sy2 - sminY) * sminY + (int)Math.signum(sy2)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
-			if (Math.abs(dminY) <= Math.abs(Dy))
+			int dminY;
+			if (!sminYHoldForTwoTurns)
 			{
-				int deltaDY = Math.abs(Dy) - Math.abs(dminY);
-				int layersSkippedY = (int)Math.floor((int)Math.sqrt(Math.abs(deltaDY)));
-				int additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY;
-				int doNotAccelerateY = 2*(layersSkippedY+1) - additionalPointsSkippedY;
-				int sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
-				int zx_int = (int)Math.ceil(zx) + (int)Math.ceil(zx)%2;
-				int dmaxX = Ax + sx2*zx_int + zx_int*zx_int/4+zx_int/2;
-				int deltaDX = Math.abs(Dx) - Math.abs(dmaxX);
-				int layersSkippedX = (int)Math.floor((int)Math.sqrt(Math.abs(deltaDX)));
-				int additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
-				int doNotAccelerateX = 2*(layersSkippedX+1) - additionalPointsSkippedX;
-				int smaxReachedX = sx2 + zx_int/2 - (int)Math.signum(sx2) * layersSkippedX;
+				dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + Math.abs(sy2 - sminY) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
+			}
+			else
+			{
+				dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + (Math.abs(sy2 - sminY) + 1) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
+			}
+			if (Math.signum(sy2) * (Dy-dminY) >= 0)
+			{
+				int deltaDY = (int)Math.signum(sy2) * (Dy-dminY);
+				int layersSkippedY;
+				int additionalPointsSkippedY;
+				int doNotAccelerateY;
+				int sminReachedY;
+				if (!sminYHoldForTwoTurns)
+				{
+					layersSkippedY = (int)Math.floor(Math.sqrt(Math.abs(deltaDY)));
+					additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY;
+					doNotAccelerateY = 2*(layersSkippedY) - additionalPointsSkippedY;
+					sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
+				}
+				else
+				{
+					layersSkippedY = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDY)));
+					additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY - layersSkippedY;
+					doNotAccelerateY = 2*(layersSkippedY+1) - 1  - additionalPointsSkippedY;
+					sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
+				}
+				int dmaxX;
+				int deltaDX;
+				int layersSkippedX;
+				int additionalPointsSkippedX;
+				int doNotAccelerateX;
+				int smaxReachedX;
+				if (zxIsEven)
+				{
+					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * (zx/2-1)*(zx/2) + (int)Math.signum(sx2) * zx/2;
+					deltaDX = Math.abs(Dx - dmaxX);
+					layersSkippedX = (int)Math.floor(Math.sqrt(Math.abs(deltaDX)));
+					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
+					doNotAccelerateX= 2*(layersSkippedX) - additionalPointsSkippedX;
+					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * zx/2 - (int)Math.signum(sx2) * layersSkippedX;
+				}
+				else
+				{
+					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * ((zx-1)/2+1)*((zx-1)/2);
+					deltaDX = Math.abs(Dx - dmaxX);
+					layersSkippedX = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDX)));
+					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX - layersSkippedX;
+					doNotAccelerateX= 2*(layersSkippedX+1) - 1 - additionalPointsSkippedX;
+					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * (zx-1)/2 - (int)Math.signum(sx2) * layersSkippedX;
+				}
 				boolean skippingX = false;
 				boolean skippingY = false;
-				boolean smaxXReached = false;
+				boolean additionalSkippingX = false;
+				boolean additionalSkippingY = false;
 				boolean sminYReached = false;
+				boolean smaxXReached = false;
 				int skippedX = 0;
 				int skippedY = 0;
+				int additionalSkippedX = 0;
+				int additionalSkippedY = 0;
 				int sx = sx1;
 				int sy = sy1;
 				int ax = 0;
@@ -133,6 +177,30 @@ public class AIUtils
 						{
 							smaxXReached = true;
 							skippingX = true;
+							if (t == 0)
+							{
+								if (ax == 0)
+								{
+									skippedX += 1;
+								}
+								else
+								{
+									if (Math.signum(ax) == Math.signum(sx2-sx1))
+									{
+										skippedX += 2;
+										doNotAccelerateX -=1;
+										additionalPointsSkippedX += 1;
+									}
+								}
+								if (skippedX > doNotAccelerateX)
+								{
+									sx = sx - ax;
+									ax = (int)Math.signum(sx2 - sx1);
+									sx = sx + ax;
+									additionalSkippingX = true;
+									skippingX = false;
+								}
+							}			
 						}
 					}
 					else
@@ -148,8 +216,17 @@ public class AIUtils
 						}
 						else
 						{
-							ax = (int)Math.signum(sx2-sx);
-							sx = sx + ax;
+							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+							{
+								additionalSkippedX += 1;
+								ax = 0;
+							}
+							else
+							{
+								ax = (int)Math.signum(sx2-sx);
+								sx = sx + ax;
+								additionalSkippingX = true;
+							}
 						}
 					}
 					if(!sminYReached)
@@ -160,6 +237,30 @@ public class AIUtils
 						{
 							sminYReached = true;
 							skippingY = true;
+							if (t == 0)
+							{
+								if (ay == 0)
+								{
+									skippedY += 1;
+								}
+								else
+								{
+									if (Math.signum(ay) == Math.signum(sy2-sy1))
+									{
+										skippedY += 2;
+										doNotAccelerateY -=1;
+										additionalPointsSkippedY += 1;
+									}
+								}
+								if (skippedY > doNotAccelerateY)
+								{
+									sy = sy - ay;
+									ay = (int)Math.signum(sy2 - sy1);
+									sy = sy + ay;
+									additionalSkippingY = true;
+									skippingY = false;
+								}
+							}
 						}
 					}
 					else
@@ -175,62 +276,128 @@ public class AIUtils
 						}
 						else
 						{
-							ay = (int)Math.signum(sy2-sy);
-							sy = sy + ay;
+							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+							{
+								additionalSkippedY += 1;
+								ay = 0;
+							}
+							else
+							{
+								ay = (int)Math.signum(sy2-sy);
+								sy = sy + ay;
+								additionalSkippingY = true;
+							}
 						}
 					}
 					accelerations.add(new Point2D(ax,ay));
 				}
+				if (turns != tx)
+				{
+					System.out.println(String.format("Mismatch between turns = %d and tx = %d", turns, tx));
+				}
 			}
 			else
 			{
-				sminY_double = Math.sqrt((2*Math.signum(sy2)*Dy - 3 * sy1 *sy1 + Math.signum(sy2) * sy1 - sy2 *sy2 - Math.signum(sy2)*sy2)/-2.0f) * (-Math.signum(sy2));
+				int sminY_even;
+				int sminY_odd; 
+				double sminY_double_even = Math.sqrt((sy1*sy1 + sy2*sy2 + (int)Math.abs(sy2) - (int)Math.signum(sy2)*sy1 - 2*Math.signum(sy2)*Dy)/2.0f)*(-Math.signum(sy2));
+				double sminY_double_odd = Math.signum(sy2) - Math.sqrt(0.25+(sy1*sy1 + sy2*sy2 + (int)Math.abs(sy2) - (int)Math.signum(sy2)*sy1 - 2*Math.signum(sy2)*Dy)/2.0f)*(Math.signum(sy2));
 				if (Math.signum(sy2)>0)
 				{
-					sminY = (int) Math.floor(sminY_double);
+					sminY_even = (int) Math.floor(sminY_double_even);
+					sminY_odd = (int) Math.floor(sminY_double_odd);
 				}
 				else
 				{
-					sminY = (int) Math.ceil(sminY_double);
+					sminY_even = (int) Math.ceil(sminY_double_even);
+					sminY_odd = (int) Math.ceil(sminY_double_odd);
 				}
-				int t_new = (int)Math.signum(sy2)*(sy1-sminY) + (int)Math.signum(sy2) *(sy2 - sminY);
-				if ((int) Math.floor(sminY_double) != (int) Math.ceil(sminY_double))
+				int t_new;
+				int t_new_even = (int)Math.signum(sy2)*(sy1-sminY_even) + (int)Math.signum(sy2) *(sy2 - sminY_even);
+				int t_new_odd = (int)Math.signum(sy2)*(sy1-sminY_odd) + (int)Math.signum(sy2) *(sy2 - sminY_odd) + 1;
+				if (t_new_even < t_new_odd)
 				{
-					t_new += 1;
+					t_new = t_new_even;
+					sminY = sminY_even;
+					sminYHoldForTwoTurns = false;
+				}
+				else
+				{
+					t_new = t_new_odd;
+					sminY = sminY_odd;
+					sminYHoldForTwoTurns = true;
 				}
 				int zx_new = t_new - ((int)Math.abs(sx2 - sx1));
 				if (zx_new%2 != 0)
 				{
-					t_new += 1;
-					zx_new +=1;
-					sminY_double = (sy1  + sy2 - Math.signum(sy2)*t_new)/2.0f;
-					if (Math.signum(sy2)>0)
-					{
-						sminY = (int) Math.floor(sminY_double);
-					}
-					else
-					{
-						sminY = (int) Math.ceil(sminY_double);
-					}
+					zxIsEven = false;
 				}
-				dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy2)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + Math.abs(sy2 - sminY) * sminY + (int)Math.signum(sy2)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
-				int deltaDY = Math.abs(Dy) - Math.abs(dminY);
-				int layersSkippedY = (int)Math.floor((int)Math.sqrt(Math.abs(deltaDY)));
-				int additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY;
-				int doNotAccelerateY = 2*(layersSkippedY+1) - additionalPointsSkippedY;
-				int sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
-				int dmaxX = Ax + sx2*zx_new + zx_new*zx_new/4+zx_new/2;
-				int deltaDX = Math.abs(Dx) - Math.abs(dmaxX);
-				int layersSkippedX = (int)Math.floor((int)Math.sqrt(Math.abs(deltaDX)));
-				int additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
-				int doNotAccelerateX = 2*(layersSkippedX+1) - additionalPointsSkippedX;
-				int smaxReachedX = sx2 + zx_new/2 - (int)Math.signum(sx2) * layersSkippedX;
+				else
+				{
+					zxIsEven = true;
+				}
+				zx = zx_new;
+				if (!sminYHoldForTwoTurns)
+				{
+					dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + Math.abs(sy2 - sminY) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
+				}
+				else
+				{
+					dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + (Math.abs(sy2 - sminY) + 1) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
+				}					
+				int deltaDY = (int)Math.signum(sy2) * (Dy-dminY);
+				int layersSkippedY;
+				int additionalPointsSkippedY;
+				int doNotAccelerateY;
+				int sminReachedY;
+				if (!sminYHoldForTwoTurns)
+				{
+					layersSkippedY = (int)Math.floor(Math.sqrt(Math.abs(deltaDY)));
+					additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY;
+					doNotAccelerateY = 2*(layersSkippedY) - additionalPointsSkippedY;
+					sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
+				}
+				else
+				{
+					layersSkippedY = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDY)));
+					additionalPointsSkippedY = Math.abs(deltaDY) - layersSkippedY * layersSkippedY - layersSkippedY;
+					doNotAccelerateY = 2*(layersSkippedY+1) - 1  - additionalPointsSkippedY;
+					sminReachedY = sminY + (int)Math.signum(sy2) * layersSkippedY;
+				}
+				int dmaxX;
+				int deltaDX;
+				int layersSkippedX;
+				int additionalPointsSkippedX;
+				int doNotAccelerateX;
+				int smaxReachedX;
+				if (zxIsEven)
+				{
+					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * (zx/2-1)*(zx/2) + (int)Math.signum(sx2) * zx/2;
+					deltaDX = Math.abs(Dx - dmaxX);
+					layersSkippedX = (int)Math.floor(Math.sqrt(Math.abs(deltaDX)));
+					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
+					doNotAccelerateX= 2*(layersSkippedX) - additionalPointsSkippedX;
+					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * zx/2 - (int)Math.signum(sx2) * layersSkippedX;
+				}
+				else
+				{
+					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * ((zx-1)/2+1)*((zx-1)/2);
+					deltaDX = Math.abs(Dx - dmaxX);
+					layersSkippedX = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDX)));
+					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX - layersSkippedX;
+					doNotAccelerateX= 2*(layersSkippedX+1) - 1 - additionalPointsSkippedX;
+					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * (zx-1)/2 - (int)Math.signum(sx2) * layersSkippedX;
+				}
 				boolean skippingX = false;
 				boolean skippingY = false;
-				boolean smaxXReached = false;
+				boolean additionalSkippingX = false;
+				boolean additionalSkippingY = false;
 				boolean sminYReached = false;
+				boolean smaxXReached = false;
 				int skippedX = 0;
 				int skippedY = 0;
+				int additionalSkippedX = 0;
+				int additionalSkippedY = 0;
 				int sx = sx1;
 				int sy = sy1;
 				int ax = 0;
@@ -245,6 +412,30 @@ public class AIUtils
 						{
 							smaxXReached = true;
 							skippingX = true;
+							if (t == 0)
+							{
+								if (ax == 0)
+								{
+									skippedX += 1;
+								}
+								else
+								{
+									if (Math.signum(ax) == Math.signum(sx2-sx1))
+									{
+										skippedX += 2;
+										doNotAccelerateX -=1;
+										additionalPointsSkippedX += 1;
+									}
+								}
+								if (skippedX > doNotAccelerateX)
+								{
+									sx = sx - ax;
+									ax = (int)Math.signum(sx2 - sx1);
+									sx = sx + ax;
+									additionalSkippingX = true;
+									skippingX = false;
+								}
+							}			
 						}
 					}
 					else
@@ -256,12 +447,21 @@ public class AIUtils
 						if(skippingX)
 						{
 							skippedX += 1;
-							ax = 0;
+							ax= 0;
 						}
 						else
 						{
-							ax = (int)Math.signum(sx2-sx);
-							sx = sx + ax;
+							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+							{
+								additionalSkippedX += 1;
+								ax = 0;
+							}
+							else
+							{
+								ax = (int)Math.signum(sx2-sx);
+								sx = sx + ax;
+								additionalSkippingX = true;
+							}
 						}
 					}
 					if(!sminYReached)
@@ -272,6 +472,30 @@ public class AIUtils
 						{
 							sminYReached = true;
 							skippingY = true;
+							if (t == 0)
+							{
+								if (ay == 0)
+								{
+									skippedY += 1;
+								}
+								else
+								{
+									if (Math.signum(ay) == Math.signum(sy2-sy1))
+									{
+										skippedY += 2;
+										doNotAccelerateY -=1;
+										additionalPointsSkippedY += 1;
+									}
+								}
+								if (skippedY > doNotAccelerateY)
+								{
+									sy = sy - ay;
+									ay = (int)Math.signum(sy2 - sy1);
+									sy = sy + ay;
+									additionalSkippingY = true;
+									skippingY = false;
+								}
+							}
 						}
 					}
 					else
@@ -287,11 +511,24 @@ public class AIUtils
 						}
 						else
 						{
-							ay = (int)Math.signum(sy2-sy);
-							sy = sy + ay;
+							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+							{
+								additionalSkippedY += 1;
+								ay = 0;
+							}
+							else
+							{
+								ay = (int)Math.signum(sy2-sy);
+								sy = sy + ay;
+								additionalSkippingY = true;
+							}
 						}
 					}
 					accelerations.add(new Point2D(ax,ay));
+				}
+				if (turns != t_new)
+				{
+					System.out.println(String.format("Mismatch between turns = %d and tx_new = %d", turns, t_new));
 				}
 			}
 		}
@@ -547,6 +784,7 @@ public class AIUtils
 					{
 						zyIsEven = true;
 					}
+					zy = zy_new;
 					if (!sminXHoldForTwoTurns)
 					{
 						dminX = (int) (Math.abs(sminX - sx1) * sx1 - (int)Math.signum(sx1-sminX)*(Math.abs(sminX - sx1) * (Math.abs(sminX  - sx1) + 1))/2 + Math.abs(sx2 - sminX) * sminX + (int)Math.signum(sx2-sminX)*(Math.abs(sx2 - sminX) * (Math.abs(sx2  - sminX) + 1))/2);
@@ -612,7 +850,7 @@ public class AIUtils
 					int sy = sy1;
 					int ax = 0;
 					int ay = 0;
-					for (int t = 0; t < ty; t++)
+					for (int t = 0; t < t_new; t++)
 					{
 						if(!smaxYReached)
 						{
@@ -736,7 +974,7 @@ public class AIUtils
 						}
 						accelerations.add(new Point2D(ax,ay));
 					}
-					if (turns != ty)
+					if (turns != t_new)
 					{
 						System.out.println(String.format("Mismatch between turns = %d and ty_new = %d", turns, t_new));
 					}
