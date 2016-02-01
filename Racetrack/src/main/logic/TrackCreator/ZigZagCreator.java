@@ -22,9 +22,9 @@ public class ZigZagCreator
 	public static void main(String[] args)
 	{
 		generator.setSeed(System.currentTimeMillis());
-		if (args.length != 4)
+		if (args.length != 4 && args.length != 5)
 		{
-			System.out.println("Usage: ZigZagCreator width maxLength minLength maxNumberOfTurns");
+			System.out.println("Usage: ZigZagCreator width maxLength minLength maxNumberOfTurns minNumberOfTurns(opt)");
 		}
 		else
 		{
@@ -32,10 +32,19 @@ public class ZigZagCreator
 			int maxLength = Integer.parseInt(args[1]);
 			int minLength = Integer.parseInt(args[2]);
 			int maxNumberOfTurns = Integer.parseInt(args[3]);
-			if (width < 1 || maxLength < 1 || minLength < 1 || maxNumberOfTurns < 1)
+			int minNumberOfTurns = 1;
+			if (args.length == 5)
+			{
+				minNumberOfTurns = Integer.parseInt(args[4]);
+			}
+			if (width < 1 || maxLength < 1 || minLength < 1 || maxNumberOfTurns < 1 || minNumberOfTurns < 1)
+			{
+				System.out.println("Invalid parameter values!");
+				return;
+			}
 			if (minLength < width)
 			{
-				minLength = width;
+				minLength = width + 1;
 			}
 			if (minLength > maxLength)
 			{
@@ -43,7 +52,7 @@ public class ZigZagCreator
 				minLength = maxLength;
 				maxLength = swap;
 			}
-			writeZigZagXML(width, maxLength, minLength, maxNumberOfTurns);
+			writeZigZagXML(width, maxLength, minLength, maxNumberOfTurns,minNumberOfTurns);
 			System.out.println("Track generation done.");
 		}
 	}
@@ -53,94 +62,104 @@ public class ZigZagCreator
 		LEFT, RIGHT, UP, DOWN 
 	}
 	
-	private static void writeZigZagXML(int width, int maxLength, int minLength, int maxNumberOfTurns)
+	private static void writeZigZagXML(int width, int maxLength, int minLength, int maxNumberOfTurns, int minNumberOfTurns)
 	{
 		ZigZagDimensions zigZagDim = new ZigZagDimensions(0, width+1, 0, width+1);
-		Direction currentDirection = Direction.RIGHT;
+		Direction currentDirection;
 		ArrayList<Point> outerBoundaryPoints = new ArrayList<Point>();
 		ArrayList<Point> innerBoundaryPoints = new ArrayList<Point>();
 		ArrayList<Point> startingPositions = new ArrayList<Point>();
 		ArrayList<LineSegment> boundaries = new ArrayList<LineSegment>();
-		outerBoundaryPoints.add(new Point(1,0));
-		outerBoundaryPoints.add(new Point(0,0));
-		outerBoundaryPoints.add(new Point(0,width+1));
-		outerBoundaryPoints.add(new Point(width+1,width+1));
-		innerBoundaryPoints.add(new Point(1,0));
-		innerBoundaryPoints.add(new Point(width+1,0));
-		for (int i = 1; i <= width; i++)
+		int turns = 0;
+		while (turns < minNumberOfTurns)
 		{
-			startingPositions.add(new Point(1,i));
+			zigZagDim = new ZigZagDimensions(0, width+1, 0, width+1);
+			currentDirection = Direction.RIGHT;
+			outerBoundaryPoints = new ArrayList<Point>();
+			innerBoundaryPoints = new ArrayList<Point>();
+			startingPositions = new ArrayList<Point>();
+			boundaries = new ArrayList<LineSegment>();
+			outerBoundaryPoints.add(new Point(1,0));
+			outerBoundaryPoints.add(new Point(0,0));
+			outerBoundaryPoints.add(new Point(0,width+1));
+			outerBoundaryPoints.add(new Point(width+1,width+1));
+			innerBoundaryPoints.add(new Point(1,0));
+			innerBoundaryPoints.add(new Point(width+1,0));
+			for (int i = 1; i <= width; i++)
+			{
+				startingPositions.add(new Point(1,i));
+			}
+			boundaries.add(new LineSegment(outerBoundaryPoints.get(0),outerBoundaryPoints.get(1)));
+			boundaries.add(new LineSegment(outerBoundaryPoints.get(1),outerBoundaryPoints.get(2)));
+			boundaries.add(new LineSegment(outerBoundaryPoints.get(2),outerBoundaryPoints.get(3)));
+			boundaries.add(new LineSegment(innerBoundaryPoints.get(0),innerBoundaryPoints.get(1)));
+			for(turns = 0; turns < maxNumberOfTurns; turns++)
+			{
+				if (!addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection))
+				{
+					break;
+				}
+				Direction newDirection = Direction.UP;
+				int random = generator.nextInt(2);
+				switch (currentDirection)
+				{
+					case UP:
+					{
+						if (random == 0)
+						{
+							newDirection = Direction.LEFT;
+						}
+						else
+						{
+							newDirection = Direction.RIGHT;
+						}
+						break;
+					}
+					case DOWN:
+					{
+						if (random == 0)
+						{
+							newDirection = Direction.RIGHT;
+						}
+						else
+						{
+							newDirection = Direction.LEFT;
+						}
+						break;
+					}
+					case LEFT:
+					{
+						if (random == 0)
+						{
+							newDirection = Direction.UP;
+						}
+						else
+						{
+							newDirection = Direction.DOWN;
+						}
+						break;
+					}
+					case RIGHT:
+					{
+						if (random == 0)
+						{
+							newDirection = Direction.DOWN;
+						}
+						else
+						{
+							newDirection = Direction.UP;
+						}
+						break;
+					}
+				}
+				if (!addTurn(width, outerBoundaryPoints, innerBoundaryPoints, boundaries, zigZagDim, currentDirection, newDirection))
+				{
+					break;
+				}
+				currentDirection = newDirection;
+			}
+			addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection);
 		}
-		boundaries.add(new LineSegment(outerBoundaryPoints.get(0),outerBoundaryPoints.get(1)));
-		boundaries.add(new LineSegment(outerBoundaryPoints.get(1),outerBoundaryPoints.get(2)));
-		boundaries.add(new LineSegment(outerBoundaryPoints.get(2),outerBoundaryPoints.get(3)));
-		boundaries.add(new LineSegment(innerBoundaryPoints.get(0),innerBoundaryPoints.get(1)));
-		for(int turns = 0; turns < maxNumberOfTurns; turns++)
-		{
-			if (!addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection))
-			{
-				break;
-			}
-			Direction newDirection = Direction.UP;
-			int random = generator.nextInt(2);
-			switch (currentDirection)
-			{
-				case UP:
-				{
-					if (random == 0)
-					{
-						newDirection = Direction.LEFT;
-					}
-					else
-					{
-						newDirection = Direction.RIGHT;
-					}
-					break;
-				}
-				case DOWN:
-				{
-					if (random == 0)
-					{
-						newDirection = Direction.RIGHT;
-					}
-					else
-					{
-						newDirection = Direction.LEFT;
-					}
-					break;
-				}
-				case LEFT:
-				{
-					if (random == 0)
-					{
-						newDirection = Direction.UP;
-					}
-					else
-					{
-						newDirection = Direction.DOWN;
-					}
-					break;
-				}
-				case RIGHT:
-				{
-					if (random == 0)
-					{
-						newDirection = Direction.DOWN;
-					}
-					else
-					{
-						newDirection = Direction.UP;
-					}
-					break;
-				}
-			}
-			if (!addTurn(width, outerBoundaryPoints, innerBoundaryPoints, boundaries, zigZagDim, currentDirection, newDirection))
-			{
-				break;
-			}
-			currentDirection = newDirection;
-		}
-		addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection);
 		int offsetX = 0 -zigZagDim.minX + 2;
 		int offsetY = 0 -zigZagDim.minY + 2;
 		int dimensionX = zigZagDim.maxX - zigZagDim.minX + 4;
@@ -242,7 +261,15 @@ public class ZigZagCreator
 	{
 		Point newOuterBoundaryPoint = null;
 		Point newInnerBoundaryPoint = null;
-		int distance = generator.nextInt(maxLength-minLength) + minLength;
+		int distance;
+		if (maxLength != minLength)
+		{
+			distance = generator.nextInt(maxLength-minLength) + minLength;
+		}
+		else
+		{
+			distance = minLength;
+		}
 		switch(currentDirection)
 		{
 			case UP:
