@@ -559,5 +559,70 @@ public class AIUtilsTest
 			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
 		}
 		System.out.println("--------------------------");
+		
+		//Test Case 33
+		a = new Point2D(6,2);
+		b = new Point2D(130,2);
+		sa = new Point2D(1,0);
+		sb = new Point2D(1,0);
+		
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
+		System.out.println("--------------------------");
+		System.out.println(String.format("Test Case %d",testCase++));
+		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
+		System.out.println("--------------------------");
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
+		}
+		System.out.println("--------------------------");
+		
+		System.out.println(accelerations.size());
+		
+		int x = 6;
+		int y = 2;
+		int sx = 1;
+		int sy = 0;
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			sx += (int)accelerations.get(i).getX();
+			sy += (int)accelerations.get(i).getY();
+			x += sx;
+			y += sy;
+			System.out.println(String.format("(%d,%d)", x,y));
+		}
+		
+		//Test Case 33
+		a = new Point2D(0,2);
+		b = new Point2D(100,2);
+		sa = new Point2D(1,10);
+		sb = new Point2D(1,10);
+		
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
+		System.out.println("--------------------------");
+		System.out.println(String.format("Test Case %d",testCase++));
+		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
+		System.out.println("--------------------------");
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
+		}
+		System.out.println("--------------------------");
+		
+		System.out.println(accelerations.size());
+		
+		x = 0;
+		y = 2;
+		sx = 0;
+		sy = 10;
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			sx += (int)accelerations.get(i).getX();
+			sy += (int)accelerations.get(i).getY();
+			x += sx;
+			y += sy;
+			System.out.println(String.format("(%d,%d)", x,y));
+		}
+		
 	}
 }
