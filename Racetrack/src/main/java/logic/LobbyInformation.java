@@ -17,7 +17,7 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 	private int lobbyID;
 	private int maxPlayers;
 	// This is only a necessary information on Lobby Creation
-	private int amountOfAIs;
+//	private int amountOfAIs;
 	
 	private int playMode;
 
@@ -204,34 +204,6 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 	}
 
 	@Override
-	public int getAmountOfAIs() {
-		return amountOfAIs;
-	}
-
-	@Override
-	public void setAmountOfAIs(int amountOfAIs) {
-		this.amountOfAIs = amountOfAIs;
-	}
-
-	@Override
-	public void setAIs(List<Integer> settings) {
-		this.amountOfAIs = 0;
-		for( int i=0 ; i<settings.size() ; i++ )
-		{
-			switch( settings.get( i ) )
-			{
-			case 0://Free
-				break;
-			case 1://Human
-				break;
-			default://AIs (or errors)
-				this.amountOfAIs++;
-				break;
-			}
-		}
-	}
-	
-	@Override
 	public void toggleParticipating(int index) {
 		this.arrayOfPlayers[index].isParticipating = !this.arrayOfPlayers[index].isParticipating;
 	}
@@ -295,7 +267,7 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 	 */
 	public void printLobby(){
 		Racetracker.printInDebugMode("\nLobby Name: " + lobbyName + " , Lobby ID: " + lobbyID + " , Max Players: " + maxPlayers);
-		Racetracker.printInDebugMode("Track ID: " + trackId + " , gameRunning: " + isGameRunning + " , Amount Of AIs" + amountOfAIs);
+		Racetracker.printInDebugMode("Track ID: " + trackId + " , gameRunning: " + isGameRunning );
 		for(int i = 0; i < arrayOfPlayers.length; i++){
 			if(arrayOfPlayers[i] != null && arrayOfPlayers[i].name != null && arrayOfPlayers[i].playerID != null){
 				Racetracker.printInDebugMode("Player[" + i + "] Name, ID, participating: " + arrayOfPlayers[i].name + " , " + 

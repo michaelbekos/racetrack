@@ -2,9 +2,14 @@ package src.main.java.logic;
 
 public class AI_Random extends AI
 {
-	public AI_Random(Integer playerID, String name)
+	public AI_Random( Integer playerID, String name )
 	{
-		super( playerID, name );
+		this( playerID, name, -1 );
+	}
+	public AI_Random( Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, name, playerColorId );
+		mTypeID=3;
 	}
 	
 	@Override

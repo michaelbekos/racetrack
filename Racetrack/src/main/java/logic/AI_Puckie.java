@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
 import src.main.java.logic.AIstar.AIstar;
 import src.main.java.logic.AIstar.LineSegment;
+import src.main.java.logic.AIstar.Point;
 //import src.main.java.logic.AIstar.Point;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
@@ -36,9 +37,13 @@ public class AI_Puckie extends AI
 	private List<Point2D> movePath;
 	private List<Point2D> goalPoints;
 	
-	public AI_Puckie(Integer playerID, String name)
+	public AI_Puckie( Integer playerID, String name )
 	{
-		super( playerID, name );
+		this( playerID, name, -1 );
+	}
+	public AI_Puckie( Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, name, playerColorId );
 		mGridCreated=false;
 
 		// SET THIS TO FALSE FOR LESS OUTPUT.
@@ -48,6 +53,7 @@ public class AI_Puckie extends AI
 		shortestPath=new ArrayList<Point2D>();
 		movePath=new ArrayList<Point2D>();
 		goalPoints=new ArrayList<Point2D>();
+		mTypeID=4;
 	}
 	
 	@Override
@@ -92,13 +98,33 @@ public class AI_Puckie extends AI
 			}
 			
 		}
-		currentIndexPosition++;
 		
-		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition ).getX() + ", "+ movePath.get( currentIndexPosition ).getY() +" )" ); 
-		return new javafx.geometry.Point2D( 
-				movePath.get( currentIndexPosition ).getX(),
-				movePath.get( currentIndexPosition ).getY()
-				);
+		Point2D currentPosition=movePath.get( currentIndexPosition );
+		currentIndexPosition++;
+		Point2D plannedNextPosition=movePath.get( currentIndexPosition );
+		
+
+		for( int i=0 ; i<mGame.getPlayerList().length ; i++ )
+		{
+			if( plannedNextPosition.equals( mGame.getPlayerList()[i].getCurrentPosition() ) )
+			{
+				if( plannedNextPosition.equals( currentPosition ) )
+				{
+					// Die eigen position darf erneut 'betreten' werden.
+					break;
+				}
+				else
+				{
+					System.out.println( ""+this.getName()+" is blocked at ( "+ plannedNextPosition.getX() + ", "+ plannedNextPosition.getY() +" ) and will not move" ); 
+					currentIndexPosition--;
+					return currentPosition;
+				}
+			}
+		}
+
+		System.out.println( ""+this.getName()+" will try to move to ( "+ plannedNextPosition.getX() + ", "+ plannedNextPosition.getY() +" )" ); 
+		return plannedNextPosition;
+		
 	}
 	
 	public boolean isAI()

@@ -5,9 +5,14 @@ import javafx.scene.shape.Line;
 
 public class AI_NoMover extends AI
 {
-	public AI_NoMover(Integer playerID, String name)
+	public AI_NoMover( Integer playerID, String name )
 	{
-		super( playerID, name );
+		this( playerID, name, -1 );
+	}
+	public AI_NoMover( Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, name, playerColorId );
+		mTypeID=2; 
 	}
 	
 	@Override

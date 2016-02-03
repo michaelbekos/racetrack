@@ -85,18 +85,18 @@ public interface ILobbyInformation {
 	 */
 	public void setParticipating(int index, boolean particiapting);
 
-	/**
-	 * This is only a necessary information on Lobby Creation
-	 * @return How many players in the game shall be AI?
-	 */
-	public int getAmountOfAIs();
-	
-	/**
-	 * This is only a necessary information on Lobby Creation
-	 * @param isAI how many AI's shall there be in the game?
-	 */
-	public void setAmountOfAIs(int isAI);
-	
+//	/**
+//	 * This is only a necessary information on Lobby Creation
+//	 * @return How many players in the game shall be AI?
+//	 */
+//	public int getAmountOfAIs();
+//	
+//	/**
+//	 * This is only a necessary information on Lobby Creation
+//	 * @param isAI how many AI's shall there be in the game?
+//	 */
+//	public void setAmountOfAIs(int isAI);
+//	
 	/**
 	 * 
 	 * @return Max amount of players
@@ -107,5 +107,5 @@ public interface ILobbyInformation {
 	 * Prints the lobby to the console (only if debug is on)
 	 */
 	public void printLobby();
-	void setAIs(List<Integer> settings);
+//	void setAIs(List<Integer> settings);
 }

@@ -1,6 +1,7 @@
 package src.main.java.logic;
 
 import src.main.java.core.DebugOutputHandler;
+import src.main.java.logic.AIstar.AIstar;
 import src.main.java.logic.utils.GameState;
 import javafx.geometry.Point2D;
 
@@ -144,26 +145,50 @@ public class Game {
 				playerList[i].setParticipating(true);
 				playerList[i].setHasCrashed(false);
 				playerList[i].setCurrentVelocity(new Point2D(0.0d, 0.0d));
-				if(playerList[i].isAI())
-					((AI)playerList[i]).setGameInformation(this);
+//				if(playerList[i].isAI())
+//					((AI)playerList[i]).setGameInformation(this);
 			}
 		}
 		this.roundCounter = 0;
 	}
 
-	public Game(ILobbyInformation lobby) {
+	public Game(ILobbyInformation lobby)
+	{
 		Player[] players = new Player[lobby.getPlayerNames().length];
-		for (int i = 0; i < players.length; i++) {
-			if (lobby.getPlayerIDs()[i] != null)
-				players[i] = new Player(lobby.getPlayerIDs()[i],
-						lobby.getPlayerNames()[i], i);
-			else
-				players[i] = new Player(null, lobby.getPlayerNames()[i], i);
+		for (int i = 0; i < players.length; i++)
+		{
+			switch( lobby.getTypeIDs()[i] )
+			{
+			case 1:
+				players[i]= new Player( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i], i );
+				break;
+			case 2:
+				players[i]= new AI_NoMover( lobby.getPlayerIDs()[i], "AI No Mover " + lobby.getPlayerNames()[i], i );
+				break;
+			case 3:
+				players[i]= new AI_Random( lobby.getPlayerIDs()[i], "AI Random " + lobby.getPlayerNames()[i], i );
+				break;
+			case 4:
+				players[i]= new AI_Puckie( lobby.getPlayerIDs()[i], "AI Puckie " + lobby.getPlayerNames()[i], i );
+				break;
+			case 5:
+				players[i]= new AIstar( lobby.getPlayerIDs()[i], "AIstar " + lobby.getPlayerNames()[i], i );
+				break;
+			case 6:
+				players[i]= new AI_Crasher( lobby.getPlayerIDs()[i], "AI Crasher " + lobby.getPlayerNames()[i], i );
+				break;
+			case 7:
+				players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i], i );
+				break;				
+				
+			/* ADD YOUR NEW AI ALSO HERE */
+			default:
+				return;
+			}
 		}
 
 		this.track = TrackFactory.getSampleTrack(lobby.getTrackId());
-		this.RTField = new Player[(int) track.getDimension().getX()][(int) track
-		                                                             .getDimension().getY()];
+		this.RTField = new Player[(int) track.getDimension().getX()][(int) track.getDimension().getY()];
 		this.playerList = players;
 		this.lastPlayerIndex = -1;
 		this.currentPlayerIndex = getFirstPlayerToMove();
@@ -235,9 +260,11 @@ public class Game {
 		//		this.gameState = GameState.values()[gameState.ordinal() + 1];
 	}
 
-	private int getFirstPlayerToMove() {
-		for (int i = playerList.length - 1; i >= 0; i--) {
-			if (playerList[i] != null)
+	private int getFirstPlayerToMove()
+	{
+		for( int i=playerList.length-1 ; i>=0 ; i-- )
+		{
+			if( playerList[i]!=null )
 				return i;
 		}
 		return 0;
@@ -707,28 +734,28 @@ public class Game {
 			nextRound();
 		}
 		
-		if (playerList[currentPlayerIndex].isAI())
-		{
-			long start_time=System.currentTimeMillis();
-			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
-			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
-			{
-				point = ((IAI)playerList[currentPlayerIndex]).move();
-			}
-			long time_needed=start_time-System.currentTimeMillis();
-			if( time_needed < 1500 )
-			{
-				try {
-					synchronized(this) {
-						this.wait( 1500-time_needed );
-					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-			}
-			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
-		}
+//		if (playerList[currentPlayerIndex].isAI())
+//		{
+//			long start_time=System.currentTimeMillis();
+//			javafx.geometry.Point2D point = ((IAI)playerList[currentPlayerIndex]).move();
+//			while (!inGameLobby.getAdministration().checkValidityOfClientMove(playerList[currentPlayerIndex].getPlayerID(), point))
+//			{
+//				point = ((IAI)playerList[currentPlayerIndex]).move();
+//			}
+//			long time_needed=start_time-System.currentTimeMillis();
+//			if( time_needed < 1500 )
+//			{
+//				try {
+//					synchronized(this) {
+//						this.wait( 1500-time_needed );
+//					}
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}	
+//			}
+//			inGameLobby.getAdministration().moveAI(playerList[currentPlayerIndex].getPlayerID(), point);
+//		}
 	}
 
 	/**

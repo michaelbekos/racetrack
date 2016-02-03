@@ -9,8 +9,15 @@ public abstract class AI extends Player implements IAI {
 	public static Random random = new Random(System.currentTimeMillis());
 
 	protected Game mGame;
-	public AI(Integer playerID, String name) {
-		super(playerID, name);
+
+	public AI( Integer playerID, String name )
+	{
+		this( playerID, name, -1 );
+	}
+	
+	public AI(Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, name, playerColorId );
 		super.setParticipating(true);
 		System.out.println( ""+ name + " - AI generated!" );
 	}

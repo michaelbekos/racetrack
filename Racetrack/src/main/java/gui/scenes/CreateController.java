@@ -239,7 +239,9 @@ public class CreateController extends NavigationSceneBase {
 		
 		names[0] = ModelExchange.GameOptions.getUserName();
 		playerIDs[0] = ModelExchange.GameOptions.getPlayerID();
+
 		//typeIDs[0] = ModelExchange.GameOptions.getAiID(); // 1 => Human
+		typeIDs[0] = ModelExchange.GameOptions.getAiID(); // 1 => Human
 		
 		// First thought is `i<playersCount´, but we need to check every slot.
 		for( int i=1, j=1; i<playerSlotsSettings.size(); i++ )

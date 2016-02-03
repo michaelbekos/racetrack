@@ -530,12 +530,12 @@ public class Lobby implements ILobby {
 			return false;
 		}
 
-		// incorrect bot amount
-		if (info.getAmountOfAIs() > 4 || info.getAmountOfAIs() < 0) {
-			DebugOutputHandler
-			.printDebug("Lobby: Incoming LobbyInformation is not valid because there was entered a wrong bot number");
-			return false;
-		}
+//		// incorrect bot amount
+//		if (info.getAmountOfAIs() > 4 || info.getAmountOfAIs() < 0) {
+//			DebugOutputHandler
+//			.printDebug("Lobby: Incoming LobbyInformation is not valid because there was entered a wrong bot number");
+//			return false;
+//		}
 
 		// non host changed play mode
 		if ((info.getPlayMode() != this.playMode)
@@ -644,25 +644,31 @@ public class Lobby implements ILobby {
 	 *         players on the server
 	 */
 	@Override
-	public LobbyInformation generateLobbyInformation() {
+	public LobbyInformation generateLobbyInformation()
+	{
 		String[] playerNames = new String[maxCurrentPlayer];
 		Integer[] playerIDs = new Integer[maxCurrentPlayer];
 		Integer[] typeIDs = new Integer[maxCurrentPlayer];
 		boolean[] isParticipating = new boolean[maxCurrentPlayer];
-		for (int i = 0; i < maxCurrentPlayer; i++) {
-			if (playerList[i] != null) {
+		for (int i = 0; i < maxCurrentPlayer; i++)
+		{
+			if (playerList[i] != null)
+			{
 				playerNames[i] = playerList[i].getName();
 				playerIDs[i] = playerList[i].getPlayerID();
 				isParticipating[i] = playerList[i].isParticipating();
-			} else {
+				typeIDs[i] = playerList[i].getTypeID();
+			}
+			else
+			{
 				playerNames[i] = null;
 				playerIDs[i] = null;
 				isParticipating[i] = false;
+				typeIDs[i] = null;
 			}
-
 		}
 		return new LobbyInformation(playerNames, playerIDs, isParticipating, typeIDs,
-				trackId, lobbyName, isGameRunning, lobbyID,playMode);
+				trackId, lobbyName, isGameRunning, lobbyID, playMode );
 	}
 
 	/**

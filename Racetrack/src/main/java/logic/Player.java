@@ -10,7 +10,8 @@ import javafx.scene.paint.Color;
  * 
  * @author Sotirios Pavlidis
  */
-public class Player {
+public class Player
+{
 	private final Integer PLAYER_ID;
 	protected Integer sessionID;
 	private String name;
@@ -24,6 +25,7 @@ public class Player {
 	private boolean isDisconnected = false;
 
 	private int colorId;
+	protected int mTypeID;
 	
 	private boolean isDummyPlayer;
 
@@ -50,6 +52,7 @@ public class Player {
 		isDummyPlayer = true;
 		isParticipating = false;
 		hasToWait = false;
+		mTypeID=1;
 	}
 
 	/**
@@ -73,6 +76,7 @@ public class Player {
 		this.sessionID = sessionID;
 		this.crashed = false;
 		hasToWait = false;
+		mTypeID=1;
 	}
 
 	public Point2D getCurrentVelocity() {
@@ -117,6 +121,11 @@ public class Player {
 
 	public void setHost() {
 		this.isHost = true;
+	}
+
+	public int getTypeID()
+	{// Assume this is a Human:
+		return mTypeID;
 	}
 
 	public ArrayList<Point2D> getMemorizeGridPoints() {
