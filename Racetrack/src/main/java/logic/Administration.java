@@ -115,6 +115,9 @@ public class Administration implements IAdministration{
 		case 6:
 			newPlayer= new AI_Crasher( AIid, "Crasher" );
 			break;
+		case 7:
+			newPlayer= new AI_Zigzag( AIid, "ZigZag" );
+			break;
 		default:
 			return 0;
 		}

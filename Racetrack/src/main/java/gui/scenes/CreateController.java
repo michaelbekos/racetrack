@@ -87,7 +87,7 @@ public class CreateController extends NavigationSceneBase {
 		super.initialize(url, rb);
 		Racetracker.printInDebugMode("----- |GUI| ----- Init CreateController -----");
 		loadHelpFileAtResource("/help/newGame/index.html");
-		playerOptions=FXCollections.observableArrayList ("Free", "Human", "No Mover", "Random", "Puckie", "AIStar", "Crasher" );
+		playerOptions=FXCollections.observableArrayList( "Closed", "Open" );
 		playerSlotsSettings=new ArrayList<Integer>();
 		playerSlotsSettings.add( new Integer(1) );
 		playerSlotsSettings.add( new Integer(0) );
@@ -239,7 +239,7 @@ public class CreateController extends NavigationSceneBase {
 		
 		names[0] = ModelExchange.GameOptions.getUserName();
 		playerIDs[0] = ModelExchange.GameOptions.getPlayerID();
-		typeIDs[0] = 1; // 1 => Human
+		//typeIDs[0] = ModelExchange.GameOptions.getAiID(); // 1 => Human
 		
 		// First thought is `i<playersCount´, but we need to check every slot.
 		for( int i=1, j=1; i<playerSlotsSettings.size(); i++ )
@@ -261,7 +261,7 @@ public class CreateController extends NavigationSceneBase {
 		
 		LobbyInformation lobbyInformation = new LobbyInformation(names, playerIDs, participating, typeIDs, selectedTrack,
 				makeLobbyName(), false, 0, playMode);
-		lobbyInformation.setAIs(playerSlotsSettings);
+		//lobbyInformation.setAIs(playerSlotsSettings);
 		
 		Racetracker.printInDebugMode("----- |CCM| ----- Send Create Lobby Message -----");
 		ModelExchange.getController().sendCreateLobbyMessage(lobbyInformation);

@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafx.geometry.Point2D;
+import src.main.java.logic.Line2D;
+import src.main.java.logic.AIstar.LineSegment;
+import src.main.java.logic.AIstar.Point;
 
 /**
  * Class which provides utility functions for our AI.
@@ -20,7 +23,7 @@ public class AIUtils
 	 * @param endSpeed The end speed.
 	 * @return list of accelerations for minimal sequence of moves
 	 */
-	public static List<Point2D> CalculateAccelerations(Point2D startPosition, Point2D endPosition, Point2D startSpeed, Point2D endSpeed)
+	public static List<Point2D> CalculateAccelerations(Point2D startPosition, Point2D endPosition, Point2D startSpeed, Point2D endSpeed, Direction dominantDirection, List<LineSegment> borders)
 	{
 		//initialize some variables
 		LinkedList<Point2D> accelerations = new LinkedList<Point2D>();
@@ -49,6 +52,29 @@ public class AIUtils
 		if (Math.signum(sy2)*(Dy-Ay) <= 0)
 		{
 			overshootY = true;
+		}
+		switch (dominantDirection)
+		{
+			case UP:
+			{
+				overshootX = true;
+				break;
+			}
+			case DOWN:
+			{
+				overshootX = true;
+				break;
+			}
+			case LEFT:
+			{
+				overshootY = true;
+				break;
+			}
+			case RIGHT:
+			{
+				overshootY = true;
+				break;
+			}
 		}
 		//check if starting or end speed are closer to the maximum speed
 		int sxForZxCalculation;
@@ -191,6 +217,8 @@ public class AIUtils
 				int skippedY = 0;
 				int additionalSkippedX = 0;
 				int additionalSkippedY = 0;
+				int x = x1;
+				int y = y1;
 				int sx = sx1;
 				int sy = sy1;
 				int ax = 0;
@@ -340,6 +368,17 @@ public class AIUtils
 							}
 						}
 					}
+					int newX = x + sx;
+					int newY = y + sy;
+					for (LineSegment border : borders)
+					{
+						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+						{
+							return null;
+						}
+					}
+					x = newX;
+					y = newY;
 					accelerations.add(new Point2D(ax,ay));
 				}
 			}
@@ -453,6 +492,8 @@ public class AIUtils
 				int sy = sy1;
 				int ax = 0;
 				int ay = 0;
+				int x = x1;
+				int y = y1;
 				for (int t = 0; t < t_new; t++)
 				{
 					if(!smaxXReached)
@@ -583,6 +624,17 @@ public class AIUtils
 							}
 						}
 					}
+					int newX = x + sx;
+					int newY = y + sy;
+					for (LineSegment border : borders)
+					{
+						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+						{
+							return null;
+						}
+					}
+					x = newX;
+					y = newY;
 					accelerations.add(new Point2D(ax,ay));
 				}
 			}
@@ -669,6 +721,8 @@ public class AIUtils
 					int additionalSkippedY = 0;
 					int sx = sx1;
 					int sy = sy1;
+					int x = x1;
+					int y = y1;
 					int ax = 0;
 					int ay = 0;
 					for (int t = 0; t < ty; t++)
@@ -801,6 +855,17 @@ public class AIUtils
 								}
 							}
 						}
+						int newX = x + sx;
+						int newY = y + sy;
+						for (LineSegment border : borders)
+						{
+							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+							{
+								return null;
+							}
+						}
+						x = newX;
+						y = newY;
 						accelerations.add(new Point2D(ax,ay));
 					}
 				}
@@ -908,6 +973,8 @@ public class AIUtils
 					int additionalSkippedY = 0;
 					int sx = sx1;
 					int sy = sy1;
+					int x = x1;
+					int y = y1;
 					int ax = 0;
 					int ay = 0;
 					for (int t = 0; t < t_new; t++)
@@ -1040,6 +1107,17 @@ public class AIUtils
 								}
 							}
 						}
+						int newX = x + sx;
+						int newY = y + sy;
+						for (LineSegment border : borders)
+						{
+							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+							{
+								return null;
+							}
+						}
+						x = newX;
+						y = newY;
 						accelerations.add(new Point2D(ax,ay));
 					}
 				}
@@ -1105,6 +1183,8 @@ public class AIUtils
 				int additionalSkippedY = 0;
 				int sx = sx1;
 				int sy = sy1;
+				int x = x1;
+				int y = y1;
 				int ax = 0;
 				int ay = 0;
 				for (int t = 0; t < ty; t++)
@@ -1245,6 +1325,17 @@ public class AIUtils
 							}
 						}
 					}
+					int newX = x + sx;
+					int newY = y + sy;
+					for (LineSegment border : borders)
+					{
+						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+						{
+							return null;
+						}
+					}
+					x = newX;
+					y = newY;
 					accelerations.add(new Point2D(ax,ay));
 				}
 			}
@@ -1258,9 +1349,9 @@ public class AIUtils
 	 * @param endPosition The end position.
 	 * @param startSpeed The starting speed. 
 	 * @param endSpeed The end speed.
-	 * @return list of accelerations for minimal sequence of moves
+	 * @return the minimum number of turns required to move between both positions with the given velocities
 	 */
-	public static int CalculateMinimumNumberOfTurns(Point2D startPosition, Point2D endPosition, Point2D startSpeed, Point2D endSpeed)
+	public static int CalculateMinimumNumberOfTurns(Point2D startPosition, Point2D endPosition, Point2D startSpeed, Point2D endSpeed, Direction dominantDirection)
 	{
 		//initialize some variables
 		int x1 = (int)startPosition.getX();
@@ -1277,7 +1368,7 @@ public class AIUtils
 		int Ax = (int)Math.abs(sx2-sx1) * sx1 + (int)Math.signum(sx2 - sx1)*(int)Math.abs(sx2 - sx1)*((int)Math.abs(sx2 - sx1) + 1)/2;				
 		//check, if we overshoot the goal
 		boolean overshootX = false;
-		if (Math.signum(sx2)*(Dx-Ax) <= 0)
+		if (Math.signum(sx2)*(Dx-Ax) < 0)
 		{
 			overshootX = true;
 		}
@@ -1285,9 +1376,32 @@ public class AIUtils
 		int Dy = y2 - y1;
 		int Ay = (int)Math.abs(sy2-sy1) * sy1 + (int)Math.signum(sy2 - sy1)*(int)Math.abs(sy2 - sy1)*((int)Math.abs(sy2 - sy1) + 1)/2;	
 		boolean overshootY = false;
-		if (Math.signum(sy2)*(Dy-Ay) <= 0)
+		if (Math.signum(sy2)*(Dy-Ay) < 0)
 		{
 			overshootY = true;
+		}
+		switch (dominantDirection)
+		{
+			case UP:
+			{
+				overshootX = true;
+				break;
+			}
+			case DOWN:
+			{
+				overshootX = true;
+				break;
+			}
+			case LEFT:
+			{
+				overshootY = true;
+				break;
+			}
+			case RIGHT:
+			{
+				overshootY = true;
+				break;
+			}
 		}
 		//check if starting or end speed are closer to the maximum speed
 		int sxForZxCalculation;
@@ -1481,5 +1595,174 @@ public class AIUtils
 				return ty;
 			}
 		}
+	}
+	public enum Direction 
+	{
+		LEFT, RIGHT, UP, DOWN 
+	}
+	
+	public static List<Point2D> CalculateFinalAccelerations(Point2D lastLandingRegionPosition, Point2D lastLandingRegionSpeed, LineSegment finishLine, Direction direction, LinkedList<LineSegment> borders)
+	{
+		LinkedList<Point2D> accelerations = new LinkedList<Point2D>();
+		int x = (int) lastLandingRegionPosition.getX();
+		int y = (int) lastLandingRegionPosition.getY();
+		int sx = (int) lastLandingRegionSpeed.getX();
+		int sy = (int) lastLandingRegionSpeed.getY();
+		int ax = 0;
+		int ay = 0;
+		boolean xIsDominant = false;
+		switch (direction)
+		{
+			case UP:
+			{
+				ay = 1;
+				ax = - (int)Math.signum(sx);
+				xIsDominant = false;
+				break;
+			}
+			case DOWN:
+			{
+				ay = -1;
+				ax = - (int)Math.signum(sx);
+				xIsDominant = false;
+				break;
+			}
+			case LEFT:
+			{
+				ax = -1;
+				ay = - (int)Math.signum(sy);
+				xIsDominant = true;
+				break;
+			}
+			case RIGHT:
+			{
+				ax = 1;
+				ay = - (int)Math.signum(sy);
+				xIsDominant = true;
+				break;
+			}
+		}
+		sx = sx + ax;
+		sy = sy + ay;
+		int newX = x + sx;
+		int newY = y + sy;
+		accelerations.add(new Point2D(ax,ay));
+		LineSegment nextMove = new LineSegment(new Point(x,y),new Point(newX,newY));
+		while (!nextMove.IntersectWith(finishLine))
+		{
+			x = newX;
+			y = newY;
+			if (xIsDominant)
+			{
+				ay = - (int)Math.signum(sy);
+			}
+			else
+			{
+				ax = - (int)Math.signum(sx);
+			}
+			sx = sx + ax;
+			sy = sy + ay;
+			newX = x + sx;
+			newY = y + sy;
+			accelerations.add(new Point2D(ax,ay));
+			nextMove = new LineSegment(new Point(x,y),new Point(newX,newY));
+			for (LineSegment border : borders)
+			{
+				if (nextMove.IntersectWith(border))
+				{
+					if (nextMove.IntersectWith(finishLine))
+					{
+						if (nextMove.GetIntersectionDistance(finishLine, new Point(x,y)) < nextMove.GetIntersectionDistance(border, new Point(x,y)))
+						{
+							continue;
+						}
+					}
+					return null;
+				}
+			}
+		}
+		return accelerations;
+	}
+	
+	public static int CalculateFinalNumberOfTurns(Point2D lastLandingRegionPosition, Point2D lastLandingRegionSpeed, LineSegment finishLine, Direction direction, LinkedList<LineSegment> borders)
+	{
+		int turns = 1;
+		int x = (int) lastLandingRegionPosition.getX();
+		int y = (int) lastLandingRegionPosition.getY();
+		int sx = (int) lastLandingRegionSpeed.getX();
+		int sy = (int) lastLandingRegionSpeed.getY();
+		int ax = 0;
+		int ay = 0;
+		boolean xIsDominant = false;
+		switch (direction)
+		{
+			case UP:
+			{
+				ay = 1;
+				ax = - (int)Math.signum(sx);
+				xIsDominant = false;
+				break;
+			}
+			case DOWN:
+			{
+				ay = -1;
+				ax = - (int)Math.signum(sx);
+				xIsDominant = false;
+				break;
+			}
+			case LEFT:
+			{
+				ax = -1;
+				ay = - (int)Math.signum(sy);
+				xIsDominant = true;
+				break;
+			}
+			case RIGHT:
+			{
+				ax = 1;
+				ay = - (int)Math.signum(sy);
+				xIsDominant = true;
+				break;
+			}
+		}
+		sx = sx + ax;
+		sy = sy + ay;
+		int newX = x + sx;
+		int newY = y + sy;
+		LineSegment nextMove = new LineSegment(new Point(x,y),new Point(newX,newY));
+		while (!nextMove.IntersectWith(finishLine))
+		{
+			x = newX;
+			y = newY;
+			if (xIsDominant)
+			{
+				ay = - (int)Math.signum(sy);
+			}
+			else
+			{
+				ax = - (int)Math.signum(sx);
+			}
+			sx = sx + ax;
+			sy = sy + ay;
+			newX = x + sx;
+			newY = y + sy;
+			turns++;
+			nextMove = new LineSegment(new Point(x,y),new Point(newX,newY));
+			for (LineSegment border : borders)
+			{
+				if (nextMove.IntersectWith(border))
+				{
+					if (nextMove.IntersectWith(finishLine))
+					{
+						if (nextMove.GetIntersectionDistance(finishLine, new Point(x,y)) < nextMove.GetIntersectionDistance(border, new Point(x,y)))
+						{
+							continue;
+						}
+					}
+					return -1;
+				}
+			}
+		}
+		return turns;
 	}
 }
