@@ -70,11 +70,19 @@ public class Administration implements IAdministration{
 	 */
 
 	@Override
-	public void createAndAddNewPlayer( int playerID )
+ 	public void createAndAddNewPlayer( int playerID )
+ 	{
+ 		//add player with default name
+ 		Player newPlayer = new Player( playerID, "Player_"+playerID );
+ 		getPlayerMap().put( playerID, newPlayer );
+ 	}
+	
+	//@Override
+	public int createAndAddNewAI( int ai_type )
 	{
 		//add player with default name
-<<<<<<< HEAD
 		Player newPlayer;
+		int AIid = controller.getNewAIid();
 		switch( ai_type )
 		{
 		case 2:
@@ -101,10 +109,6 @@ public class Administration implements IAdministration{
 		//newPlayer.setSessionID( ... );
 		playerMap.put( AIid, newPlayer );
 		return AIid;
-=======
-		Player newPlayer = new Player( playerID, "Player_"+playerID );
-		getPlayerMap().put( playerID, newPlayer );
->>>>>>> refs/remotes/origin/master
 	}
 
 	@Override
