@@ -159,7 +159,7 @@ public class AIUtils
 				dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + (Math.abs(sy2 - sminY) + 1) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
 			}
 			//the following condition checks, if dmin < D -> if sy2 is in the same direction as the difference of distances, we are able to decrease the distance
-			if (Math.signum(sy2) * (Dy-dminY) >= 0)
+			if (Math.signum(sy2) * (Dy-dminY) >= 0 && tx >= Math.abs(sy2-sy1))
 			{
 				int deltaDY = (int)Math.signum(sy2) * (Dy-dminY);
 				int layersSkippedY;
@@ -664,7 +664,7 @@ public class AIUtils
 				{
 					dminX = (int) (Math.abs(sminX - sx1) * sx1 - (int)Math.signum(sx1-sminX)*(Math.abs(sminX - sx1) * (Math.abs(sminX  - sx1) + 1))/2 + (Math.abs(sx2 - sminX) + 1) * sminX + (int)Math.signum(sx2-sminX)*(Math.abs(sx2 - sminX) * (Math.abs(sx2  - sminX) + 1))/2);
 				}
-				if (Math.signum(sx2) * (Dx-dminX) >= 0)
+				if (Math.signum(sx2) * (Dx-dminX) >= 0  && ty >= Math.abs(sx2-sx1))
 				{
 					int deltaDX = (int)Math.signum(sx2) * (Dx-dminX);
 					int layersSkippedX;
@@ -1486,7 +1486,7 @@ public class AIUtils
 				dminY = (int) (Math.abs(sminY - sy1) * sy1 - (int)Math.signum(sy1-sminY)*(Math.abs(sminY - sy1) * (Math.abs(sminY  - sy1) + 1))/2 + (Math.abs(sy2 - sminY) + 1) * sminY + (int)Math.signum(sy2-sminY)*(Math.abs(sy2 - sminY) * (Math.abs(sy2  - sminY) + 1))/2);
 			}
 			//the following condition checks, if dmin < D -> if sy2 is in the same direction as the difference of distances, we are able to decrease the distance
-			if (Math.signum(sy2) * (Dy-dminY) >= 0)
+			if (Math.signum(sy2) * (Dy-dminY) >= 0  && tx >= Math.abs(sy2-sy1))
 			{
 				return tx;
 			}
@@ -1551,7 +1551,7 @@ public class AIUtils
 				{
 					dminX = (int) (Math.abs(sminX - sx1) * sx1 - (int)Math.signum(sx1-sminX)*(Math.abs(sminX - sx1) * (Math.abs(sminX  - sx1) + 1))/2 + (Math.abs(sx2 - sminX) + 1) * sminX + (int)Math.signum(sx2-sminX)*(Math.abs(sx2 - sminX) * (Math.abs(sx2  - sminX) + 1))/2);
 				}
-				if (Math.signum(sx2) * (Dx-dminX) >= 0)
+				if (Math.signum(sx2) * (Dx-dminX) >= 0  && ty >= Math.abs(sx2-sx1))
 				{
 					return ty;
 				}

@@ -1,8 +1,10 @@
 package src.main.java.logic.utils;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javafx.geometry.Point2D;
+import src.main.java.logic.AIstar.LineSegment;
 import src.main.java.logic.utils.AIUtils;
 
 /**
@@ -17,11 +19,62 @@ public class AIUtilsTest
 	{
 		int testCase = 1;
 		//Test Case 1
-		Point2D a = new Point2D(6,2);
-		Point2D b = new Point2D(4,13);
-		Point2D sa = new Point2D(1,1);
-		Point2D sb = new Point2D(-2,1);
+		Point2D a = new Point2D(49,24);
+		Point2D b = new Point2D(45,14);
+		Point2D sa = new Point2D(2,-3);
+		Point2D sb = new Point2D(-3,-1);
 		
+		List<Point2D> accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,AIUtils.Direction.DOWN, new LinkedList<LineSegment>());
+		System.out.println("--------------------------");
+		System.out.println(String.format("Test Case %d",testCase++));
+		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
+		System.out.println("--------------------------");
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
+		}
+		System.out.println("--------------------------");
+
+		//Test Case 2
+		a = new Point2D(49,24);
+		b = new Point2D(45,14);
+		sa = new Point2D(2,-3);
+		sb = new Point2D(-2,-1);
+		
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,AIUtils.Direction.DOWN, new LinkedList<LineSegment>());
+		System.out.println("--------------------------");
+		System.out.println(String.format("Test Case %d",testCase++));
+		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
+		System.out.println("--------------------------");
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
+		}
+		System.out.println("--------------------------");
+		
+		//Test Case 3
+		a = new Point2D(49,24);
+		b = new Point2D(45,14);
+		sa = new Point2D(2,-3);
+		sb = new Point2D(-1,-1);
+		
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb,AIUtils.Direction.DOWN, new LinkedList<LineSegment>());
+		System.out.println("--------------------------");
+		System.out.println(String.format("Test Case %d",testCase++));
+		System.out.println(String.format("(%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)a.getX(),(int)a.getY(),(int)sa.getX(),(int)sa.getY(),(int)b.getX(),(int)b.getY(),(int)sb.getX(),(int)sb.getY()));
+		System.out.println("--------------------------");
+		for (int i = 0; i < accelerations.size(); i++)
+		{
+			System.out.println(String.format("(%d,%d)", (int)accelerations.get(i).getX(), (int)accelerations.get(i).getY()));
+		}
+		System.out.println("--------------------------");
+
+//		//Test Case 1
+//		Point2D a = new Point2D(6,2);
+//		Point2D b = new Point2D(4,13);
+//		Point2D sa = new Point2D(1,1);
+//		Point2D sb = new Point2D(-2,1);
+//		
 //		List<Point2D> accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb);
 //		System.out.println("--------------------------");
 //		System.out.println(String.format("Test Case %d",testCase++));

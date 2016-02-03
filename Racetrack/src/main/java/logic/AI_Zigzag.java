@@ -193,12 +193,10 @@ public class AI_Zigzag extends AI
 						int distance;
 						if (accelerations == null)
 						{
-							System.out.println("190: I am here!");
 							continue;
 						}
 						else
 						{
-							System.out.println("195: I am here!");
 							distance = accelerations.size() + startLandingPoint.Distance();
 						}
 						if (distance < endLandingPoint.Distance() || endLandingPoint.Distance() == -1)
@@ -240,7 +238,10 @@ public class AI_Zigzag extends AI
 				landingRegionResolvedCount += 1;
 			}
 			landingPointsToVisit[landingPointsToVisit.length - landingRegionResolvedCount] = bestLandingPoint;
-			
+			for (int i = 0; i < landingPointsToVisit.length; i++)
+			{
+				System.out.println(String.format("(%d,%d,%d,%d)", (int)landingPointsToVisit[i].Position().getX(), (int)landingPointsToVisit[i].Position().getY(), (int)landingPointsToVisit[i].Speed().getX(), (int)landingPointsToVisit[i].Speed().getY()));
+			}
 			movePath = new LinkedList<Point2D>();
 			
 			for (int landingPointIndex = 0; landingPointIndex < landingPointsToVisit.length - 1; landingPointIndex++)
@@ -254,7 +255,6 @@ public class AI_Zigzag extends AI
 				List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), landingRegionOldDirections.get(landingPointIndex), borders);
 				for (int accelerationIndex = 0; accelerationIndex < accelerations.size(); accelerationIndex++)
 				{
-					System.out.println("228: I'm here!");
 					sx = sx + (int)accelerations.get(accelerationIndex).getX();
 					sy = sy + (int)accelerations.get(accelerationIndex).getY();
 					x = x + sx;
