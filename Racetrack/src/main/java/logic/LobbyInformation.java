@@ -203,34 +203,6 @@ public class LobbyInformation implements ILobbyInformation, java.io.Serializable
 		return maxPlayers;
 	}
 
-//	@Override
-//	public int getAmountOfAIs() {
-//		return amountOfAIs;
-//	}
-
-//	@Override
-//	public void setAmountOfAIs(int amountOfAIs) {
-//		this.amountOfAIs = amountOfAIs;
-//	}
-//
-//	@Override
-//	public void setAIs(List<Integer> settings) {
-//		this.amountOfAIs = 0;
-//		for( int i=0 ; i<settings.size() ; i++ )
-//		{
-//			switch( settings.get( i ) )
-//			{
-//			case 0://Free
-//				break;
-//			case 1://Human
-//				break;
-//			default://AIs (or errors)
-//				this.amountOfAIs++;
-//				break;
-//			}
-//		}
-//	}
-	
 	@Override
 	public void toggleParticipating(int index) {
 		this.arrayOfPlayers[index].isParticipating = !this.arrayOfPlayers[index].isParticipating;

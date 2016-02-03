@@ -77,52 +77,6 @@ public class Administration implements IAdministration{
 		getPlayerMap().put( playerID, newPlayer );
 	}
 
-	/*
-	 * HOWTO ADD AN AI.
-	 * 
-	 * 1. Write the AI:
-	 *    Take an existing AI, like "AI_NoMover.java" and copy it.
-	 *    Then add your changes and write it as desired.
-	 * 2. Add the AI with an own / new number below.
-	 * 3. List your AI for the GUI:
-	 *    In the file "CreateController.java" in the method "initialize(...)"
-	 *    there is member variable that gets initialised: playerOptions.
-	 *    At the end of this list, you must add the name of the AI as you want it 
-	 *    to be listed for the player.
-	 * 
-	 */
-	@Override
-	public int createAndAddNewAI( int ai_type )
-	{
-		// "Free", "Human", "No Mover", "Random", "Puckie", "AIStar"
-		int AIid = controller.getNewAIid();
-		//add player with default name
-		//Player newPlayer;
-		switch( ai_type )
-		{
-		case 2:
-			//newPlayer= new AI_NoMover( AIid, "No Mover" );
-			break;
-		case 3:
-			//newPlayer= new AI_Random( AIid, "Random" );
-			break;
-		case 4:
-			//newPlayer= new AI_Puckie( AIid, "Puckie" );
-			break;
-		case 5:
-			//newPlayer= new AIstar( AIid, "AIstar" );
-			break;
-		case 6:
-			//newPlayer= new AI_Crasher( AIid, "Crasher" );
-			break;
-		default:
-			return 0;
-		}
-		//newPlayer.setSessionID( ... );
-		//playerMap.put( AIid, newPlayer );
-		return AIid;
-	}
-
 	@Override
 	public void joinLobby(int playerID, int sessionID){
 		//cant join session -1, to get to session -1 a player needs to leave his lobby and get back
@@ -274,21 +228,6 @@ public class Administration implements IAdministration{
 
 		//let the player join set new lobby
 		joinLobby(playerID, sessionID);
-		
-//		// for every player in the lobby
-//		for (int i=0; i<lobbyInformation.getPlayerIDs().length; i++)
-//		{
-//			// Get the type
-//			int AI_type=lobbyInformation.getTypeIDs()[i];
-//			if( AI_type!=0 && AI_type!=1 )
-//			{
-//				// 0==Free
-//				// 1==Human
-//				// => Only AIs get here.
-//				joinLobby(this.createAndAddNewAI(AI_type), sessionID);
-//			}
-//		}
-//		DebugOutputHandler.printDebug(lobbyInformation.getAmountOfAIs() + " AIs created for the new Lobby");
 	}
 
 	@Override
@@ -398,6 +337,10 @@ public class Administration implements IAdministration{
 		case 6:
 			entity= new AI_Crasher( playerID, "AI Crasher " + clientName );
 			break;
+		case 7:
+			entity= new AI_Zigzag( playerID, "AI Zigzag " + clientName );
+			break;
+			/* ADD YOUR NEW AI ALSO HERE */
 		}
 		//Player player=getPlayerMap().get(playerID);
 		getPlayerMap().put( playerID, entity );

@@ -9,6 +9,7 @@ import src.main.java.logic.AI_Crasher;
 import src.main.java.logic.AI_NoMover;
 import src.main.java.logic.AI_Puckie;
 import src.main.java.logic.AI_Random;
+import src.main.java.logic.AI_Zigzag;
 import src.main.java.logic.Game;
 import src.main.java.logic.ILobbyInformation;
 import src.main.java.logic.ModelExchange;
@@ -85,6 +86,11 @@ public class ReceiveStartGameMessageClientHandler extends
 					case 6:
 						players[i]= new AI_Crasher( lobby.getPlayerIDs()[i], "AI Crasher " + lobby.getPlayerNames()[i] );
 						break;
+					case 7:
+						players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i] );
+						break;
+						
+						/* ADD YOUR NEW AI ALSO HERE */
 					default:
 						return;
 					}

@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import src.main.java.gui.Racetracker;
 import src.main.java.gui.navigation.NavigationSceneBase;
+import src.main.java.logic.ILobbyInformation;
 import src.main.java.logic.ModelExchange;
 
 /**
@@ -94,8 +95,26 @@ public class SetupController extends NavigationSceneBase {
 				colorHightlightOutline(usernameTextfield, usernameValid);
 			}
 		});
+		/*
+		 * HOWTO ADD AN AI.
+		 * 
+		 * 1. Write the AI:
+		 *    Take an existing AI, like "AI_NoMover.java" and copy it.
+		 *    Then add your changes and write it as desired.
+		 * 2. Add your new AI in the list below (where is says  "YOUR NEW AI"  )
+		 * 3. Count through the list, Human == 1, determine the number of your AI
+		 * 4. Write the number in the constructor of your AI to the member mTypeID.
+		 * 5. Add your AI in Administation.java in the methode setPlayerNameAndAiType into the
+		 *    switch in the same fashion as the others are added with its determined number,
+		 *    where it says  ADD YOUR NEW AI ALSO HERE. ( Don't forget the break ... )
+		 * 6. Add your AI to Game.java in the constructor: public Game(ILobbyInformation lobby)
+		 *    into the switch in the same way the others got added, where it says
+		 *    ADD YOUR NEW AI ALSO HERE. ( Don't forget the break ... )
+		 * 7. Add to the last switch in ReceiveStartGameMessageClientHandler.java, in 
+		 *    updateModel too
+		 */
 
-		aiChoiceBox.setItems( FXCollections.observableArrayList( /*"Free",*/ "Human", "No Mover", "Random", "Puckie", "AIStar", "Crasher" ) );
+		aiChoiceBox.setItems( FXCollections.observableArrayList( /*"Free",*/ "Human", "No Mover", "Random", "Puckie", "AIStar", "Crasher", "Zigzag" /*, "YOUR NEW AI" */ ) );
 		aiChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
 				new ChangeListener<Number>()
 				{

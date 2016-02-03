@@ -155,7 +155,6 @@ public class Game {
 	public Game(ILobbyInformation lobby)
 	{
 		Player[] players = new Player[lobby.getPlayerNames().length];
-		//HOWTO
 		for (int i = 0; i < players.length; i++)
 		{
 			switch( lobby.getTypeIDs()[i] )
@@ -178,6 +177,11 @@ public class Game {
 			case 6:
 				players[i]= new AI_Crasher( lobby.getPlayerIDs()[i], "AI Crasher " + lobby.getPlayerNames()[i], i );
 				break;
+			case 7:
+				players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i], i );
+				break;				
+				
+			/* ADD YOUR NEW AI ALSO HERE */
 			default:
 				return;
 			}

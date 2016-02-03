@@ -12,22 +12,15 @@ import javafx.geometry.Point2D;
  * @author Denis
  *
  */
-interface IAdministration {
-
+interface IAdministration
+{
 	/**
 	 * This method creates a new player with a given ID
 	 * and adds him into the list
 	 * @param playerID
 	 */
 	public void createAndAddNewPlayer(int playerID);
-	
-	/**
-	 * This method creates a new ai with a given ID
-	 * and adds him into the list of players
-	 * @return aiID
-	 */
-	public int createAndAddNewAI( int ai_type );
-	
+		
 	/**
 	 * This method removes a player from the playerList in ListOfLobby
 	 * when he wants to disconnect
