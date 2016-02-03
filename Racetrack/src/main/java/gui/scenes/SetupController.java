@@ -9,9 +9,11 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import src.main.java.gui.Racetracker;
@@ -34,7 +36,11 @@ public class SetupController extends NavigationSceneBase {
 	private Button saveButton;
 	@FXML
 	private Button cancelButton;
-
+	@FXML
+	private ChoiceBox<String> aiChoiceBox;
+	
+	private int mAiId;
+	
 	private boolean alreadySetupGame = false;
 	
 	private boolean hostIpValid = true;
@@ -88,7 +94,19 @@ public class SetupController extends NavigationSceneBase {
 				colorHightlightOutline(usernameTextfield, usernameValid);
 			}
 		});
-		
+
+		aiChoiceBox.setItems( FXCollections.observableArrayList( /*"Free",*/ "Human", "No Mover", "Random", "Puckie", "AIStar", "Crasher" ) );
+		aiChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+				new ChangeListener<Number>()
+				{
+					@Override
+					public void changed(ObservableValue<? extends Number> ov, Number value, Number new_value)
+					{
+						mAiId=new_value.intValue();
+					}
+				});
+		mAiId=0;
+		aiChoiceBox.getSelectionModel().select(0);
 		
 	}
 	
@@ -156,8 +174,9 @@ public class SetupController extends NavigationSceneBase {
 		} catch (Exception e) {
 			ModelExchange.GameOptions.setHostPort(0);
 		}
-		
+
 		ModelExchange.GameOptions.setUserName(usernameTextfield.getText());
+		ModelExchange.GameOptions.setAiID( mAiId+1 ); // plus one here because we don't use free.
 	}
 
 	/**
@@ -255,8 +274,8 @@ public class SetupController extends NavigationSceneBase {
 
 		// Start new connection
 		Racetracker.printInDebugMode("----- |CCM| ----- Send start connection message -----");
-		ModelExchange.getController().startConnection(ModelExchange.GameOptions.getHostIp(),
-				ModelExchange.GameOptions.getHostPort());
+		ModelExchange.getController().startConnection( ModelExchange.GameOptions.getHostIp(),
+				                                       ModelExchange.GameOptions.getHostPort() );
 		ModelExchange.setControllerRefference(this);
 
 		while (true) {
@@ -268,8 +287,8 @@ public class SetupController extends NavigationSceneBase {
 				showIpAndPortSuccess();
 				
 				showUsernameWaiting();
-				Racetracker.printInDebugMode("----- |CCM| ----- Send user name message -----");
-				ModelExchange.getController().sendUserNameMessage(this.usernameTextfield.getText());
+				Racetracker.printInDebugMode( "----- |CCM| ----- Send user name and AI type ID message -----" );
+				ModelExchange.getController().sendUserNameAndAiTypeIdMessage( this.usernameTextfield.getText(), mAiId+1 );
 
 				enableUI();
 				break;

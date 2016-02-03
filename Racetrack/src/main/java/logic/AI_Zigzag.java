@@ -37,9 +37,9 @@ public class AI_Zigzag extends AI
 	private List<Point2D> movePath;
 	private List<Point2D> goalPoints;
 	
-	public AI_Zigzag(Integer playerID, String name)
+	public AI_Zigzag(Integer playerID, String name, int playerColorId )
 	{
-		super( playerID, name );
+		super( playerID, name, playerColorId );
 		mGridCreated=false;
 
 		// SET THIS TO FALSE FOR LESS OUTPUT.

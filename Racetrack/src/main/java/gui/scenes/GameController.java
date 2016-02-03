@@ -46,6 +46,8 @@ import src.main.java.gui.utils.Colors;
 import src.main.java.logic.ModelExchange;
 import src.main.java.logic.Game;
 import src.main.java.logic.Player;
+import src.main.java.logic.IAI;
+import src.main.java.logic.AI;
 
 /**
  * FXML Controller class
@@ -95,6 +97,8 @@ public class GameController extends MultiSceneBase implements Initializable {
 	private Timer timer;
 	
 	private boolean hasPlayerCrashed;
+	
+	Player mSelf;
 
 	// MARK: Initialization
 	/**
@@ -230,7 +234,7 @@ public class GameController extends MultiSceneBase implements Initializable {
 									alert.setContentText("Congratulation, you won the game!");
 								} else {
 									// If I am not the winner.
-									alert.setHeaderText("Sorry, you lose...");
+									alert.setHeaderText("You lose.");
 									alert.setContentText("Player " + winnerName + " has won the game!");
 								}
 								
@@ -456,14 +460,17 @@ public class GameController extends MultiSceneBase implements Initializable {
 	}
 
 	// MARK: Setter
-	private void setGame(final Game game) {
+	private void setGame(final Game game)
+	{
 		Platform.runLater(new Runnable() {
 			@Override
-			public void run() {				
+			public void run()
+			{				
 				currentGame = game;
 				Game modelGame = ModelExchange.CurrentGame.getGame();
 				
-				if (game != null && modelGame != null) {
+				if (game != null && modelGame != null)
+				{
 					// Set track
 					gameAreaCanvas.setTrack(game.getTrack());
 					previewCanvas.resetView();
@@ -478,59 +485,54 @@ public class GameController extends MultiSceneBase implements Initializable {
 					Integer currentGamePlayerId = game.getCurrentPlayerIndex();
 					Integer userId = ModelExchange.GameOptions.getPlayerID();
 					
-					for (int i = 0; i < game.getPlayers().length; i++) {
+					for( int i=0 ; i<game.getPlayers().length ; i++ )
+					{
 						Player gamePlayer = game.getPlayers()[i];
-						if (gamePlayer.getPlayerID() != null) {
-							if (gamePlayer.getPlayerID().equals(userId)) {
-								hasPlayerCrashed = gamePlayer.hasCrashed();
+						if( gamePlayer.getPlayerID()!=null )
+						{
+							if( gamePlayer.getPlayerID().equals( userId ) )
+							{
+								hasPlayerCrashed=gamePlayer.hasCrashed();
 								
-								if (gamePlayer.getCurrentVelocity() != null) {
+								if( gamePlayer.getCurrentVelocity()!=null )
+								{
 									// Set current velocity
-									setCurrentVelocityLabel(gamePlayer.getCurrentVelocity());
+									setCurrentVelocityLabel( gamePlayer.getCurrentVelocity() );
 								}
-								
-//								if (currentGame != null) {
-//									if (currentGame.getPlayers()[i].hasCrashed() && !game.getPlayers()[i].hasCrashed()) {
-//										// Changed participating from true to false
-//											
-//											Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//											alert.setTitle("Crash");
-//											alert.setHeaderText("You crashed...");
-//											alert.setContentText(
-//													"You just crashed... From now on, you can have a look on how the game continous "
-//													+ "or just leave the game by pressing the 'X' button in the upper right.");
-//		
-//											alert.showAndWait();
-//										
-//									}
-//								}
 							}
 						}
-						//You crashed...
 					}
 					
 					
 					
 					// Set player
-					for (int i = 0; i < game.getPlayers().length; i++) {
+					for( int i=0 ; i<game.getPlayers().length ; i++ )
+					{
 						Player gamePlayer = game.getPlayers()[i];
 						// If player is not null -> is set
-						if (gamePlayer.getPlayerID() != null) {
+						if( gamePlayer.getPlayerID()!=null )
+						{
 							Integer gamePlayerId = gamePlayer.getPlayerID();
 							String gamePlayerName = gamePlayer.getName();
 	
 							GamePlayerPane newPlayerPane = new GamePlayerPane();
 							
-							if (gamePlayerId != null) {
+							if( gamePlayerId!=null )
+							{
 								newPlayerPane.setName(gamePlayerName);
 								
 								drawPlayerTrails();
-								if (gamePlayer.hasCrashed() || gamePlayer.isDisconnected()) {
+								if (gamePlayer.hasCrashed() || gamePlayer.isDisconnected())
+								{
 									newPlayerPane.setColor(Colors.Player.inactive);
-								} else {
+								}
+								else
+								{
 									newPlayerPane.setColor(Colors.Player.getColorWithId(i));
 								}
-							} else {
+							} 
+							else
+							{
 								newPlayerPane.setName(".....");
 							}
 							
@@ -547,41 +549,76 @@ public class GameController extends MultiSceneBase implements Initializable {
 								}
 							}
 							
-							if (i == currentGamePlayerId) {
+							
+							
+							if( i==currentGamePlayerId )
+							{
 								// Highlight current set Player
 								Racetracker.printInDebugMode("----- |INF| ----- Current player: " + i + " -----");
 								newPlayerPane.setFillBorderStrokeWidth();
+
 								
-								if (gamePlayerId.equals(userId)) {
-									// If 'i am' the current player
-									if (matrixTool != null) {
-										matrixTool.setDisable(false);
-									}
-	
+								if ( gamePlayerId.equals( userId ) )
+								{
 									String action;
 									boolean firstGameMove = isFirstGameMove();
-									if (firstGameMove) {
-										action = "Select one of the gold highlighed starting points!";
-									} else {
-										action = gamePlayerName + ": Choose your next move.";
-									}
-									setGameActionLabel(action);
-									
-									
-									if (shouldShowMovePreview()) {
-										previewCanvas.setPlayerColor(desaturatedColor);
-										if (!firstGameMove) {
-											previewCanvas.setPlayerGridLocation(getCurrentUserLocation());
-											previewCanvas.setPlayerVelocity(getCurrentUserVelocity());
+									if( currentGame.getPlayers()[i].isAI() )
+									{
+										((AI)currentGame.getPlayers()[i]).setGameInformation( currentGame );
+										if( firstGameMove )
+										{
+											if( matrixTool!=null )
+												matrixTool.setDisable( false );
+											action = "Select one of the gold highlighed starting points!";
+											setGameActionLabel( action );
 										}
-										previewCanvas.updateView();
+										else
+										{
+											if( matrixTool!=null )
+												matrixTool.setDisable( true );
+											action = gamePlayerName + " will now calculate the next move.";
+											setGameActionLabel( action );
+
+											mSelf=currentGame.getPlayers()[i];
+											moveAI();
+										}
 									}
-									
-									
-									
-								} else {
+									else
+									{
+										// If 'i am' the current player
+										if( matrixTool!=null )
+										{
+											matrixTool.setDisable( false );
+										}
+		
+										if( firstGameMove )
+										{
+											action = "Select one of the gold highlighed starting points!";
+										}
+										else
+										{
+											action = gamePlayerName + ": Choose your next move.";
+										}
+										setGameActionLabel( action );
+										
+										
+										if( shouldShowMovePreview() ) 
+										{
+											previewCanvas.setPlayerColor(desaturatedColor);
+											if( !firstGameMove )
+											{
+												previewCanvas.setPlayerGridLocation(getCurrentUserLocation());
+												previewCanvas.setPlayerVelocity(getCurrentUserVelocity());
+											}
+											previewCanvas.updateView();
+										}										
+									}
+								} 
+								else
+								{
 									// If someone else is the player
-									if (matrixTool != null) {
+									if (matrixTool != null)
+									{
 										matrixTool.setDisable(true);
 									}
 	
@@ -870,18 +907,56 @@ public class GameController extends MultiSceneBase implements Initializable {
 		
 		setModel();
 		
-		if (!isCurrentPlayer()) {
-			if (timer != null) {
+		if (!isCurrentPlayer())
+		{
+			if (timer != null)
+			{
 				timer.cancel();
 				timer = null;
 				setTimeLabel(-Integer.MAX_VALUE);
 			}
 		}
 		
-		if (userWantsToExitGame) {
+		if (userWantsToExitGame)
+		{
 			leaveGameScene();
 		}
 	}
+	
+	private void moveAI() 
+	{
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() 
+			{
+				if( null==mSelf )
+					return;
+				long start_time=System.currentTimeMillis();
+
+				javafx.geometry.Point2D newGridLocation = ((IAI)mSelf).move();
+				
+				long time_needed=System.currentTimeMillis()-start_time;
+				if( time_needed < 1500 )
+				{
+					try
+					{
+						synchronized(this)
+						{
+							this.wait( 1500-time_needed );
+						}
+					} 
+					catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+				}
+				sendMoveToServer( newGridLocation );
+			}
+		});
+	}
+	
+	
 	
 	private void leaveGameScene() {
 		if (ModelExchange.GameOptions.isShouldReturnToSetup()) {

@@ -7,8 +7,8 @@ package src.main.java.com.messages;
  * @author Denis
  *
  */
-public class ClientNameMessage extends RaceTrackMessage {
-	
+public class ClientNameMessage extends RaceTrackMessage
+{
 	/**
 	 * 
 	 */
@@ -16,15 +16,23 @@ public class ClientNameMessage extends RaceTrackMessage {
 	/**
 	 * the client name
 	 */
-	private String clientName;
+	private String mClientName;
+	private Integer mAiTypeId;
 	
-	public ClientNameMessage(String clientName){
+	public ClientNameMessage( String clientName, Integer aiTypeId )
+	{
 		super();
-		this.clientName = clientName;
+		this.mClientName = clientName;
+		this.mAiTypeId = aiTypeId;
+	}
+
+	public String getClientName()
+	{
+		return mClientName;
 	}
 	
-	public String getClientName(){
-		return clientName;
-	}
-	
+	public Integer getClientAiTypeId()
+	{
+		return mAiTypeId;
+	}	
 }

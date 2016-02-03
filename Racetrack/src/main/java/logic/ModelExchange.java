@@ -56,6 +56,7 @@ public class ModelExchange {
 		private static int hostPort;
 		private static String userName;
 		private static int playerID;
+		private static int aiID;
 		private static boolean shouldReturnToSetup;
 		
 		/*
@@ -90,6 +91,15 @@ public class ModelExchange {
 		
 		public static void setUserName(String userName) {
 			GameOptions.userName = userName;
+		}
+		
+		public static void setAiID( int aiId)
+		{
+			GameOptions.aiID = aiId;
+		}
+		public static int getAiID()
+		{
+			return GameOptions.aiID;
 		}
 		
 		public static int getPlayerID() {

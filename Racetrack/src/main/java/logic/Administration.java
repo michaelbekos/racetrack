@@ -70,11 +70,11 @@ public class Administration implements IAdministration{
 	 */
 
 	@Override
-	public void createAndAddNewPlayer(int playerID){
+	public void createAndAddNewPlayer( int playerID )
+	{
 		//add player with default name
-		Player newPlayer = new Player(playerID, "Player_"+playerID);
-
-		playerMap.put(playerID, newPlayer);
+		Player newPlayer = new Player( playerID, "Player_"+playerID );
+		getPlayerMap().put( playerID, newPlayer );
 	}
 
 	/*
@@ -97,29 +97,29 @@ public class Administration implements IAdministration{
 		// "Free", "Human", "No Mover", "Random", "Puckie", "AIStar"
 		int AIid = controller.getNewAIid();
 		//add player with default name
-		Player newPlayer;
+		//Player newPlayer;
 		switch( ai_type )
 		{
 		case 2:
-			newPlayer= new AI_NoMover( AIid, "No Mover" );
+			//newPlayer= new AI_NoMover( AIid, "No Mover" );
 			break;
 		case 3:
-			newPlayer= new AI_Random( AIid, "Random" );
+			//newPlayer= new AI_Random( AIid, "Random" );
 			break;
 		case 4:
-			newPlayer= new AI_Puckie( AIid, "Puckie" );
+			//newPlayer= new AI_Puckie( AIid, "Puckie" );
 			break;
 		case 5:
-			newPlayer= new AIstar( AIid, "AIstar" );
+			//newPlayer= new AIstar( AIid, "AIstar" );
 			break;
 		case 6:
-			newPlayer= new AI_Crasher( AIid, "Crasher" );
+			//newPlayer= new AI_Crasher( AIid, "Crasher" );
 			break;
 		default:
 			return 0;
 		}
 		//newPlayer.setSessionID( ... );
-		playerMap.put( AIid, newPlayer );
+		//playerMap.put( AIid, newPlayer );
 		return AIid;
 	}
 
@@ -133,8 +133,8 @@ public class Administration implements IAdministration{
 		int playerSession = getSessionFromClient(playerID);
 
 		if(playerSession == NO_LOBBY_ID){
-			lobbyMap.get(sessionID).addPlayer(playerMap.get(playerID));
-			DebugOutputHandler.printDebug("Player "+playerMap.get(playerID).getName()+" now is in lobby " + playerMap.get(playerID).getSessionID());
+			lobbyMap.get(sessionID).addPlayer(getPlayerMap().get(playerID));
+			DebugOutputHandler.printDebug("Player "+getPlayerMap().get(playerID).getName()+" now is in lobby " + getPlayerMap().get(playerID).getSessionID());
 		}
 	}
 	
@@ -143,9 +143,9 @@ public class Administration implements IAdministration{
 
 		int playerToDisconnectPosition = -1;
 
-		if( playerMap.get(playerToDisconnect) != null){
+		if( getPlayerMap().get(playerToDisconnect) != null){
 
-			int session = playerMap.get(playerToDisconnect).getSessionID();
+			int session = getPlayerMap().get(playerToDisconnect).getSessionID();
 
 			if(lobbyMap.get(session) != null){
 				playerToDisconnectPosition = lobbyMap.get(session).getGroupPositionByClientID(playerToDisconnect);
@@ -154,7 +154,7 @@ public class Administration implements IAdministration{
 
 				if(session != NO_LOBBY_ID){
 
-					lobbyMap.get(session).deletePlayer(playerMap.get(playerToDisconnect));
+					lobbyMap.get(session).deletePlayer(getPlayerMap().get(playerToDisconnect));
 
 					if(moveTimerMap.get(session)!=null && lobbyMap.get(session) != null){
 						int currentPlayer = getPlayerIDByGroupPosition(lobbyMap.get(session).getNextPlayer(), session);
@@ -181,7 +181,7 @@ public class Administration implements IAdministration{
 					}
 
 				}
-				playerMap.remove(playerToDisconnect);
+				getPlayerMap().remove(playerToDisconnect);
 
 				controller.disconnectPlayerFromServer(playerToDisconnect);
 
@@ -198,13 +198,13 @@ public class Administration implements IAdministration{
 	@Override
 	public void leaveLobby(int playerID){
 
-		int sessionID = playerMap.get(playerID).getSessionID();
+		int sessionID = getPlayerMap().get(playerID).getSessionID();
 
-		DebugOutputHandler.printDebug(playerMap.get(playerID).getName()+" was in lobby: "+playerMap.get(playerID).getSessionID()+ " and left");
+		DebugOutputHandler.printDebug(getPlayerMap().get(playerID).getName()+" was in lobby: "+getPlayerMap().get(playerID).getSessionID()+ " and left");
 
 		//cant "leave" list of lobby as a lobby
 
-		if(sessionID != NO_LOBBY_ID && lobbyMap.get(sessionID) != null && playerMap.get(playerID) != null){
+		if(sessionID != NO_LOBBY_ID && lobbyMap.get(sessionID) != null && getPlayerMap().get(playerID) != null){
 
 			int playerToDisconnectPosition = lobbyMap.get(sessionID).getGroupPositionByClientID(playerID);
 
@@ -212,7 +212,7 @@ public class Administration implements IAdministration{
 
 			if(lobbyMap.get(sessionID).isGameRunning()){
 
-				lobbyMap.get(sessionID).deletePlayer(playerMap.get(playerID));
+				lobbyMap.get(sessionID).deletePlayer(getPlayerMap().get(playerID));
 
 				resetPlayer(playerID);
 
@@ -240,7 +240,7 @@ public class Administration implements IAdministration{
 			}
 			
 			DebugOutputHandler.printDebug("Are we here rights");
-			lobbyMap.get(sessionID).deletePlayer(playerMap.get(playerID));
+			lobbyMap.get(sessionID).deletePlayer(getPlayerMap().get(playerID));
 			resetPlayer(playerID);
 
 		}
@@ -275,20 +275,20 @@ public class Administration implements IAdministration{
 		//let the player join set new lobby
 		joinLobby(playerID, sessionID);
 		
-		// for every player in the lobby
-		for (int i=0; i<lobbyInformation.getPlayerIDs().length; i++)
-		{
-			// Get the type
-			int AI_type=lobbyInformation.getTypeIDs()[i];
-			if( AI_type!=0 && AI_type!=1 )
-			{
-				// 0==Free
-				// 1==Human
-				// => Only AIs get here.
-				joinLobby(this.createAndAddNewAI(AI_type), sessionID);
-			}
-		}
-		DebugOutputHandler.printDebug(lobbyInformation.getAmountOfAIs() + " AIs created for the new Lobby");
+//		// for every player in the lobby
+//		for (int i=0; i<lobbyInformation.getPlayerIDs().length; i++)
+//		{
+//			// Get the type
+//			int AI_type=lobbyInformation.getTypeIDs()[i];
+//			if( AI_type!=0 && AI_type!=1 )
+//			{
+//				// 0==Free
+//				// 1==Human
+//				// => Only AIs get here.
+//				joinLobby(this.createAndAddNewAI(AI_type), sessionID);
+//			}
+//		}
+//		DebugOutputHandler.printDebug(lobbyInformation.getAmountOfAIs() + " AIs created for the new Lobby");
 	}
 
 	@Override
@@ -352,7 +352,7 @@ public class Administration implements IAdministration{
 		List<Integer> playersInSameSession = new ArrayList<Integer>();
 		int sessionIDSearched = getSessionFromClient(playerID);
 
-		for(Player p : playerMap.values()){
+		for(Player p : getPlayerMap().values()){
 			if(p != null ){
 				if(sessionIDSearched == p.getSessionID()){
 					playersInSameSession.add(p.getPlayerID());
@@ -365,18 +365,43 @@ public class Administration implements IAdministration{
 
 	@Override
 	public Point2D updatePlayerPositionByID(int playerID, Point2D vector){
-		Player playerMoved = playerMap.get(playerID);
+		Player playerMoved = getPlayerMap().get(playerID);
 		int playerSessionID = getSessionFromClient(playerID);	
 		return lobbyMap.get(playerSessionID).getCollisionPointFromGame(playerMoved, vector);
 	}
 
+	//HOWTO
 	@Override
-	public String setPlayerName(int playerID, String clientName){
+	public String setPlayerNameAndAiType( int playerID, String clientName, Integer clientAiTypeId )
+	{		
+		String playerName=getNextFreePlayerName( clientName, playerID );
 
-		String playerName = getNextFreePlayerName(clientName, playerID);
-
-		Player player = playerMap.get(playerID);
-		player.setName(playerName);
+		Player entity;
+		switch( clientAiTypeId )
+		{
+		default:
+		case 1:
+			entity= new Player( playerID, clientName );
+			break;
+		case 2:
+			entity= new AI_NoMover( playerID, "AI No Mover " + clientName );
+			break;
+		case 3:
+			entity= new AI_Random( playerID, "AI Random " + clientName );
+			break;
+		case 4:
+			entity= new AI_Puckie( playerID, "AI Puckie " + clientName );
+			break;
+		case 5:
+			entity= new AIstar( playerID, "AIstar " + clientName );
+			break;
+		case 6:
+			entity= new AI_Crasher( playerID, "AI Crasher " + clientName );
+			break;
+		}
+		//Player player=getPlayerMap().get(playerID);
+		getPlayerMap().put( playerID, entity );
+		entity.setName(playerName);
 
 		return playerName;
 	}	
@@ -395,7 +420,7 @@ public class Administration implements IAdministration{
 	public boolean checkValidityOfClientMove(int playerID, Point2D vector) {
 
 
-		Player playerMoved = playerMap.get(playerID);
+		Player playerMoved = getPlayerMap().get(playerID);
 
 		int sessionID = playerMoved.getSessionID();
 
@@ -408,7 +433,7 @@ public class Administration implements IAdministration{
 
 	@Override
 	public boolean hasPlayerWon(int playerID) {
-		Player playerSearched = playerMap.get(playerID);
+		Player playerSearched = getPlayerMap().get(playerID);
 		int sessionID = playerSearched.getSessionID();
 		return lobbyMap.get(sessionID).hasPlayerWonInGame(playerSearched);
 	}
@@ -451,7 +476,7 @@ public class Administration implements IAdministration{
 
 	@Override
 	public int getSessionFromPlayer(int playerID){
-		return playerMap.get(playerID).getSessionID();
+		return getPlayerMap().get(playerID).getSessionID();
 	}
 
 	@Override
@@ -461,7 +486,7 @@ public class Administration implements IAdministration{
 
 		//		lobbyMap.get(sessionID).playerLeaves(playerID);
 
-		lobbyMap.get(sessionID).deletePlayer(playerMap.get(playerID));
+		lobbyMap.get(sessionID).deletePlayer(getPlayerMap().get(playerID));
 
 
 	}
@@ -576,7 +601,7 @@ public class Administration implements IAdministration{
 		int sessionID = getSessionFromClient(aiID);
 
 		//Move player and get collisionpoint if there was one
-		if(lobbyMap.get(sessionID) != null && sessionID != NO_LOBBY_ID && playerMap.get(aiID)!=null){
+		if(lobbyMap.get(sessionID) != null && sessionID != NO_LOBBY_ID && getPlayerMap().get(aiID)!=null){
 
 			if(lobbyMap.get(sessionID).isFirstRound()){
 				setRandomStartingPoint(aiID, sessionID);
@@ -591,7 +616,7 @@ public class Administration implements IAdministration{
 
 			int playerWhoMoved = getGroupPositionByPlayerID(aiID);
 
-			AI ai = (AI) playerMap.get(aiID);
+			AI ai = (AI) getPlayerMap().get(aiID);
 
 			if(ai.hasCrashed() || !ai.isParticipating()){
 				return;
@@ -614,7 +639,7 @@ public class Administration implements IAdministration{
 			Point2D playerVelocity = getCurrentPlayerVelocityByPlayerID(aiID);
 
 			if(didAPlayerWin){
-				DebugOutputHandler.printDebug((playerMap.get(playerWhoWon).isAI() ? "AI" : "Player") +" "+playerWhoWon+" did win the game.");
+				DebugOutputHandler.printDebug((getPlayerMap().get(playerWhoWon).isAI() ? "AI " : "Player ") +playerWhoWon+" won the game.");
 
 				answer = VectorMessageServerHandler.generatePlayerWonMessage(playerWhoMoved,playerWhoWon, playerPosition);
 				closeGameByPlayerID(aiID);
@@ -641,7 +666,7 @@ public class Administration implements IAdministration{
 		int sessionID = getSessionFromClient(playerID);
 
 		//Move player and get collisionpoint if there was one
-		if(lobbyMap.get(sessionID) != null && sessionID != NO_LOBBY_ID && playerMap.get(playerID)!=null){
+		if(lobbyMap.get(sessionID) != null && sessionID != NO_LOBBY_ID && getPlayerMap().get(playerID)!=null){
 
 			if(lobbyMap.get(sessionID).isFirstRound()){
 				setRandomStartingPoint(playerID, sessionID);
@@ -656,7 +681,7 @@ public class Administration implements IAdministration{
 
 			int playerWhoMoved = getGroupPositionByPlayerID(playerID);
 
-			Player player = playerMap.get(playerID);
+			Player player = getPlayerMap().get(playerID);
 
 			if(player.hasCrashed() || !player.isParticipating()){
 				return;
@@ -766,7 +791,7 @@ public class Administration implements IAdministration{
 
 		int sessionIDSearched = -1;
 
-		for (Player p : playerMap.values()) {
+		for (Player p : getPlayerMap().values()) {
 			if(p.getPlayerID() == playerID){
 				sessionIDSearched = p.getSessionID();
 				break;
@@ -797,7 +822,7 @@ public class Administration implements IAdministration{
 	 * @return
 	 */
 	private boolean isPlayerNameFreeToUse(String clientName){
-		for (Player p : playerMap.values()) {
+		for (Player p : getPlayerMap().values()) {
 			if(p.getName().equals(clientName)){
 				return false;
 			}
@@ -811,11 +836,11 @@ public class Administration implements IAdministration{
 	 */
 	private void resetPlayer(int playerID) {
 
-		if(playerMap.get(playerID) != null){
-			playerMap.get(playerID).setParticipating(false);
-			playerMap.get(playerID).setCrashed(false);
-			playerMap.get(playerID).setCurrentPosition(null);
-			playerMap.get(playerID).setCurrentVelocity(null);
+		if(getPlayerMap().get(playerID) != null){
+			getPlayerMap().get(playerID).setParticipating(false);
+			getPlayerMap().get(playerID).setCrashed(false);
+			getPlayerMap().get(playerID).setCurrentPosition(null);
+			getPlayerMap().get(playerID).setCurrentVelocity(null);
 		}
 	}
 
@@ -855,8 +880,8 @@ public class Administration implements IAdministration{
 				int playerWhoWonID = getPlayerIDWhoWonByPlayerID(((DisconnectMessage) playerDisconnectsMessage).getNextPlayerToMove());
 				if(playerWhoWon != -1){
 					Point2D lastVec = null;
-					if(playerMap.get(playerWhoWonID) != null)
-						lastVec = playerMap.get(playerWhoWonID).getCurrentPosition();
+					if(getPlayerMap().get(playerWhoWonID) != null)
+						lastVec = getPlayerMap().get(playerWhoWonID).getCurrentPosition();
 
 
 					PlayerWonMessage answer;
@@ -904,7 +929,7 @@ public class Administration implements IAdministration{
 			playersInSameSession = getPlayerIdsInSameSession(playerID);
 		}
 
-		Player player = playerMap.get(playerID);
+		Player player = getPlayerMap().get(playerID);
 
 		if(player.hasCrashed() || !player.isParticipating()){
 			return;
@@ -943,22 +968,22 @@ public class Administration implements IAdministration{
 		sendMessage(answer);
 	}
 	
-	private void sendMessage(RaceTrackMessage message){
-		List<Integer> idsToRemove = new ArrayList<Integer>();
-		List<Integer> receivers = message.getReceiverIds();
-		for (Integer i : receivers)
-		{
-			if (playerMap.get(i).isAI())
-			{
-				idsToRemove.add(i);
-			}				
-		}
-		for (Integer id : idsToRemove)
-		{
-			receivers.remove(id);
-		}
-		message.setReceiverIDs(receivers);
+	private void sendMessage(RaceTrackMessage message)
+	{
+//		List<Integer> idsToRemove = new ArrayList<Integer>();
+//		List<Integer> receivers = message.getReceiverIds();
+//		for (Integer i : receivers)
+//		{
+//			if (playerMap.get(i).isAI())
+//			{
+//				idsToRemove.add(i);
+//			}				
+//		}
+//		for (Integer id : idsToRemove)
+//		{
+//			receivers.remove(id);
+//		}
+//		message.setReceiverIDs(receivers);
 		controller.sendExtraMessage(message);		
 	}
-
 }

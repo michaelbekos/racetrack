@@ -17,10 +17,10 @@ import src.main.java.logic.Administration;
  * @author Denis
  *
  */
-public class ClientNameMessageServerHandler extends RaceTrackMessageServerHandler{
-
-
-	public ClientNameMessageServerHandler(Administration administration){
+public class ClientNameMessageServerHandler extends RaceTrackMessageServerHandler
+{
+	public ClientNameMessageServerHandler( Administration administration )
+	{
 		super( administration );
 	}
 
@@ -30,17 +30,16 @@ public class ClientNameMessageServerHandler extends RaceTrackMessageServerHandle
 	 * no answer will be generated
 	 */
 	@Override
-	public RaceTrackMessage generateAnswerAndUpdateModel(RaceTrackMessage messageToHandle){
-
+	public RaceTrackMessage generateAnswerAndUpdateModel( RaceTrackMessage messageToHandle )
+	{
 		DebugOutputHandler.printDebug("Received a ClientNameMessage");
 
 		//No answer needs to be sent to other clients
 		RaceTrackMessage answer = null;
 
 		//cast to the right type of message
-
-		try{
-
+		try
+		{
 			ClientNameMessage incomingMessage = (ClientNameMessage) messageToHandle;
 
 			//get the id of the client, which connected
@@ -50,16 +49,22 @@ public class ClientNameMessageServerHandler extends RaceTrackMessageServerHandle
 
 			//Get the players name
 			String playerName ="";
-			if(incomingMessage.getClientName()!=null)
+			Integer playerEntityId=-1;
+			if( null!=incomingMessage.getClientName() )
+			{
 				playerName = incomingMessage.getClientName();
+				playerEntityId = incomingMessage.getClientAiTypeId();
+			}
 
-			DebugOutputHandler.printDebug("Player: "+playerName+" wants to connect with ID: "+playerId);
-
+			DebugOutputHandler.printDebug( "Player: "+playerName+" wants to connect with ID: " + playerId + " and entity ID: " + playerEntityId );
+			
+			
 
 			String  fixedPlayerName = "Null";
 			//inform the lobby, that a specific player has now a name
-			if(!(playerId == -1 || playerName =="")){
-				fixedPlayerName = administration.setPlayerName(playerId, playerName);
+			if( -1!=playerId && ""!=playerName && -1!=playerEntityId )
+			{
+				fixedPlayerName = administration.setPlayerNameAndAiType( playerId, playerName, playerEntityId );
  
 				DebugOutputHandler.printDebug(fixedPlayerName+" has been added to Playerlist");
 

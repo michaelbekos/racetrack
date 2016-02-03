@@ -54,6 +54,8 @@
                         <Insets bottom="15.0" />
                      </VBox.margin>
                   </TextField>
+              	  <ChoiceBox fx:id="aiChoiceBox" layoutX="490.0" layoutY="127.0" prefHeight="26.0" prefWidth="155.0" />
+              	  
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="27.0" prefWidth="100.0" text="Cancel / Exit">

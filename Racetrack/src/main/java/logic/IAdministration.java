@@ -92,7 +92,7 @@ interface IAdministration {
 	 * 
 	 * @return the name of the player which will be safed
 	 */
-	public String setPlayerName(int playerID, String clientName);
+	public String setPlayerNameAndAiType( int playerID, String clientName, Integer clientAiTypeId );
 	
 	
 	/**

@@ -28,8 +28,13 @@ public class AIstar extends AI {
 	private State[] path;
 	private int turn;
 	
-	public AIstar(Integer playerID, String name) {
-		super(playerID, "AIstar");
+	public AIstar(Integer playerID, String name )
+	{
+		this( playerID, "AIstar", -1 );
+	}
+	public AIstar(Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, "AIstar", playerColorId );
 		closedList = new HashSet<State>();
 		openList = new PriorityQueue<State>(11,new StateComparator());
 		borders = new HashSet<LineSegment>();
@@ -38,6 +43,7 @@ public class AIstar extends AI {
 		goal = null;
 		pathComputed = false;
 		forbiddenPositions = new HashSet<Point>();
+		mTypeID=5;
 	}
 	
 	@Override

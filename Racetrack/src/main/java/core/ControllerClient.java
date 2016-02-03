@@ -189,10 +189,12 @@ public class ControllerClient {
 	 * Sends a ClientNameMessage to the server which has to hold the following parameters
 	 * @param userName	The name of the Player
 	 */
-	public void sendUserNameMessage(String userName){
-		RaceTrackMessage rtMessage = new ClientNameMessage(userName);
-		sendMessage(rtMessage , "UserNameMessage");
+	public void sendUserNameAndAiTypeIdMessage( String userName,int aiTypeID )
+	{
+		RaceTrackMessage rtMessage = new ClientNameMessage( userName, aiTypeID );
+		sendMessage( rtMessage , "UserNameMessage" );
 	}
+
 	
 	/**
 	 * Sends a SendOptionsMessage to the server which has to hold the following parameters

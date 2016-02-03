@@ -6,10 +6,15 @@ import javafx.scene.shape.Line;
 public class AI_Crasher extends AI
 {
 	private int turn;
-	public AI_Crasher(Integer playerID, String name)
+	public AI_Crasher(Integer playerID, String name )
 	{
-		super( playerID, name );
+		this( playerID, name, -1 );
+	}
+	public AI_Crasher(Integer playerID, String name, int playerColorId )
+	{
+		super( playerID, name, playerColorId );
 		turn = 1;
+		mTypeID=6;
 	}
 	
 	@Override

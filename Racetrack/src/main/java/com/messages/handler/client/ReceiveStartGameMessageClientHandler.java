@@ -5,10 +5,15 @@ import src.main.java.com.messages.StartGameMessage;
 import src.main.java.com.messages.handler.RaceTrackMessageClientHandler;
 import src.main.java.gui.Racetracker;
 import src.main.java.gui.navigation.MultiSceneBase;
+import src.main.java.logic.AI_Crasher;
+import src.main.java.logic.AI_NoMover;
+import src.main.java.logic.AI_Puckie;
+import src.main.java.logic.AI_Random;
 import src.main.java.logic.Game;
 import src.main.java.logic.ILobbyInformation;
 import src.main.java.logic.ModelExchange;
 import src.main.java.logic.Player;
+import src.main.java.logic.AIstar.AIstar;
 
 /**
  * The Receive StartGame Handler
@@ -58,11 +63,33 @@ public class ReceiveStartGameMessageClientHandler extends
 				// Set Player and Round
 				Player[] players = new Player[ModelExchange.LobbyList.getCurrentLobby().getPlayerIDs().length];
 				game.setCurrentPlayerIndex(n);
-				for (int i = 0; i < players.length; i++) {
-					players[i] = new Player(lobby.getPlayerIDs()[i],
-							lobby.getPlayerNames()[i]);
-					players[i].setCurrentVelocity(null);
-					players[i].setCurrentPosition(null);
+				for (int i = 0; i < players.length; i++) 
+				{
+					switch( lobby.getTypeIDs()[i] )
+					{
+					case 1:
+						players[i]= new Player( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
+						break;
+					case 2:
+						players[i]= new AI_NoMover( lobby.getPlayerIDs()[i], "AI No Mover " + lobby.getPlayerNames()[i] );
+						break;
+					case 3:
+						players[i]= new AI_Random( lobby.getPlayerIDs()[i], "AI Random " + lobby.getPlayerNames()[i] );
+						break;
+					case 4:
+						players[i]= new AI_Puckie( lobby.getPlayerIDs()[i], "AI Puckie " + lobby.getPlayerNames()[i] );
+						break;
+					case 5:
+						players[i]= new AIstar( lobby.getPlayerIDs()[i], "AIstar " + lobby.getPlayerNames()[i] );
+						break;
+					case 6:
+						players[i]= new AI_Crasher( lobby.getPlayerIDs()[i], "AI Crasher " + lobby.getPlayerNames()[i] );
+						break;
+					default:
+						return;
+					}
+					players[i].setCurrentVelocity( null );
+					players[i].setCurrentPosition( null );
 				}
 
 				// Initialize the game
