@@ -936,6 +936,7 @@ public class GameController extends MultiSceneBase implements Initializable {
 				javafx.geometry.Point2D newGridLocation = ((IAI)mSelf).move();
 				
 				long time_needed=System.currentTimeMillis()-start_time;
+				((AI)mSelf).addTime( time_needed );
 				if( time_needed < 1500 )
 				{
 					try
