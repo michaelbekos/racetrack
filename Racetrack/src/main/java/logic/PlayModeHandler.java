@@ -10,7 +10,7 @@ public class PlayModeHandler {
 	 * 1 - medium 10 seconds time for a move
 	 * 2 - hard 5 seconds time for a move
 	 */
-	private static final long[] modeTimer = {31L , 11L, 6L };
+	private static final long[] modeTimer = {1000L , 11L, 6L };
 	
 	private PlayModes currentMode;
 	

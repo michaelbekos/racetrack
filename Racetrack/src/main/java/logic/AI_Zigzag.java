@@ -117,15 +117,16 @@ public class AI_Zigzag extends AI
 						{
 							continue;
 						}
-						// List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
-						int distance = AIUtils.CalculateMinimumNumberOfTurns(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed());
-						if (distance == -1)
+						List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
+						//int distance = AIUtils.CalculateMinimumNumberOfTurns(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed());
+						int distance;
+						if (accelerations == null)
 						{
 							continue;
 						}
 						else
 						{
-							distance = distance + startLandingPoint.Distance();
+							distance = accelerations.size() + startLandingPoint.Distance();
 						}
 						if (distance < endLandingPoint.Distance() || endLandingPoint.Distance() == -1)
 						{
