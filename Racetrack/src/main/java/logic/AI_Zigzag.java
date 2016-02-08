@@ -84,7 +84,7 @@ public class AI_Zigzag extends AI
 			//createMovePath();
 			//System.out.println( this.getName()+ " is extracting all landing regions." );
 			
-			ArrayList<ArrayList<Point2D> > lrl=searchLandingRegions();
+			ArrayList<LandingRegion> lrl=searchLandingRegions();
 			
 			LinkedList<LineSegment> borders = new LinkedList<LineSegment>();
 			for (Line2D boundary : mGame.getTrack().getOuterBoundary())
@@ -96,96 +96,15 @@ public class AI_Zigzag extends AI
 				borders.add(LineSegment.GetLineSegment(boundary));
 			}
 
-			LinkedList<LinkedList<ZigZagVertex>> landingRegions = new LinkedList<LinkedList<ZigZagVertex>>();
-			LinkedList<ZigZagVertex> firstLandingRegion = new LinkedList<ZigZagVertex>();
+			LinkedList<ArrayList<ZigZagVertex>> landingRegions = new LinkedList<ArrayList<ZigZagVertex>>();
+			ArrayList<ZigZagVertex> firstLandingRegion = new ArrayList<ZigZagVertex>();
 			ZigZagVertex startingState = new ZigZagVertex(this.getCurrentPosition(),this.getCurrentVelocity());
 			startingState.Distance(0);
 			firstLandingRegion.add(startingState);
 			landingRegions.add(firstLandingRegion);
-			for (int landingRegionIndex = 0; landingRegionIndex < lrl.size(); landingRegionIndex++)
+			for (int i = 0; i < lrl.size(); i++)
 			{
-				LinkedList<ZigZagVertex> landingRegion = new LinkedList<ZigZagVertex>(); 
-				int maxSpeedX = 0;
-				int minSpeedX = 0;
-				int maxSpeedY = 0;
-				int minSpeedY = 0;
-				int directionX = 0;
-				int directionY = 0;
-				switch (landingRegionOldDirections.get(landingRegionIndex))
-				{
-					case UP:
-					{
-						maxSpeedY = maxSpeedOtherDirection;
-						minSpeedY = 1;
-						directionY = 1;
-						break;
-					}
-					case DOWN:
-					{
-						maxSpeedY = maxSpeedOtherDirection;
-						minSpeedY = -1;
-						directionY = -1;
-						break;
-					}
-					case LEFT:
-					{
-						maxSpeedX = maxSpeedOtherDirection;
-						minSpeedX = -1;
-						directionX = -1;
-						break;
-					}
-					case RIGHT:
-					{
-						maxSpeedX = maxSpeedOtherDirection;
-						minSpeedX = 1;
-						directionX = 1;	
-						break;
-					}
-				}
-				
-				switch (landingRegionNewDirections.get(landingRegionIndex))
-				{
-					case UP:
-					{
-						maxSpeedY = maxSpeedDominantDirection;
-						minSpeedY = 1;
-						directionY = 1;
-						break;
-					}
-					case DOWN:
-					{
-						maxSpeedY = maxSpeedDominantDirection;
-						minSpeedY = -1;
-						directionY = -1;
-						break;
-					}
-					case LEFT:
-					{
-						maxSpeedX = maxSpeedDominantDirection;
-						minSpeedX = -1;
-						directionX = -1;
-						break;
-					}
-					case RIGHT:
-					{
-						maxSpeedX = maxSpeedDominantDirection;
-						minSpeedX = 1;
-						directionX = 1;	
-						break;
-					}
-				}
-				
-				for (int speedX = minSpeedX; Math.abs(speedX) <= maxSpeedX; speedX += directionX)
-				{
-					for (int speedY = minSpeedY; Math.abs(speedY) <= maxSpeedY; speedY += directionY)
-					{
-						for (Point2D position : lrl.get(landingRegionIndex))
-						{
-							landingRegion.add(new ZigZagVertex(position, new Point2D(speedX,speedY)));
-						}
-					}
-				}
-				landingRegions.add(landingRegion);
+				landingRegions.add( lrl.get( i ).getZigZagVertice() );
 			}
 			
 			for (int landingRegionIndex = 0; landingRegionIndex < landingRegions.size() - 1; landingRegionIndex++)
@@ -199,15 +118,14 @@ public class AI_Zigzag extends AI
 							continue;
 						}
 						// List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
-						List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
-						int distance;
-						if (accelerations == null)
+						int distance = AIUtils.CalculateMinimumNumberOfTurns(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed());
+						if (distance == -1)
 						{
 							continue;
 						}
 						else
 						{
-							distance = accelerations.size() + startLandingPoint.Distance();
+							distance = distance + startLandingPoint.Distance();
 						}
 						if (distance < endLandingPoint.Distance() || endLandingPoint.Distance() == -1)
 						{
@@ -290,14 +208,14 @@ public class AI_Zigzag extends AI
 			
 			if( mVerbose )
 			{
-				for( int i=0 ; i<lrl.size() ; i++ )
-				{
-					System.out.println( "Region " + (i+1) + ". has " + lrl.get(i).size() + "elements :"  );
-					for( int j=0 ; j<lrl.get(i).size() ; j++ )
-					{
-						System.out.println( "( x=" + lrl.get(i).get(j).getX() + "; y=" + lrl.get(i).get(j).getY()+ " )" );
-					}
-				}
+//				for( int i=0 ; i<lrl.size() ; i++ )
+//				{
+//					System.out.println( "Region " + (i+1) + ". has " + lrl.get(i).size() + "elements :"  );
+//					for( int j=0 ; j<lrl.get(i).size() ; j++ )
+//					{
+//						System.out.println( "( x=" + lrl.get(i).get(j).getX() + "; y=" + lrl.get(i).get(j).getY()+ " )" );
+//					}
+//				}
 				
 				for( int j=mHeight-1 ; j>=0 ; j-- )
 				{
@@ -840,7 +758,7 @@ public class AI_Zigzag extends AI
 		}
 		//System.out.println( "   Not in PQ" );
 	}
-	private ArrayList<ArrayList<Point2D> > searchLandingRegions()
+	private ArrayList< LandingRegion > searchLandingRegions()
 	{
 		mLandingRegions=new int[mWidth][mHeight];
 		for( int j=mHeight-1 ; j>=0 ; j-- )
@@ -860,7 +778,7 @@ public class AI_Zigzag extends AI
 		
 		int regionFoundFirstIdOrder=0;
 		
-		ArrayList<ArrayList<Point2D> > ret= new ArrayList<ArrayList<Point2D> >();
+		ArrayList<LandingRegion> ret= new ArrayList<LandingRegion>();
 		ArrayList<Integer> idOfDijkstraShortestPathForSorting=new ArrayList<Integer>();
 		//ArrayList<Point2D> tmpLandingRegion;
 		AtomicReference<Integer> w=new AtomicReference<Integer>( 0 );
@@ -1175,7 +1093,7 @@ public class AI_Zigzag extends AI
 					if( idOfDijkstraShortestPathForSorting.size() == 0 )
 					{
 						idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-						ret.add( tmpLandingRegion.getAllPositions() );
+						ret.add( tmpLandingRegion );
 						landingRegionOldDirections.add(oldDirection);
 						landingRegionNewDirections.add(newDirection);
 					}
@@ -1190,7 +1108,7 @@ public class AI_Zigzag extends AI
 							{
 								foundSlot=true;
 								idOfDijkstraShortestPathForSorting.add( k+1, idForSorting.get() );
-								ret.add( k+1, tmpLandingRegion.getAllPositions() );
+								ret.add( k+1, tmpLandingRegion );
 								landingRegionOldDirections.add(k+1, oldDirection);
 								landingRegionNewDirections.add(k+1, newDirection);
 								break;
@@ -1201,14 +1119,14 @@ public class AI_Zigzag extends AI
 							if( idForSorting.get() < idOfDijkstraShortestPathForSorting.get( 0 ) )
 							{
 								idOfDijkstraShortestPathForSorting.add( 0, idForSorting.get() );
-								ret.add( 0, tmpLandingRegion.getAllPositions() );
+								ret.add( 0, tmpLandingRegion );
 								landingRegionOldDirections.add(0, oldDirection);
 								landingRegionNewDirections.add(0, newDirection);
 							}
 							else
 							{
 								idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-								ret.add( tmpLandingRegion.getAllPositions() );
+								ret.add( tmpLandingRegion );
 								landingRegionOldDirections.add(oldDirection);
 								landingRegionNewDirections.add(newDirection);
 							}
@@ -1221,9 +1139,10 @@ public class AI_Zigzag extends AI
 		
 		for( int i=0 ; i<ret.size() ; i++ )
 		{
-			for( int k=0 ; k<ret.get(i).size() ; k++ )
+			ArrayList<Point2D> lr=ret.get(i).getAllPositions();
+			for( int k=0 ; k<lr.size() ; k++ )
 			{
-				mLandingRegions[(int)ret.get(i).get(k).getX()][(int)ret.get(i).get(k).getY()]=i+1;
+				mLandingRegions[(int)lr.get(k).getX()][(int)lr.get(k).getY()]=i+1;
 			}
 		}
 		
