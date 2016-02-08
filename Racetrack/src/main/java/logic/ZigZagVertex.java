@@ -49,4 +49,17 @@ public class ZigZagVertex
 	{
 		predecessor = _predecessor;
 	}
+	
+	@Override
+	public String toString()
+	{
+		Point2D p=position;
+		Point2D s=speed;
+		return new String( "( x:" + p.getX() + " , y:" + p.getY() + " ); ( sx:" + s.getX() + " , sy:" + s.getY() + " ) " );
+	}
+	
+	public boolean isAtPosition( Point2D p )
+	{
+		return (p.getX()==this.position.getX() && p.getY()==this.position.getY() );
+	}
 }
