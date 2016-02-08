@@ -979,7 +979,7 @@ public class AI_Puckie extends AI
 	private void calcWidthAndLandingRegion( AtomicReference<Integer> w, AtomicReference<Integer> landingRegionWidth, AtomicReference<Integer> landingRegionAdditionalHeight, int i, int j, boolean searchDownwards )
 	{
 		w.set( calcWidth( new Point2D( i, j ), searchDownwards ) );
-		landingRegionWidth.set( (int) Math.floor(Math.sqrt(w.get()*2+0.25)-0.5) );
+		landingRegionWidth.set( (int) Math.floor(Math.sqrt(w.get()*2+1.75)-0.5) );
 		// s_max=landingRegionWidth+1
 		landingRegionAdditionalHeight.set( (int) Math.floor(Math.sqrt(w.get()*2-1.75)-0.5)+1 );
 	}
