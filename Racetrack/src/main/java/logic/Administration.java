@@ -374,6 +374,18 @@ public class Administration implements IAdministration{
 		case 7:
 			entity= new AI_Zigzag( playerID, "AI Zigzag " + clientName );
 			break;
+		case 8:
+			entity= new AI_LimitedView_DriveSafe( playerID, "AI LimitedView DriveSafe" + clientName );
+			break;
+		case 9:
+			entity= new AI_LimitedView_FastCorner( playerID, "AI LimitedView FastCorner" + clientName );
+			break;
+		case 10:
+			entity= new AI_LimitedView_FastTopmost( playerID, "AI LimitedView FastTopmost" + clientName );
+			break;
+		case 11:
+			entity= new AI_LimitedView_SpeedUp( playerID, "AI LimitedView SpeedUp" + clientName );
+			break;
 			/* ADD YOUR NEW AI ALSO HERE */
 		}
 		//Player player=getPlayerMap().get(playerID);

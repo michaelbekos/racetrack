@@ -6,6 +6,10 @@ import src.main.java.com.messages.handler.RaceTrackMessageClientHandler;
 import src.main.java.gui.Racetracker;
 import src.main.java.gui.navigation.MultiSceneBase;
 import src.main.java.logic.AI_Crasher;
+import src.main.java.logic.AI_LimitedView_DriveSafe;
+import src.main.java.logic.AI_LimitedView_FastCorner;
+import src.main.java.logic.AI_LimitedView_FastTopmost;
+import src.main.java.logic.AI_LimitedView_SpeedUp;
 import src.main.java.logic.AI_NoMover;
 import src.main.java.logic.AI_Puckie;
 import src.main.java.logic.AI_Random;
@@ -89,7 +93,18 @@ public class ReceiveStartGameMessageClientHandler extends
 					case 7:
 						players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i] );
 						break;
-						
+					case 8:
+						players[i]= new AI_LimitedView_DriveSafe( lobby.getPlayerIDs()[i], "AI LimitedView DriveSafe " + lobby.getPlayerNames()[i] );
+						break;
+					case 9:
+						players[i]= new AI_LimitedView_FastCorner( lobby.getPlayerIDs()[i], "AI LimitedView FastCorner " + lobby.getPlayerNames()[i] );
+						break;
+					case 10:
+						players[i]= new AI_LimitedView_FastTopmost( lobby.getPlayerIDs()[i], "AI LimitedView FastTopmost " + lobby.getPlayerNames()[i] );
+						break;
+					case 11:
+						players[i]= new AI_LimitedView_SpeedUp( lobby.getPlayerIDs()[i], "AI LimitedView SpeedUp " + lobby.getPlayerNames()[i] );
+						break;
 						/* ADD YOUR NEW AI ALSO HERE */
 					default:
 						return;

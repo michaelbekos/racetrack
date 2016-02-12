@@ -8,6 +8,7 @@ import src.main.java.logic.utils.AIUtils.Direction;
 public class LandingRegion
 {
     private Point2D mOrigin; // Point diagonal to cornor
+    private Point2D mCornor; // Point diagonal to cornor
     private Point2D mStart;
     private Point2D mEnd;
 
@@ -44,6 +45,26 @@ public class LandingRegion
 
         mOldDirection= oldDirection;
         mNewDirection= newDirection;
+        if(    mOldDirection==Direction.LEFT && mNewDirection==Direction.DOWN ||
+    		   mOldDirection==Direction.DOWN && mNewDirection==Direction.LEFT )
+        {
+        	mCornor = new Point2D( mOrigin.getX()-1, mOrigin.getY()-1 );
+        }
+        else if( mOldDirection==Direction.LEFT && mNewDirection==Direction.UP ||
+    		     mOldDirection==Direction.UP && mNewDirection==Direction.LEFT )
+        {
+        	mCornor = new Point2D( mOrigin.getX()-1, mOrigin.getY()+1 );
+        }
+        else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.DOWN ||
+    		     mOldDirection==Direction.DOWN && mNewDirection==Direction.RIGHT )
+        {
+        	mCornor = new Point2D( mOrigin.getX()+1, mOrigin.getY()-1 );
+        }
+        else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.UP ||
+    		     mOldDirection==Direction.UP && mNewDirection==Direction.RIGHT )
+        {
+        	mCornor = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
+        }
     }
     
     static void setMaxSpeeds( int recessiveMaxSpeed, int dominantMaxSpeed )
@@ -563,6 +584,78 @@ public class LandingRegion
         	break;
         }
         return ret;
+    }
+
+    public ZigZagVertex getFastCornerZigZagVertex()
+    {
+    	ZigZagVertex ret=null;
+    	ArrayList<ZigZagVertex> allVertex=getZigZagVertice();
+    	double s=0;
+    	for( int i=0 ; i<allVertex.size() ; i++ )
+    	{
+    		if( mCornor.equals( allVertex.get( i ).Position() ) )
+    		{
+    			if( s<allVertex.get( i ).getTotalSpeed() )
+				{
+					s=allVertex.get( i ).getTotalSpeed();
+					ret=allVertex.get( i );
+				}
+    		}
+    	}
+    	return ret;
+    }
+
+    public ZigZagVertex getFastTopZigZagVertex()
+    {
+    	ZigZagVertex ret=null;
+    	boolean horizontal=false;
+    	boolean positiv=false;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    		positiv=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    		positiv=true;
+    	}
+    	
+    	ArrayList<ZigZagVertex> allVertex=getZigZagVertice();
+    	int frontmost=0;
+    	if( horizontal )
+    	{
+    		frontmost=(int)allVertex.get( 0 ).Position().getX();
+    	}
+    	else
+    	{
+    		frontmost=(int)allVertex.get( 0 ).Position().getY();
+    	}
+    	
+    	//TODO:
+//    	for( int i=0 ; i<allVertex.size() ; i++ )
+//    	{
+//    		if( mCornor.equals( allVertex.get( i ).Position() ) )
+//    		{
+//    			if( s<allVertex.get( i ).getTotalSpeed() )
+//				{
+//					s=allVertex.get( i ).getTotalSpeed();
+//					ret=allVertex.get( i );
+//				}
+//    		}
+//    	}
+    	
+    	return ret;
     }
 }
 

@@ -179,8 +179,19 @@ public class Game {
 				break;
 			case 7:
 				players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i], i );
+				break;
+			case 8:
+				players[i]= new AI_LimitedView_DriveSafe( lobby.getPlayerIDs()[i], "AI LimitedView DriveSafe" + lobby.getPlayerNames()[i], i );
+				break;
+			case 9:
+				players[i]= new AI_LimitedView_FastCorner( lobby.getPlayerIDs()[i], "AI LimitedView FastCorner" + lobby.getPlayerNames()[i], i );
+				break;
+			case 10:
+				players[i]= new AI_LimitedView_FastTopmost( lobby.getPlayerIDs()[i], "AI LimitedView FastTopmost" + lobby.getPlayerNames()[i], i );
+				break;
+			case 11:
+				players[i]= new AI_LimitedView_SpeedUp( lobby.getPlayerIDs()[i], "AI LimitedView SpeedUp" + lobby.getPlayerNames()[i], i );
 				break;				
-				
 			/* ADD YOUR NEW AI ALSO HERE */
 			default:
 				return;

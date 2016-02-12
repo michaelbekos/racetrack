@@ -30,6 +30,11 @@ public class ZigZagVertex
 		return speed;
 	}
 	
+	public double getTotalSpeed()
+	{
+		return Math.sqrt( speed.getX()*speed.getX()+speed.getY()*speed.getY() );
+	}
+	
 	public int Distance()
 	{
 		return distance;
