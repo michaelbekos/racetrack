@@ -126,7 +126,8 @@ public class SetupController extends NavigationSceneBase {
 				"LimitedView_DriveSafe",	// 8
 				"LimitedView_FastCorner",	// 9
 				"LimitedView_FastTopmost",	// 10
-				"LimitedView_SpeedUp"		// 11
+				"LimitedView_SpeedUp",		// 11
+				"Bipartite"					// 12
 				/* "YOUR NEW AI" */ ) );
 		aiChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
 				new ChangeListener<Number>()

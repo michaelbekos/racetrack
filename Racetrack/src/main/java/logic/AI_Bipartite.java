@@ -13,7 +13,9 @@ import src.main.java.logic.AIstar.LineSegment;
 //import src.main.java.logic.AIstar.Point;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
-import src.main.java.logic.utils.AIUtils;
+import src.main.java.logic.utils.AIUtils.Direction;
+import src.main.java.logic.utils.BipartiteNormalCalculator;
+import src.main.java.logic.utils.BipartiteStartCalculator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,12 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class AI_LimitedView_DriveSafe extends AI
+public class AI_Bipartite extends AI
 {
 	private boolean mVerbose;
 	
-	private List<AIUtils.Direction> landingRegionOldDirections;
-	private List<AIUtils.Direction> landingRegionNewDirections;
+	private List<Direction> landingRegionOldDirections;
+	private List<Direction> landingRegionNewDirections;
 	private int maxSpeedDominantDirection;
 	private int maxSpeedOtherDirection;
 	private boolean mGridCreated;
@@ -45,15 +47,15 @@ public class AI_LimitedView_DriveSafe extends AI
 	private List<Point2D> movePath;
 	private List<Point2D> goalPoints;
 	
-	public AI_LimitedView_DriveSafe( Integer playerID, String name )
+	public AI_Bipartite( Integer playerID, String name )
 	{	
 		this( playerID, name, -1 );
 	}
 	
-	public AI_LimitedView_DriveSafe( Integer playerID, String name, int playerColorId )
+	public AI_Bipartite( Integer playerID, String name, int playerColorId )
 	{
 		super( playerID, name, playerColorId );
-		mTypeID=8;
+		mTypeID=12;
 		mGridCreated=false;
 		// SET THIS TO FALSE FOR LESS OUTPUT.
 		mVerbose=true;
@@ -62,8 +64,8 @@ public class AI_LimitedView_DriveSafe extends AI
 		shortestPath=new ArrayList<Point2D>();
 		movePath=new ArrayList<Point2D>();
 		goalPoints=new ArrayList<Point2D>();
-		landingRegionOldDirections = new ArrayList<AIUtils.Direction>();
-		landingRegionNewDirections = new ArrayList<AIUtils.Direction>();
+		landingRegionOldDirections = new ArrayList<Direction>();
+		landingRegionNewDirections = new ArrayList<Direction>();
 	}
 	
 	@Override
@@ -85,36 +87,50 @@ public class AI_LimitedView_DriveSafe extends AI
 			//System.out.println( this.getName()+ " is extracting all landing regions." );
 			
 			ArrayList<LandingRegion> lrl=searchLandingRegions();
-			
-			LinkedList<LineSegment> borders = new LinkedList<LineSegment>();
-			for (Line2D boundary : mGame.getTrack().getOuterBoundary())
-			{
-				borders.add(LineSegment.GetLineSegment(boundary));
-			}
-			for (Line2D boundary : mGame.getTrack().getInnerBoundary())
-			{
-				borders.add(LineSegment.GetLineSegment(boundary));
-			}
+			ArrayList<BipartiteNormalCalculator> theGraph=new ArrayList<BipartiteNormalCalculator>();
 
-			LinkedList<ArrayList<LandingPoint>> landingRegions = new LinkedList<ArrayList<LandingPoint>>();
+			BipartiteStartCalculator startToGraph=new BipartiteStartCalculator( this.getCurrentPosition(), 
+																				lrl.get( 0 ),
+																				lrl.get( 0 ).getOldDirection(), 
+																				lrl.get( 0 ).getNewDirection(), 
+																				lrl.get( 0 ).getW(),
+																				mGrid );
 			
-			LandingPoint tmpFrom=new LandingPoint( this.getCurrentPosition(), this.getCurrentVelocity() );
-			LandingPoint tmpTo;
-			for (int i = 0; i < lrl.size(); i++)
+			ArrayList<LandingPoint> prevLRDistPredInfo=startToGraph.getDistancePredecessorInformation();
+			
+			for( int i=0 ; i<lrl.size()-1 ; i++ )
 			{
-				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
-				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
-																	tmpTo.getPosition(), 
-																	tmpFrom.getSpeed(), 
-																	tmpTo.getSpeed(), 
-																	borders ) );
-				tmpFrom=tmpTo;
+				BipartiteNormalCalculator tmp =
+						new BipartiteNormalCalculator( lrl.get( i ), 
+												 lrl.get( i+1 ), 
+												 lrl.get( i ).getOldDirection(), 
+												 lrl.get( i ).getNewDirection(), 
+												 lrl.get( i+1 ).getNewDirection(), 
+												 lrl.get( i ).getW(),
+												 mGrid,
+												 prevLRDistPredInfo );
+				prevLRDistPredInfo=tmp.getDistancePredecessorInformation();
+						theGraph.add( tmp );
 			}
-		}			
 			
-			
-			
-			
+			if( mVerbose )
+			{
+				for( int j=mHeight-1 ; j>=0 ; j-- )
+				{
+					for( int i=0 ; i<mWidth ; i++ )
+					{
+						System.out.format( "%3d", mLandingRegions[i][j] );
+					}
+					System.out.println( " " );
+				}
+				
+				System.out.println(String.format("(%d,%d)", (int)this.getCurrentPosition().getX(),(int)this.getCurrentPosition().getY()));
+				for (int i = 0; i < movePath.size(); i++)
+				{
+					System.out.println(String.format("(%d,%d)", (int)movePath.get(i).getX(),(int)movePath.get(i).getY()));
+				}
+			}			
+		}
 		
 		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition + 1 ).getX() + ", "+ movePath.get( currentIndexPosition + 1 ).getY() +" )" ); 
 		return movePath.get( currentIndexPosition++ );
@@ -675,8 +691,8 @@ public class AI_LimitedView_DriveSafe extends AI
 				Point2D start=new Point2D( 0, 0 );
 				Point2D end=new Point2D( 0, 0 );
 				Point2D origin=new Point2D( 0, 0 );
-				AIUtils.Direction oldDirection = AIUtils.Direction.UP;
-				AIUtils.Direction newDirection = AIUtils.Direction.UP;
+				Direction oldDirection = Direction.UP;
+				Direction newDirection = Direction.UP;
 				tmpLandingRegion=null;
 				if(    false==mGrid[i][j+1]   &&   true==mGrid[i+1][j+1]   &&
 					    true==mGrid[i][j]     &&   true==mGrid[i+1][j]     )
@@ -707,8 +723,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//##########
 						start=origin.add( new Point2D( 0, landingRegionAdditionalHeight.get() ) );
 						end=origin.add(   new Point2D( landingRegionWidth.get()-1, -w.get()+1 ) );
-						oldDirection = AIUtils.Direction.RIGHT;
-						newDirection = AIUtils.Direction.UP;
+						oldDirection = Direction.RIGHT;
+						newDirection = Direction.UP;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -734,8 +750,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//##########
 						start=origin.add( new Point2D( -landingRegionAdditionalHeight.get(), 0 ) );
 						end=origin.add(   new Point2D( w.get()-1, -landingRegionWidth.get()+1 ) );
-						oldDirection = AIUtils.Direction.DOWN;
-						newDirection = AIUtils.Direction.LEFT;
+						oldDirection = Direction.DOWN;
+						newDirection = Direction.LEFT;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -777,8 +793,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//##########
 						start=origin.add( new Point2D( -w.get()+1, 0 ) );
 						end=origin.add(   new Point2D( landingRegionAdditionalHeight.get(), -landingRegionWidth.get()+1 ) );
-						oldDirection = AIUtils.Direction.DOWN;
-						newDirection = AIUtils.Direction.RIGHT;
+						oldDirection = Direction.DOWN;
+						newDirection = Direction.RIGHT;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -803,8 +819,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//##########
 						start=origin.add( new Point2D( -landingRegionWidth.get()+1, landingRegionAdditionalHeight.get() ) );
 						end=origin.add(   new Point2D( 0, -w.get()+1 ) );
-						oldDirection = AIUtils.Direction.LEFT;
-						newDirection = AIUtils.Direction.UP;
+						oldDirection = Direction.LEFT;
+						newDirection = Direction.UP;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -846,8 +862,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//####.....#
 						start=origin.add( new Point2D( 0, w.get()-1 ) );
 						end=origin.add(   new Point2D( landingRegionWidth.get()-1, -landingRegionAdditionalHeight.get() ) );
-						oldDirection = AIUtils.Direction.RIGHT;
-						newDirection = AIUtils.Direction.DOWN;
+						oldDirection = Direction.RIGHT;
+						newDirection = Direction.DOWN;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -872,8 +888,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//####.....#
 						start=origin.add( new Point2D( -landingRegionAdditionalHeight.get(), landingRegionWidth.get()-1 ) );
 						end=origin.add(   new Point2D( w.get()-1, 0 ) );
-						oldDirection = AIUtils.Direction.UP;
-						newDirection = AIUtils.Direction.LEFT;
+						oldDirection = Direction.UP;
+						newDirection = Direction.LEFT;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -915,8 +931,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//#.....####
 						start=origin.add( new Point2D( -w.get()+1, landingRegionWidth.get()-1 ) );
 						end=origin.add(   new Point2D( landingRegionAdditionalHeight.get(), 0 ) );
-						oldDirection = AIUtils.Direction.UP;
-						newDirection = AIUtils.Direction.RIGHT;
+						oldDirection = Direction.UP;
+						newDirection = Direction.RIGHT;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{
@@ -941,8 +957,8 @@ public class AI_LimitedView_DriveSafe extends AI
 						//#.....####
 						start=origin.add( new Point2D( -landingRegionWidth.get()+1, w.get()-1 ) );
 						end=origin.add(   new Point2D( 0, -landingRegionAdditionalHeight.get() ) );
-						oldDirection = AIUtils.Direction.LEFT;
-						newDirection = AIUtils.Direction.DOWN;
+						oldDirection = Direction.LEFT;
+						newDirection = Direction.DOWN;
 						tmpLandingRegion=new LandingRegion( origin, start, end, oldDirection, newDirection, w.get(), landingRegionAdditionalHeight.get(), landingRegionWidth.get() );
 						if( mVerbose )
 						{

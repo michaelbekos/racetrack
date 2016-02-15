@@ -98,15 +98,15 @@ public class AI_LimitedView_FastCorner extends AI
 
 			LinkedList<ArrayList<ZigZagVertex>> landingRegions = new LinkedList<ArrayList<ZigZagVertex>>();
 			
-			ZigZagVertex tmpFrom=new ZigZagVertex( this.getCurrentPosition(), this.getCurrentVelocity() );
-			ZigZagVertex tmpTo;
+			LandingPoint tmpFrom=new LandingPoint( this.getCurrentPosition(), this.getCurrentVelocity() );
+			LandingPoint tmpTo;
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				tmpTo=lrl.get( i ).getFastCornerZigZagVertex();
-				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.Position(), 
-																	tmpTo.Position(), 
-																	tmpFrom.Speed(), 
-																	tmpTo.Speed(), 
+				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
+				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+																	tmpTo.getPosition(), 
+																	tmpFrom.getSpeed(), 
+																	tmpTo.getSpeed(), 
 																	borders ) );
 				tmpFrom=tmpTo;
 			}
@@ -959,7 +959,7 @@ public class AI_LimitedView_FastCorner extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					ArrayList<ZigZagVertex> zzv=tmpLandingRegion.getZigZagVertice();
+					ArrayList<LandingPoint> zzv=tmpLandingRegion.getLandingPoints();
 					//TODO: REMOVE THIS:
 					if( mVerbose )
 					{

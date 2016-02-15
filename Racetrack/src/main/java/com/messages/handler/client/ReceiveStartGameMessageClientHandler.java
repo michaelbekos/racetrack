@@ -5,6 +5,7 @@ import src.main.java.com.messages.StartGameMessage;
 import src.main.java.com.messages.handler.RaceTrackMessageClientHandler;
 import src.main.java.gui.Racetracker;
 import src.main.java.gui.navigation.MultiSceneBase;
+import src.main.java.logic.AI_Bipartite;
 import src.main.java.logic.AI_Crasher;
 import src.main.java.logic.AI_LimitedView_DriveSafe;
 import src.main.java.logic.AI_LimitedView_FastCorner;
@@ -105,6 +106,9 @@ public class ReceiveStartGameMessageClientHandler extends
 					case 11:
 						players[i]= new AI_LimitedView_SpeedUp( lobby.getPlayerIDs()[i], "AI LimitedView SpeedUp " + lobby.getPlayerNames()[i] );
 						break;
+					case 12:
+						players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], "AI Bipartite " + lobby.getPlayerNames()[i] );
+						break;
 						/* ADD YOUR NEW AI ALSO HERE */
 					default:
 						return;
@@ -112,7 +116,7 @@ public class ReceiveStartGameMessageClientHandler extends
 					players[i].setCurrentVelocity( null );
 					players[i].setCurrentPosition( null );
 				}
-
+		        
 				// Initialize the game
 				ModelExchange.CurrentGame.setGame(game);
 				// Set Players

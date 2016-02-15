@@ -2,9 +2,12 @@ package src.main.java.logic.utils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.geometry.Point2D;
+import src.main.java.logic.LandingRegion;
 import src.main.java.logic.Line2D;
+import src.main.java.logic.ZigZagVertex;
 import src.main.java.logic.AIstar.LineSegment;
 import src.main.java.logic.AIstar.Point;
 
@@ -15,6 +18,11 @@ import src.main.java.logic.AIstar.Point;
  */
 public class AIUtils
 {
+	public enum Direction 
+	{
+		LEFT, RIGHT, UP, DOWN 
+	}
+	
 	/** Calculates the sequence of accelerations required to move from a starting position to an end position with given starting and end speed in minimal number of turns. 
 	 * 
 	 * @param startPosition The starting position.
@@ -2753,10 +2761,6 @@ public class AIUtils
 				return tx;
 			}
 		}
-	}
-	public enum Direction 
-	{
-		LEFT, RIGHT, UP, DOWN 
 	}
 	
 	public static List<Point2D> CalculateFinalAccelerations(Point2D lastLandingRegionPosition, Point2D lastLandingRegionSpeed, LineSegment finishLine, Direction direction, LinkedList<LineSegment> borders)

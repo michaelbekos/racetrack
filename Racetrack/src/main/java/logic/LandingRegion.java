@@ -2,7 +2,7 @@ package src.main.java.logic;
 import java.util.ArrayList;
 
 import javafx.geometry.Point2D;
-import src.main.java.logic.utils.AIUtils;
+//import src.main.java.logic.utils.AIUtils;
 import src.main.java.logic.utils.AIUtils.Direction;
 
 public class LandingRegion
@@ -23,9 +23,9 @@ public class LandingRegion
     static private int recessiveDirectionMaxSpeed;
     static private int dominantDirectionMaxSpeed;
 
-    static private ArrayList<ZigZagVertex> landingRegionSpeedMatrix;
+    static private ArrayList<LandingPoint> landingRegionSpeedMatrix;
     //static private boolean isLandingRegionSpeedMatrixSet=false;
-           
+
     public LandingRegion( Point2D origin, 
                           Point2D start, 
                           Point2D end, 
@@ -66,11 +66,32 @@ public class LandingRegion
         	mCornor = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
         }
     }
-    
+
+    public int getW()
+    {
+    	return mW;
+    }
+    public Direction getOldDirection()
+    {
+    	return mOldDirection;
+    }
+    public Direction getNewDirection()
+    {
+    	return mNewDirection;
+    }
     static void setMaxSpeeds( int recessiveMaxSpeed, int dominantMaxSpeed )
     {
     	recessiveDirectionMaxSpeed=recessiveMaxSpeed;
     	dominantDirectionMaxSpeed=dominantMaxSpeed;
+    }
+
+    public Point2D getAreaStartPosition()
+    {
+    	return mStart;
+    }
+    public Point2D getAreaEndPosition()
+    {
+    	return mEnd;
     }
     
     public ArrayList<Point2D> getAllPositions()
@@ -88,10 +109,10 @@ public class LandingRegion
     
     /*
     // Creates every Vertex, even those that are not relevant.
-    private ArrayList<ZigZagVertex> createEveryVertex()
+    private ArrayList<LandingPoint> createEveryVertex()
     {
     	ArrayList<Point2D> allPos=getAllPositions();
-		ArrayList<ZigZagVertex> ret = new ArrayList<ZigZagVertex>();
+		ArrayList<LandingPoint> ret = new ArrayList<LandingPoint>();
     	for( int i=0 ; i<allPos.size() ; i++ )
     	{
     		for( int j=1 ; j<recessiveDirectionMaxSpeed+1 ; j++ )
@@ -100,11 +121,11 @@ public class LandingRegion
             	{
         			if( Direction.RIGHT==mNewDirection || Direction.LEFT==mNewDirection )
         			{
-        				ret.add( new ZigZagVertex( allPos.get( i ), new Point2D( k, j ) ) );
+        				ret.add( new LandingPoint( allPos.get( i ), new Point2D( k, j ) ) );
         			}
         			else
         			{
-        				ret.add( new ZigZagVertex( allPos.get( i ), new Point2D( j, k ) ) );
+        				ret.add( new LandingPoint( allPos.get( i ), new Point2D( j, k ) ) );
         			}
             	}
         	}
@@ -140,14 +161,14 @@ public class LandingRegion
             }
         }
 
-		ArrayList<ZigZagVertex> tmpLandingRegionSpeedMatrix = new ArrayList<ZigZagVertex>();
+		ArrayList<LandingPoint> tmpLandingRegionSpeedMatrix = new ArrayList<LandingPoint>();
     	for( int i=0 ; i<matrixPositions.size() ; i++ )
     	{
     		for( int j=1 ; j<=a ; j++ )//recessiveDirectionMaxSpeed=lw ; We won't drive in with speed 0 ... 
         	{
         		for( int k=0 ; k<=a ; k++ )//dominatingDirectionMaxSpeed==a
             	{
-        			tmpLandingRegionSpeedMatrix.add( new ZigZagVertex( matrixPositions.get( i ), new Point2D( k, j ) ) );
+        			tmpLandingRegionSpeedMatrix.add( new LandingPoint( matrixPositions.get( i ), new Point2D( k, j ) ) );
             	}
         	}
     	}
@@ -173,7 +194,7 @@ public class LandingRegion
             	{//Search all 'wrong' vertex and remove them
             		if( tmpLandingRegionSpeedMatrix.get( k ).isAtPosition( p ) )
             		{
-            			if( tmpLandingRegionSpeedMatrix.get( k ).Speed().getX()<( i-w+1 ) )
+            			if( tmpLandingRegionSpeedMatrix.get( k ).getSpeed().getX()<( i-w+1 ) )
             			{
             				// This vertex implies we are driving into the additional landing region with a too small speed.
             				// It is not possible and we will delete the vertex.
@@ -204,7 +225,7 @@ public class LandingRegion
             	{//Search all 'wrong' vertex and remove them
             		if( tmpLandingRegionSpeedMatrix.get( k ).isAtPosition( p ) )
             		{
-            			if( tmpLandingRegionSpeedMatrix.get( k ).Speed().getY()>maxSpeedForRow )
+            			if( tmpLandingRegionSpeedMatrix.get( k ).getSpeed().getY()>maxSpeedForRow )
             			{
             				// This vertex implies we are driving into the additional landing region with a too small speed.
             				// It is not possible and we will delete the vertex.
@@ -238,7 +259,7 @@ public class LandingRegion
             	{//Search all 'wrong' vertex and remove them
             		if( tmpLandingRegionSpeedMatrix.get( k ).isAtPosition( p ) )
             		{
-            			double incomingSpeed=tmpLandingRegionSpeedMatrix.get( k ).Speed().getY()/tmpLandingRegionSpeedMatrix.get( k ).Speed().getX();
+            			double incomingSpeed=tmpLandingRegionSpeedMatrix.get( k ).getSpeed().getY()/tmpLandingRegionSpeedMatrix.get( k ).getSpeed().getX();
             			if( m<=incomingSpeed )
             			{
             				// This vertex implies we are driving into the additional landing region with a too small speed.
@@ -265,8 +286,8 @@ public class LandingRegion
     	for( int i=0 ; i<tmpLandingRegionSpeedMatrix.size() ; i++ )
     	{
     		Point2D successor=new Point2D( 
-    								tmpLandingRegionSpeedMatrix.get( i ).Position().getX()-tmpLandingRegionSpeedMatrix.get( i ).Speed().getX(),
-									tmpLandingRegionSpeedMatrix.get( i ).Position().getY()-tmpLandingRegionSpeedMatrix.get( i ).Speed().getY() );
+    								tmpLandingRegionSpeedMatrix.get( i ).getPosition().getX()-tmpLandingRegionSpeedMatrix.get( i ).getSpeed().getX(),
+									tmpLandingRegionSpeedMatrix.get( i ).getPosition().getY()-tmpLandingRegionSpeedMatrix.get( i ).getSpeed().getY() );
         	for( int j=0 ; j<tmpLandingRegionSpeedMatrix.size() ; j++ )
         	{
         		if( tmpLandingRegionSpeedMatrix.get( j ).isAtPosition( successor ) )
@@ -290,20 +311,20 @@ public class LandingRegion
     	}
     }
 
-    private ArrayList<ZigZagVertex> flipLandingRegionOnXAxis( ArrayList<ZigZagVertex> lrsm ) // Landing Region Speed Matrix
+    private ArrayList<LandingPoint> flipLandingRegionOnXAxis( ArrayList<LandingPoint> lrsm ) // Landing Region Speed Matrix
     {
-    	ArrayList<ZigZagVertex> ret=new ArrayList<ZigZagVertex>();
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
     	int maxHorizontal=0;
     	int maxVertical=0;
     	for( int i=0 ; i<lrsm.size() ; i++ )
     	{
-    		if( maxHorizontal<lrsm.get( i ).Position().getX() )
+    		if( maxHorizontal<lrsm.get( i ).getPosition().getX() )
     		{
-    			maxHorizontal=(int)lrsm.get( i ).Position().getX();
+    			maxHorizontal=(int)lrsm.get( i ).getPosition().getX();
     		}
-    		if( maxVertical<lrsm.get( i ).Position().getY() )
+    		if( maxVertical<lrsm.get( i ).getPosition().getY() )
     		{
-    			maxVertical=(int)lrsm.get( i ).Position().getY();
+    			maxVertical=(int)lrsm.get( i ).getPosition().getY();
     		}
     	}
     	
@@ -316,11 +337,11 @@ public class LandingRegion
             	{
             		if( lrsm.get( k ).isAtPosition( p ) )
             		{
-	            		double x=lrsm.get( k ).Position().getX();
-	            		double y=lrsm.get( k ).Position().getY();
-	            		double sx=lrsm.get( k ).Speed().getX();
-	            		double sy=lrsm.get( k ).Speed().getY();
-	        			ret.add( new ZigZagVertex( new Point2D( x, ( maxVertical+1 )-( y+1 ) ), new Point2D( sx, -sy ) ) );
+	            		double x=lrsm.get( k ).getPosition().getX();
+	            		double y=lrsm.get( k ).getPosition().getY();
+	            		double sx=lrsm.get( k ).getSpeed().getX();
+	            		double sy=lrsm.get( k ).getSpeed().getY();
+	        			ret.add( new LandingPoint( new Point2D( x, ( maxVertical+1 )-( y+1 ) ), new Point2D( sx, -sy ) ) );
             		}
             	}
             }
@@ -328,20 +349,20 @@ public class LandingRegion
     	return ret;
     }
     
-    private ArrayList<ZigZagVertex> rotateLandingRegion90Clockwise( ArrayList<ZigZagVertex> lrsm ) // Landing Region Speed Matrix
+    private ArrayList<LandingPoint> rotateLandingRegion90Clockwise( ArrayList<LandingPoint> lrsm ) // Landing Region Speed Matrix
     {
-    	ArrayList<ZigZagVertex> ret=new ArrayList<ZigZagVertex>();
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
     	int maxHorizontal=0;
     	int maxVertical=0;
     	for( int i=0 ; i<lrsm.size() ; i++ )
     	{
-    		if( maxHorizontal<lrsm.get( i ).Position().getX() )
+    		if( maxHorizontal<lrsm.get( i ).getPosition().getX() )
     		{
-    			maxHorizontal=(int)lrsm.get( i ).Position().getX();
+    			maxHorizontal=(int)lrsm.get( i ).getPosition().getX();
     		}
-    		if( maxVertical<lrsm.get( i ).Position().getY() )
+    		if( maxVertical<lrsm.get( i ).getPosition().getY() )
     		{
-    			maxVertical=(int)lrsm.get( i ).Position().getY();
+    			maxVertical=(int)lrsm.get( i ).getPosition().getY();
     		}
     	}
     	for( int ix=0 ; ix<maxHorizontal+1 ; ix++ )
@@ -353,15 +374,15 @@ public class LandingRegion
             	{
             		if( lrsm.get( k ).isAtPosition( p ) )
             		{
-	            		double x=lrsm.get( k ).Position().getX();
-	            		double y=lrsm.get( k ).Position().getY();
+	            		double x=lrsm.get( k ).getPosition().getX();
+	            		double y=lrsm.get( k ).getPosition().getY();
 	            		
 	            		// t=transposed
 	            		Point2D t=new Point2D( y, x );
 	            		
-	            		double sx=lrsm.get( k ).Speed().getX();
-	            		double sy=lrsm.get( k ).Speed().getY();
-	        			ret.add( new ZigZagVertex( new Point2D( ( maxVertical+1 )-( t.getX()+1 ), t.getY() ), new Point2D( sy, -sx ) ) );
+	            		double sx=lrsm.get( k ).getSpeed().getX();
+	            		double sy=lrsm.get( k ).getSpeed().getY();
+	        			ret.add( new LandingPoint( new Point2D( ( maxVertical+1 )-( t.getX()+1 ), t.getY() ), new Point2D( sy, -sx ) ) );
             		}
             	}
             }
@@ -369,9 +390,9 @@ public class LandingRegion
     	return ret;
     }
     
-    public ArrayList<ZigZagVertex> getZigZagVertice()
+    public ArrayList<LandingPoint> getLandingPoints()
     {
-    	ArrayList<ZigZagVertex> ret;
+    	ArrayList<LandingPoint> ret;
     	if( null==landingRegionSpeedMatrix )
     	{
     		LandingRegion.setLandingRegionSpeedMatrix( mW );
@@ -392,14 +413,14 @@ public class LandingRegion
                 //#.....####
                 //#.....####
                 //#.....####
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<landingRegionSpeedMatrix.size() ; i++ )
             	{
-            		double x=landingRegionSpeedMatrix.get( i ).Position().getX();
-            		double y=landingRegionSpeedMatrix.get( i ).Position().getY();
-            		double sx=landingRegionSpeedMatrix.get( i ).Speed().getX();
-            		double sy=landingRegionSpeedMatrix.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=landingRegionSpeedMatrix.get( i ).getPosition().getX();
+            		double y=landingRegionSpeedMatrix.get( i ).getPosition().getY();
+            		double sx=landingRegionSpeedMatrix.get( i ).getSpeed().getX();
+            		double sy=landingRegionSpeedMatrix.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -414,16 +435,16 @@ public class LandingRegion
                 //####.....#
                 //####.....#
                 //####.....#
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) ) );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -440,16 +461,16 @@ public class LandingRegion
                 //....oo...#
                 //....oo...#
                 //##########
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -464,16 +485,16 @@ public class LandingRegion
                 //####oo...#
                 //####oo...#
                 //####.....#
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( landingRegionSpeedMatrix );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -490,16 +511,16 @@ public class LandingRegion
                 //#.........
                 //#.........
                 //##########
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( landingRegionSpeedMatrix );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -514,16 +535,16 @@ public class LandingRegion
                 //.........#
                 //.........#
                 //##########
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -540,16 +561,16 @@ public class LandingRegion
                 //#...oo....
                 //#...oo....
                 //##########
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) ) );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -564,36 +585,36 @@ public class LandingRegion
                 //#...oo####
                 //#...oo####
                 //#.....####
-            	ArrayList<ZigZagVertex> pLRSM;// Prepared Landing Region Speed Matrix
+            	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
-            		double x=pLRSM.get( i ).Position().getX();
-            		double y=pLRSM.get( i ).Position().getY();
-            		double sx=pLRSM.get( i ).Speed().getX();
-            		double sy=pLRSM.get( i ).Speed().getY();
-            		ret.add( new ZigZagVertex( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		double x=pLRSM.get( i ).getPosition().getX();
+            		double y=pLRSM.get( i ).getPosition().getY();
+            		double sx=pLRSM.get( i ).getSpeed().getX();
+            		double sy=pLRSM.get( i ).getSpeed().getY();
+            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
             default:
             {
-            	ret=new ArrayList<ZigZagVertex>();
+            	ret=new ArrayList<LandingPoint>();
             }
         	break;
         }
         return ret;
     }
 
-    public ZigZagVertex getFastCornerZigZagVertex()
+    public LandingPoint getFastCornerLandingPoint()
     {
-    	ZigZagVertex ret=null;
-    	ArrayList<ZigZagVertex> allVertex=getZigZagVertice();
+    	LandingPoint ret=null;
+    	ArrayList<LandingPoint> allVertex=getLandingPoints();
     	double s=0;
     	for( int i=0 ; i<allVertex.size() ; i++ )
     	{
-    		if( mCornor.equals( allVertex.get( i ).Position() ) )
+    		if( mCornor.equals( allVertex.get( i ).getPosition() ) )
     		{
     			if( s<allVertex.get( i ).getTotalSpeed() )
 				{
@@ -605,9 +626,9 @@ public class LandingRegion
     	return ret;
     }
 
-    public ZigZagVertex getFastTopZigZagVertex()
+    public LandingPoint getFastTopLandingPoint()
     {
-    	ZigZagVertex ret=null;
+    	LandingPoint ret=null;
     	boolean horizontal=false;
     	boolean positiv=false;
     	if( mNewDirection==Direction.LEFT )
@@ -631,15 +652,15 @@ public class LandingRegion
     		positiv=true;
     	}
     	
-    	ArrayList<ZigZagVertex> allVertex=getZigZagVertice();
+    	ArrayList<LandingPoint> allVertex=getLandingPoints();
     	int frontmost=0;
     	if( horizontal )
     	{
-    		frontmost=(int)allVertex.get( 0 ).Position().getX();
+    		frontmost=(int)allVertex.get( 0 ).getPosition().getX();
     	}
     	else
     	{
-    		frontmost=(int)allVertex.get( 0 ).Position().getY();
+    		frontmost=(int)allVertex.get( 0 ).getPosition().getY();
     	}
     	
     	//TODO:

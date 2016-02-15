@@ -375,16 +375,19 @@ public class Administration implements IAdministration{
 			entity= new AI_Zigzag( playerID, "AI Zigzag " + clientName );
 			break;
 		case 8:
-			entity= new AI_LimitedView_DriveSafe( playerID, "AI LimitedView DriveSafe" + clientName );
+			entity= new AI_LimitedView_DriveSafe( playerID, "AI LimitedView DriveSafe " + clientName );
 			break;
 		case 9:
-			entity= new AI_LimitedView_FastCorner( playerID, "AI LimitedView FastCorner" + clientName );
+			entity= new AI_LimitedView_FastCorner( playerID, "AI LimitedView FastCorner " + clientName );
 			break;
 		case 10:
-			entity= new AI_LimitedView_FastTopmost( playerID, "AI LimitedView FastTopmost" + clientName );
+			entity= new AI_LimitedView_FastTopmost( playerID, "AI LimitedView FastTopmost " + clientName );
 			break;
 		case 11:
-			entity= new AI_LimitedView_SpeedUp( playerID, "AI LimitedView SpeedUp" + clientName );
+			entity= new AI_LimitedView_SpeedUp( playerID, "AI LimitedView SpeedUp " + clientName );
+			break;
+		case 12:
+			entity= new AI_Bipartite( playerID, "AI Bipartite " + clientName );
 			break;
 			/* ADD YOUR NEW AI ALSO HERE */
 		}

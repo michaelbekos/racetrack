@@ -105,7 +105,8 @@ public class AI_Zigzag extends AI
 			mLandingRegionsList.add(firstLandingRegion);
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				mLandingRegionsList.add( lrl.get( i ).getZigZagVertice() );
+				//TODO: Henry, adjust here...
+				//mLandingRegionsList.add( lrl.get( i ).getZigZagVertice() );
 			}
 			
 			for (int landingRegionIndex = 0; landingRegionIndex < mLandingRegionsList.size() - 1; landingRegionIndex++)
@@ -1080,16 +1081,17 @@ public class AI_Zigzag extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					ArrayList<ZigZagVertex> zzv=tmpLandingRegion.getZigZagVertice();
-					//TODO: REMOVE THIS:
-					if( mVerbose )
-					{
-						System.out.println( ""+regionFoundFirstIdOrder+": " );
-						for( int x=0 ; x<zzv.size() ;  x++ )
-						{
-							System.out.println( zzv.get( x ) );
-						}
-					}
+					//TODO: Henry, adjust here...
+					// ArrayList<ZigZagVertex> zzv=tmpLandingRegion.getZigZagVertice();
+					
+//					if( mVerbose )
+//					{
+//						System.out.println( ""+regionFoundFirstIdOrder+": " );
+//						for( int x=0 ; x<zzv.size() ;  x++ )
+//						{
+//							System.out.println( zzv.get( x ) );
+//						}
+//					}
 					
 					
 					if( idOfDijkstraShortestPathForSorting.size() == 0 )

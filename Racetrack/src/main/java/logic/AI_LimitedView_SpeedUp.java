@@ -96,17 +96,17 @@ public class AI_LimitedView_SpeedUp extends AI
 				borders.add(LineSegment.GetLineSegment(boundary));
 			}
 
-			LinkedList<ArrayList<ZigZagVertex>> landingRegions = new LinkedList<ArrayList<ZigZagVertex>>();
+			LinkedList<ArrayList<LandingPoint>> landingRegions = new LinkedList<ArrayList<LandingPoint>>();
 			
-			ZigZagVertex tmpFrom=new ZigZagVertex( this.getCurrentPosition(), this.getCurrentVelocity() );
-			ZigZagVertex tmpTo;
+			LandingPoint tmpFrom=new LandingPoint( this.getCurrentPosition(), this.getCurrentVelocity() );
+			LandingPoint tmpTo;
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				tmpTo=lrl.get( i ).getFastCornerZigZagVertex();
-				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.Position(), 
-																	tmpTo.Position(), 
-																	tmpFrom.Speed(), 
-																	tmpTo.Speed(), 
+				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
+				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+																	tmpTo.getPosition(), 
+																	tmpFrom.getSpeed(), 
+																	tmpTo.getSpeed(), 
 																	borders ) );
 				tmpFrom=tmpTo;
 			}
@@ -959,7 +959,7 @@ public class AI_LimitedView_SpeedUp extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					ArrayList<ZigZagVertex> zzv=tmpLandingRegion.getZigZagVertice();
+					ArrayList<LandingPoint> zzv=tmpLandingRegion.getLandingPoints();
 					//TODO: REMOVE THIS:
 					if( mVerbose )
 					{
