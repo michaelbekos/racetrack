@@ -158,7 +158,10 @@ public class ZigZagCreator
 				}
 				currentDirection = newDirection;
 			}
-			addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection);
+			if (!addStraightLine(maxLength, minLength, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection))
+			{
+				turns = -1;
+			}
 		}
 		int offsetX = 0 -zigZagDim.minX + 2;
 		int offsetY = 0 -zigZagDim.minY + 2;
