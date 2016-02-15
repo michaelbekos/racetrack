@@ -36,7 +36,7 @@ public class AI_Zigzag extends AI
 	private int mWidth;
 	private int mHeight;
 	private int currentIndexPosition;
-	private LinkedList<ArrayList<ZigZagVertex>> mLandingRegionsList;
+	private LinkedList<ArrayList<LandingPoint>> mLandingRegionsList;
 	
 	// This is the pure path
 	private List<Point2D> shortestPath;
@@ -97,29 +97,28 @@ public class AI_Zigzag extends AI
 				borders.add(LineSegment.GetLineSegment(boundary));
 			}
 
-			mLandingRegionsList = new LinkedList<ArrayList<ZigZagVertex>>();
-			ArrayList<ZigZagVertex> firstLandingRegion = new ArrayList<ZigZagVertex>();
-			ZigZagVertex startingState = new ZigZagVertex(this.getCurrentPosition(),this.getCurrentVelocity());
-			startingState.Distance(0);
+			mLandingRegionsList = new LinkedList<ArrayList<LandingPoint>>();
+			ArrayList<LandingPoint> firstLandingRegion = new ArrayList<LandingPoint>();
+			LandingPoint startingState = new LandingPoint(this.getCurrentPosition(),this.getCurrentVelocity());
+			startingState.setDistance(0);
 			firstLandingRegion.add(startingState);
 			mLandingRegionsList.add(firstLandingRegion);
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				//TODO: Henry, adjust here...
-				//mLandingRegionsList.add( lrl.get( i ).getZigZagVertice() );
+				mLandingRegionsList.add( lrl.get( i ).getLandingPoints() );
 			}
 			
 			for (int landingRegionIndex = 0; landingRegionIndex < mLandingRegionsList.size() - 1; landingRegionIndex++)
 			{
-				for (ZigZagVertex endLandingPoint : mLandingRegionsList.get(landingRegionIndex+1))
+				for (LandingPoint endLandingPoint : mLandingRegionsList.get(landingRegionIndex+1))
 				{
-					for (ZigZagVertex startLandingPoint : mLandingRegionsList.get(landingRegionIndex))
+					for (LandingPoint startLandingPoint : mLandingRegionsList.get(landingRegionIndex))
 					{
-						if (landingRegionIndex != 0 && startLandingPoint.Predecessor() == null)
+						if (landingRegionIndex != 0 && startLandingPoint.getPredecessor() == null)
 						{
 							continue;
 						}
-						List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
+						List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.getPosition(), endLandingPoint.getPosition(), startLandingPoint.getSpeed(), endLandingPoint.getSpeed(), borders);
 						//int distance = AIUtils.CalculateMinimumNumberOfTurns(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed());
 						int distance;
 						if (accelerations == null)
@@ -128,62 +127,62 @@ public class AI_Zigzag extends AI
 						}
 						else
 						{
-							distance = accelerations.size() + startLandingPoint.Distance();
+							distance = accelerations.size() + startLandingPoint.getDistance();
 						}
-						if (distance < endLandingPoint.Distance() || endLandingPoint.Distance() == -1)
+						if (distance < endLandingPoint.getDistance() || endLandingPoint.getDistance() == -1)
 						{
-							endLandingPoint.Distance(distance);
-							endLandingPoint.Predecessor(startLandingPoint);
+							endLandingPoint.setDistance(distance);
+							endLandingPoint.setPredecessor(startLandingPoint);
 						}
 					}
 				}
 			}
 			
 			int minimumDistance = -1;
-			ZigZagVertex bestLandingPoint = null;
-			for (ZigZagVertex finalLandingPoint : mLandingRegionsList.get(mLandingRegionsList.size()-1))
+			LandingPoint bestLandingPoint = null;
+			for (LandingPoint finalLandingPoint : mLandingRegionsList.get(mLandingRegionsList.size()-1))
 			{
-				if (finalLandingPoint.Predecessor() == null)
+				if (finalLandingPoint.getPredecessor() == null)
 				{
 					continue;
 				}
-				int additionalDistance = AIUtils.CalculateFinalNumberOfTurns(finalLandingPoint.Position(), finalLandingPoint.Speed(), LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()), landingRegionNewDirections.get(landingRegionNewDirections.size()-1),borders);
+				int additionalDistance = AIUtils.CalculateFinalNumberOfTurns(finalLandingPoint.getPosition(), finalLandingPoint.getSpeed(), LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()), landingRegionNewDirections.get(landingRegionNewDirections.size()-1),borders);
 				if (additionalDistance == -1)
 				{
 					continue;
 				}
-				finalLandingPoint.Distance(finalLandingPoint.Distance() + additionalDistance);	
-				if (finalLandingPoint.Distance() < minimumDistance || minimumDistance == -1)
+				finalLandingPoint.setDistance(finalLandingPoint.getDistance() + additionalDistance);	
+				if (finalLandingPoint.getDistance() < minimumDistance || minimumDistance == -1)
 				{
-					minimumDistance = finalLandingPoint.Distance();
+					minimumDistance = finalLandingPoint.getDistance();
 					bestLandingPoint = finalLandingPoint;
 				}
 			}
 			
-			ZigZagVertex[] landingPointsToVisit = new ZigZagVertex[mLandingRegionsList.size()];
+			LandingPoint[] landingPointsToVisit = new LandingPoint[mLandingRegionsList.size()];
 			int landingRegionResolvedCount = 1;
-			while (bestLandingPoint.Predecessor() != null)
+			while (bestLandingPoint.getPredecessor() != null)
 			{
 				landingPointsToVisit[landingPointsToVisit.length - landingRegionResolvedCount] = bestLandingPoint;
-				bestLandingPoint = bestLandingPoint.Predecessor();
+				bestLandingPoint = bestLandingPoint.getPredecessor();
 				landingRegionResolvedCount += 1;
 			}
 			landingPointsToVisit[landingPointsToVisit.length - landingRegionResolvedCount] = bestLandingPoint;
 			for (int i = 0; i < landingPointsToVisit.length; i++)
 			{
-				System.out.println(String.format("(%d,%d,%d,%d)", (int)landingPointsToVisit[i].Position().getX(), (int)landingPointsToVisit[i].Position().getY(), (int)landingPointsToVisit[i].Speed().getX(), (int)landingPointsToVisit[i].Speed().getY()));
+				System.out.println(String.format("(%d,%d,%d,%d)", (int)landingPointsToVisit[i].getPosition().getX(), (int)landingPointsToVisit[i].getPosition().getY(), (int)landingPointsToVisit[i].getSpeed().getX(), (int)landingPointsToVisit[i].getSpeed().getY()));
 			}
 			movePath = new LinkedList<Point2D>();
 			
 			for (int landingPointIndex = 0; landingPointIndex < landingPointsToVisit.length - 1; landingPointIndex++)
 			{
-				ZigZagVertex startLandingPoint = landingPointsToVisit[landingPointIndex];
-				ZigZagVertex endLandingPoint = landingPointsToVisit[landingPointIndex+1];
-				x = (int)startLandingPoint.Position().getX();
-				y = (int)startLandingPoint.Position().getY();
-				int sx = (int)startLandingPoint.Speed().getX();
-				int sy = (int)startLandingPoint.Speed().getY();
-				List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.Position(), endLandingPoint.Position(), startLandingPoint.Speed(), endLandingPoint.Speed(), borders);
+				LandingPoint startLandingPoint = landingPointsToVisit[landingPointIndex];
+				LandingPoint endLandingPoint = landingPointsToVisit[landingPointIndex+1];
+				x = (int)startLandingPoint.getPosition().getX();
+				y = (int)startLandingPoint.getPosition().getY();
+				int sx = (int)startLandingPoint.getSpeed().getX();
+				int sy = (int)startLandingPoint.getSpeed().getY();
+				List<Point2D> accelerations = AIUtils.CalculateAccelerations(startLandingPoint.getPosition(), endLandingPoint.getPosition(), startLandingPoint.getSpeed(), endLandingPoint.getSpeed(), borders);
 				for (int accelerationIndex = 0; accelerationIndex < accelerations.size(); accelerationIndex++)
 				{
 					sx = sx + (int)accelerations.get(accelerationIndex).getX();
@@ -194,12 +193,12 @@ public class AI_Zigzag extends AI
 				}
 			}
 			
-			ZigZagVertex finalLandingPoint = landingPointsToVisit[landingPointsToVisit.length - 1];
-			x = (int)finalLandingPoint.Position().getX();
-			y = (int)finalLandingPoint.Position().getY();
-			int sx = (int)finalLandingPoint.Speed().getX();
-			int sy = (int)finalLandingPoint.Speed().getY();
-			List<Point2D> finalAccelerations = AIUtils.CalculateFinalAccelerations(finalLandingPoint.Position(), finalLandingPoint.Speed(), LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()), landingRegionNewDirections.get(landingRegionNewDirections.size()-1), borders);
+			LandingPoint finalLandingPoint = landingPointsToVisit[landingPointsToVisit.length - 1];
+			x = (int)finalLandingPoint.getPosition().getX();
+			y = (int)finalLandingPoint.getPosition().getY();
+			int sx = (int)finalLandingPoint.getSpeed().getX();
+			int sy = (int)finalLandingPoint.getSpeed().getY();
+			List<Point2D> finalAccelerations = AIUtils.CalculateFinalAccelerations(finalLandingPoint.getPosition(), finalLandingPoint.getSpeed(), LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()), landingRegionNewDirections.get(landingRegionNewDirections.size()-1), borders);
 			for (int accelerationIndex = 0; accelerationIndex < finalAccelerations.size(); accelerationIndex++)
 			{
 				sx = sx + (int)finalAccelerations.get(accelerationIndex).getX();
@@ -1082,7 +1081,7 @@ public class AI_Zigzag extends AI
 					regionFoundFirstIdOrder++;
 					
 					//TODO: Henry, adjust here...
-					// ArrayList<ZigZagVertex> zzv=tmpLandingRegion.getZigZagVertice();
+					// ArrayList<LandingPoint> zzv=tmpLandingRegion.getZigZagVertice();
 					
 //					if( mVerbose )
 //					{
