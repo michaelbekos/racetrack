@@ -654,29 +654,108 @@ public class LandingRegion
     	
     	ArrayList<LandingPoint> allVertex=getLandingPoints();
     	int frontmost=0;
-    	if( horizontal )
+    	int tmpPossiblyFrontmost=0;
+		frontmost=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
+    	ret=allVertex.get( 0 );
+		
+    	for( int i=1 ; i<allVertex.size() ; i++ )
     	{
-    		frontmost=(int)allVertex.get( 0 ).getPosition().getX();
+    		tmpPossiblyFrontmost=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		boolean bigger=false;
+    		if( positiv )
+    		{
+    			if( tmpPossiblyFrontmost>frontmost ) 
+    				bigger=true;
+    		}
+    		else
+    		{
+    			if( tmpPossiblyFrontmost<frontmost ) 
+    				bigger=true;
+    		}
+    		if( bigger )
+    		{
+    			frontmost=tmpPossiblyFrontmost;
+    			ret=allVertex.get( i );
+    		}
+    	}
+    	
+    	return ret;
+    }
+    public ArrayList<LandingPoint> getSafeLandingPoint()
+    {
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
+    	boolean horizontal=false;
+    	boolean positiv=false;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    		positiv=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    		positiv=true;
+    	}
+    	
+    	//int landingRegionHeight=mW+mA;
+    	ArrayList<LandingPoint> allVertex=getLandingPoints();
+    	int highestVertex=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
+    	int lowestVertex=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
+    	for( int i=1 ; i<allVertex.size() ; i++ )
+    	{
+    		if( highestVertex<(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) ) )
+    		{
+    			highestVertex=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		}
+    	}
+    	
+    	for( int i=1 ; i<allVertex.size() ; i++ )
+    	{
+    		if( lowestVertex>(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) ) )
+    		{
+    			lowestVertex=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		}
+    	}
+    	int diff=highestVertex-lowestVertex;
+    	int center=0;
+    	int center2=-1;
+    	boolean odd=( diff )%2==0;
+    	if( odd )
+    	{
+    		center=( diff-1 )/2;
+    		center2=( diff+1 )/2;
     	}
     	else
     	{
-    		frontmost=(int)allVertex.get( 0 ).getPosition().getY();
+    		center=diff/2;
     	}
-    	
-    	//TODO:
-//    	for( int i=0 ; i<allVertex.size() ; i++ )
-//    	{
-//    		if( mCornor.equals( allVertex.get( i ).Position() ) )
-//    		{
-//    			if( s<allVertex.get( i ).getTotalSpeed() )
-//				{
-//					s=allVertex.get( i ).getTotalSpeed();
-//					ret=allVertex.get( i );
-//				}
-//    		}
-//    	}
+    	int tmp;	
+    	for( int i=0 ; i<allVertex.size() ; i++ )
+    	{
+    		tmp=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		if( tmp==center || tmp==center2 )
+    		{
+        		ret.add( allVertex.get( i ) );
+    		}
+    	}
     	
     	return ret;
     }
 }
+
+
+
+
+
+
 

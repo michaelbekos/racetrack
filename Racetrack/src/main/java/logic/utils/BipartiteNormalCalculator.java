@@ -61,7 +61,6 @@ public class BipartiteNormalCalculator
     	mMain=main; 
     	mOut=out; 
         mW=w;
-    	//mBorders=borders;
     	mEntireGrid=entireGrid;
     	
     	mStartLRVertex= mStartLR.getLandingPoints(); 
