@@ -223,376 +223,163 @@ public class AIUtils
 				int sy = sy1;
 				int ax = 0;
 				int ay = 0;
-//				for (int t = 0; t < tx; t++)
-//				{
-//					if(!smaxXReached)
-//					{
-//						//we have not reaches smax yet
-//						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
-//						{
-//							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
-//							ax = 0;
-//							skippedX += 1;
-//						}
-//						else
-//						{
-//							//increase speed to smax
-//							ax = (int)Math.signum(smaxReachedX-sx);
-//						}
-//						sx = sx + ax;
-//						if (sx == smaxReachedX)
-//						{
-//							//did we reach smax?
-//							smaxXReached = true;
-//							skippingX = true;
-//							if (t == 0)
-//							{
-//								//special case: we did reach smax in first turn
-//								if (ax == 0)
-//								{
-//									//we did not accelerate -> we already skipped one of the turns we are not allowed to accelerate
-//									skippedX += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ax) == Math.signum(sx2-sx1))
-//									{
-//										//we did decelerate -> we missed one of the doNotAcceleratePoints -> add it to the additionalPointsSkipped
-//										skippedX += 2;
-//										doNotAccelerateX -=1;
-//										additionalPointsSkippedX += 1;
-//									}
-//								}
-//								if (skippedX > doNotAccelerateX)
-//								{
-//									//we already did not accelerate enough
-//									sx = sx - ax;
-//									ax = (int)Math.signum(sx2 - sx1);
-//									sx = sx + ax;
-//									additionalSkippingX = true;
-//									skippingX = false;
-//								}
-//							}			
-//						}
-//					}
-//					else
-//					{
-//						//we reached smax
-//						if (skippedX == doNotAccelerateX)
-//						{
-//							//we skipped enough -> don't skip again
-//							skippingX = false;
-//						}
-//						if(skippingX)
-//						{
-//							//we still have to skip accelerations
-//							skippedX += 1;
-//							ax = 0;
-//						}
-//						else
-//						{
-//							//we already skipped accelerating after reaching smax
-//							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
-//							{
-//								//we still have to skip accelerating in the next layer
-//								additionalSkippedX += 1;
-//								ax = 0;
-//							}
-//							else
-//							{
-//								//everything is already handled, now accelerate to sx2
-//								ax = (int)Math.signum(sx2-sx);
-//								sx = sx + ax;
-//								additionalSkippingX = true;
-//							}
-//						}
-//					}
-//					if(!sminYReached)
-//					{
-//						//now do the same for y
-//						if (sy2 == sminReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < tx)
-//						{
-//							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
-//							ay = 0;
-//							skippedY += 1;
-//						}
-//						else
-//						{
-//							//increase speed to smax
-//							ay = (int)Math.signum(sminReachedY-sy);
-//						}
-//						sy = sy + ay;
-//						if (sy == sminReachedY)
-//						{
-//							sminYReached = true;
-//							skippingY = true;
-//							if (t == 0)
-//							{
-//								if (ay == 0)
-//								{
-//									skippedY += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ay) == Math.signum(sy2-sy1))
-//									{
-//										skippedY += 2;
-//										doNotAccelerateY -=1;
-//										additionalPointsSkippedY += 1;
-//									}
-//								}
-//								if (skippedY > doNotAccelerateY)
-//								{
-//									sy = sy - ay;
-//									ay = (int)Math.signum(sy2 - sy1);
-//									sy = sy + ay;
-//									additionalSkippingY = true;
-//									skippingY = false;
-//								}
-//							}
-//						}
-//					}
-//					else
-//					{
-//						if (skippedY == doNotAccelerateY)
-//						{
-//							skippingY = false;
-//						}
-//						if(skippingY)
-//						{
-//							skippedY += 1;
-//							ay = 0;
-//						}
-//						else
-//						{
-//							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
-//							{
-//								additionalSkippedY += 1;
-//								ay = 0;
-//							}
-//							else
-//							{
-//								ay = (int)Math.signum(sy2-sy);
-//								sy = sy + ay;
-//								additionalSkippingY = true;
-//							}
-//						}
-//					}
-//					int newX = x + sx;
-//					int newY = y + sy;
-//					for (LineSegment border : borders)
-//					{
-//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-//						{
-//							return null;
-//						}
-//					}
-//					x = newX;
-//					y = newY;
-//					accelerations.add(new Point2D(ax,ay));
-//				}
-				if (sy1 == sminY)
-				{
-					sminYReached = true;
-				}
-				if (sx1 == smaxX)
-				{
-					smaxXReached = true;
-				}
-				int speedsX[] = new int[tx];
-				int speedsY[] = new int[tx];
-				boolean holdForTwoTurnsX = false;
-				boolean holdForTwoTurnsY = false;
 				for (int t = 0; t < tx; t++)
 				{
 					if(!smaxXReached)
 					{
-						//increase speed to smax
-						ax = (int)Math.signum(smaxX-sx);
+						//we have not reaches smax yet
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
+						{
+							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							//increase speed to smax
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
 						sx = sx + ax;
-						if (sx == smaxX)
+						if (sx == smaxReachedX)
 						{
 							//did we reach smax?
-							smaxXReached = true;			
+							smaxXReached = true;
+							skippingX = true;
+							if (t == 0)
+							{
+								//special case: we did reach smax in first turn
+								if (ax == 0)
+								{
+									//we did not accelerate -> we already skipped one of the turns we are not allowed to accelerate
+									skippedX += 1;
+								}
+								else
+								{
+									if (Math.signum(ax) == Math.signum(sx2-sx1))
+									{
+										//we did decelerate -> we missed one of the doNotAcceleratePoints -> add it to the additionalPointsSkipped
+										skippedX += 2;
+										doNotAccelerateX -=1;
+										additionalPointsSkippedX += 1;
+									}
+								}
+								if (skippedX > doNotAccelerateX)
+								{
+									//we already did not accelerate enough
+									sx = sx - ax;
+									ax = (int)Math.signum(sx2 - sx1);
+									sx = sx + ax;
+									additionalSkippingX = true;
+									skippingX = false;
+								}
+							}			
 						}
 					}
 					else
 					{
 						//we reached smax
-						if (!holdForTwoTurnsX && !zxIsEven)
+						if (skippedX == doNotAccelerateX)
 						{
-							holdForTwoTurnsX = true;
+							//we skipped enough -> don't skip again
+							skippingX = false;
+						}
+						if(skippingX)
+						{
+							//we still have to skip accelerations
+							skippedX += 1;
+							ax = 0;
 						}
 						else
 						{
-							//everything is already handled, now accelerate to sx2
-							ax = (int)Math.signum(sx2-sx);
-							sx = sx + ax;
+							//we already skipped accelerating after reaching smax
+							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+							{
+								//we still have to skip accelerating in the next layer
+								additionalSkippedX += 1;
+								ax = 0;
+							}
+							else
+							{
+								//everything is already handled, now accelerate to sx2
+								ax = (int)Math.signum(sx2-sx);
+								sx = sx + ax;
+								additionalSkippingX = true;
+							}
 						}
 					}
 					if(!sminYReached)
 					{
-						//increase speed to smax
-						ay = (int)Math.signum(sminY-sy);
-						sy = sy + ay;
-						if (sy == sminY)
+						//now do the same for y
+						if (sy2 == sminReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < tx)
 						{
-							//did we reach smax?
-							sminYReached = true;			
+							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
+							ay = 0;
+							skippedY += 1;
+						}
+						else
+						{
+							//increase speed to smax
+							ay = (int)Math.signum(sminReachedY-sy);
+						}
+						sy = sy + ay;
+						if (sy == sminReachedY)
+						{
+							sminYReached = true;
+							skippingY = true;
+							if (t == 0)
+							{
+								if (ay == 0)
+								{
+									skippedY += 1;
+								}
+								else
+								{
+									if (Math.signum(ay) == Math.signum(sy2-sy1))
+									{
+										skippedY += 2;
+										doNotAccelerateY -=1;
+										additionalPointsSkippedY += 1;
+									}
+								}
+								if (skippedY > doNotAccelerateY)
+								{
+									sy = sy - ay;
+									ay = (int)Math.signum(sy2 - sy1);
+									sy = sy + ay;
+									additionalSkippingY = true;
+									skippingY = false;
+								}
+							}
 						}
 					}
 					else
 					{
-						if (!holdForTwoTurnsY && sminYHoldForTwoTurns)
+						if (skippedY == doNotAccelerateY)
 						{
-							holdForTwoTurnsY = true;
+							skippingY = false;
+						}
+						if(skippingY)
+						{
+							skippedY += 1;
+							ay = 0;
 						}
 						else
 						{
-							ay = (int)Math.signum(sy2-sy);
-							sy = sy + ay;
-							additionalSkippingY = true;
+							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+							{
+								additionalSkippedY += 1;
+								ay = 0;
+							}
+							else
+							{
+								ay = (int)Math.signum(sy2-sy);
+								sy = sy + ay;
+								additionalSkippingY = true;
+							}
 						}
 					}
 					int newX = x + sx;
 					int newY = y + sy;
-					/*for (LineSegment border : borders)
-					{
-						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-						{
-							return null;
-						}
-					}*/
-					x = newX;
-					y = newY;
-					speedsX[t] = sx;
-					speedsY[t] = sy;
-				}
-				int distanceX = Math.abs(x-x2);
-				int distanceY = Math.abs(y-y2);
-				int potentialSpeed = smaxX;
-				int directionToSx2= (int)Math.signum(sx2 - smaxX);
-				while (distanceX != 0)
-				{
-					int potentialTurn = -1;
-					for (int t = speedsX.length - 2; t > 0; t--)
-					{
-						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
-						{
-							potentialTurn = speedsX.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsX.length; t++)
-						{
-							if (speedsX[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsX.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
-						distanceX--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSx2;
-						if (Math.abs(potentialSpeed - sx2) > tx)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				potentialSpeed = sminY;
-				int directionToSy2= (int)Math.signum(sy2 - sminY);
-				while (distanceY != 0)
-				{
-					int potentialTurn = -1;
-					
-					for (int t = speedsY.length - 2; t > 0; t--)
-					{
-						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
-						{
-							potentialTurn = speedsY.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsY.length; t++)
-						{
-							if (speedsY[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsY.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
-						distanceY--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSy2;
-						if (Math.abs(potentialSpeed - sy2) > tx)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				x = x1;
-				y = y1;
-				for (int t = 0; t < tx; t++)
-				{
-					int newX = x + speedsX[t];
-					int newY = y + speedsY[t];
 					for (LineSegment border : borders)
 					{
 						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
@@ -602,15 +389,228 @@ public class AIUtils
 					}
 					x = newX;
 					y = newY;
-					if (t == 0)
-					{
-						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
-					}
-					else
-					{
-						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
-					}
+					accelerations.add(new Point2D(ax,ay));
 				}
+//				if (sy1 == sminY)
+//				{
+//					sminYReached = true;
+//				}
+//				if (sx1 == smaxX)
+//				{
+//					smaxXReached = true;
+//				}
+//				int speedsX[] = new int[tx];
+//				int speedsY[] = new int[tx];
+//				boolean holdForTwoTurnsX = false;
+//				boolean holdForTwoTurnsY = false;
+//				for (int t = 0; t < tx; t++)
+//				{
+//					if(!smaxXReached)
+//					{
+//						//increase speed to smax
+//						ax = (int)Math.signum(smaxX-sx);
+//						sx = sx + ax;
+//						if (sx == smaxX)
+//						{
+//							//did we reach smax?
+//							smaxXReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						//we reached smax
+//						if (!holdForTwoTurnsX && !zxIsEven)
+//						{
+//							holdForTwoTurnsX = true;
+//						}
+//						else
+//						{
+//							//everything is already handled, now accelerate to sx2
+//							ax = (int)Math.signum(sx2-sx);
+//							sx = sx + ax;
+//						}
+//					}
+//					if(!sminYReached)
+//					{
+//						//increase speed to smax
+//						ay = (int)Math.signum(sminY-sy);
+//						sy = sy + ay;
+//						if (sy == sminY)
+//						{
+//							//did we reach smax?
+//							sminYReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						if (!holdForTwoTurnsY && sminYHoldForTwoTurns)
+//						{
+//							holdForTwoTurnsY = true;
+//						}
+//						else
+//						{
+//							ay = (int)Math.signum(sy2-sy);
+//							sy = sy + ay;
+//							additionalSkippingY = true;
+//						}
+//					}
+//					int newX = x + sx;
+//					int newY = y + sy;
+//					/*for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}*/
+//					x = newX;
+//					y = newY;
+//					speedsX[t] = sx;
+//					speedsY[t] = sy;
+//				}
+//				int distanceX = Math.abs(x-x2);
+//				int distanceY = Math.abs(y-y2);
+//				int potentialSpeed = smaxX;
+//				int directionToSx2= (int)Math.signum(sx2 - smaxX);
+//				while (distanceX != 0)
+//				{
+//					int potentialTurn = -1;
+//					for (int t = speedsX.length - 2; t > 0; t--)
+//					{
+//						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
+//						{
+//							potentialTurn = speedsX.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsX.length; t++)
+//						{
+//							if (speedsX[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsX.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
+//						distanceX--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSx2;
+//						if (Math.abs(potentialSpeed - sx2) > tx)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				potentialSpeed = sminY;
+//				int directionToSy2= (int)Math.signum(sy2 - sminY);
+//				while (distanceY != 0)
+//				{
+//					int potentialTurn = -1;
+//					
+//					for (int t = speedsY.length - 2; t > 0; t--)
+//					{
+//						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
+//						{
+//							potentialTurn = speedsY.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsY.length; t++)
+//						{
+//							if (speedsY[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsY.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
+//						distanceY--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSy2;
+//						if (Math.abs(potentialSpeed - sy2) > tx)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				x = x1;
+//				y = y1;
+//				for (int t = 0; t < tx; t++)
+//				{
+//					int newX = x + speedsX[t];
+//					int newY = y + speedsY[t];
+//					for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}
+//					x = newX;
+//					y = newY;
+//					if (t == 0)
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
+//					}
+//					else
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
+//					}
+//				}
 			}
 			else
 			{
@@ -739,361 +739,148 @@ public class AIUtils
 				int ay = 0;
 				int x = x1;
 				int y = y1;
-//				for (int t = 0; t < t_new; t++)
-//				{
-//					if(!smaxXReached)
-//					{
-//						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < t_new)
-//						{
-//							ax = 0;
-//							skippedX += 1;
-//						}
-//						else
-//						{
-//							ax = (int)Math.signum(smaxReachedX-sx);
-//						}
-//						sx = sx + ax;
-//						if (sx == smaxReachedX)
-//						{
-//							smaxXReached = true;
-//							skippingX = true;
-//							if (t == 0)
-//							{
-//								if (ax == 0)
-//								{
-//									skippedX += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ax) == Math.signum(sx2-sx1))
-//									{
-//										skippedX += 2;
-//										doNotAccelerateX -=1;
-//										additionalPointsSkippedX += 1;
-//									}
-//								}
-//								if (skippedX > doNotAccelerateX)
-//								{
-//									sx = sx - ax;
-//									ax = (int)Math.signum(sx2 - sx1);
-//									sx = sx + ax;
-//									additionalSkippingX = true;
-//									skippingX = false;
-//								}
-//							}			
-//						}
-//					}
-//					else
-//					{
-//						if (skippedX == doNotAccelerateX)
-//						{
-//							skippingX = false;
-//						}
-//						if(skippingX)
-//						{
-//							skippedX += 1;
-//							ax= 0;
-//						}
-//						else
-//						{
-//							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
-//							{
-//								additionalSkippedX += 1;
-//								ax = 0;
-//							}
-//							else
-//							{
-//								ax = (int)Math.signum(sx2-sx);
-//								sx = sx + ax;
-//								additionalSkippingX = true;
-//							}
-//						}
-//					}
-//					if(!sminYReached)
-//					{
-//						if (sy2 == sminReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < t_new)
-//						{
-//							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
-//							ay = 0;
-//							skippedY += 1;
-//						}
-//						else
-//						{
-//							//increase speed to smax
-//							ay = (int)Math.signum(sminReachedY-sy);
-//						}
-//						sy = sy + ay;
-//						if (sy == sminReachedY)
-//						{
-//							sminYReached = true;
-//							skippingY = true;
-//							if (t == 0)
-//							{
-//								if (ay == 0)
-//								{
-//									skippedY += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ay) == Math.signum(sy2-sy1))
-//									{
-//										skippedY += 2;
-//										doNotAccelerateY -=1;
-//										additionalPointsSkippedY += 1;
-//									}
-//								}
-//								if (skippedY > doNotAccelerateY)
-//								{
-//									sy = sy - ay;
-//									ay = (int)Math.signum(sy2 - sy1);
-//									sy = sy + ay;
-//									additionalSkippingY = true;
-//									skippingY = false;
-//								}
-//							}
-//						}
-//					}
-//					else
-//					{
-//						if (skippedY == doNotAccelerateY)
-//						{
-//							skippingY = false;
-//						}
-//						if(skippingY)
-//						{
-//							skippedY += 1;
-//							ay = 0;
-//						}
-//						else
-//						{
-//							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
-//							{
-//								additionalSkippedY += 1;
-//								ay = 0;
-//							}
-//							else
-//							{
-//								ay = (int)Math.signum(sy2-sy);
-//								sy = sy + ay;
-//								additionalSkippingY = true;
-//							}
-//						}
-//					}
-//					int newX = x + sx;
-//					int newY = y + sy;
-//					for (LineSegment border : borders)
-//					{
-//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-//						{
-//							return null;
-//						}
-//					}
-//					x = newX;
-//					y = newY;
-//					accelerations.add(new Point2D(ax,ay));
-//				}
-				if (sy1 == sminY)
-				{
-					sminYReached = true;
-				}
-				if (sx1 == smaxX)
-				{
-					smaxXReached = true;
-				}
-				int speedsX[] = new int[t_new];
-				int speedsY[] = new int[t_new];
-				boolean holdForTwoTurnsX = false;
-				boolean holdForTwoTurnsY = false;
 				for (int t = 0; t < t_new; t++)
 				{
 					if(!smaxXReached)
 					{
-						//increase speed to smax
-						ax = (int)Math.signum(smaxX-sx);
-						sx = sx + ax;
-						if (sx == smaxX)
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < t_new)
 						{
-							//did we reach smax?
-							smaxXReached = true;			
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
+						sx = sx + ax;
+						if (sx == smaxReachedX)
+						{
+							smaxXReached = true;
+							skippingX = true;
+							if (t == 0)
+							{
+								if (ax == 0)
+								{
+									skippedX += 1;
+								}
+								else
+								{
+									if (Math.signum(ax) == Math.signum(sx2-sx1))
+									{
+										skippedX += 2;
+										doNotAccelerateX -=1;
+										additionalPointsSkippedX += 1;
+									}
+								}
+								if (skippedX > doNotAccelerateX)
+								{
+									sx = sx - ax;
+									ax = (int)Math.signum(sx2 - sx1);
+									sx = sx + ax;
+									additionalSkippingX = true;
+									skippingX = false;
+								}
+							}			
 						}
 					}
 					else
 					{
-						//we reached smax
-						if (!holdForTwoTurnsX && !zxIsEven)
+						if (skippedX == doNotAccelerateX)
 						{
-							holdForTwoTurnsX = true;
+							skippingX = false;
+						}
+						if(skippingX)
+						{
+							skippedX += 1;
+							ax= 0;
 						}
 						else
 						{
-							//everything is already handled, now accelerate to sx2
-							ax = (int)Math.signum(sx2-sx);
-							sx = sx + ax;
+							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+							{
+								additionalSkippedX += 1;
+								ax = 0;
+							}
+							else
+							{
+								ax = (int)Math.signum(sx2-sx);
+								sx = sx + ax;
+								additionalSkippingX = true;
+							}
 						}
 					}
 					if(!sminYReached)
 					{
-						//increase speed to smax
-						ay = (int)Math.signum(sminY-sy);
-						sy = sy + ay;
-						if (sy == sminY)
+						if (sy2 == sminReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < t_new)
 						{
-							//did we reach smax?
-							sminYReached = true;			
+							//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
+							ay = 0;
+							skippedY += 1;
+						}
+						else
+						{
+							//increase speed to smax
+							ay = (int)Math.signum(sminReachedY-sy);
+						}
+						sy = sy + ay;
+						if (sy == sminReachedY)
+						{
+							sminYReached = true;
+							skippingY = true;
+							if (t == 0)
+							{
+								if (ay == 0)
+								{
+									skippedY += 1;
+								}
+								else
+								{
+									if (Math.signum(ay) == Math.signum(sy2-sy1))
+									{
+										skippedY += 2;
+										doNotAccelerateY -=1;
+										additionalPointsSkippedY += 1;
+									}
+								}
+								if (skippedY > doNotAccelerateY)
+								{
+									sy = sy - ay;
+									ay = (int)Math.signum(sy2 - sy1);
+									sy = sy + ay;
+									additionalSkippingY = true;
+									skippingY = false;
+								}
+							}
 						}
 					}
 					else
 					{
-						if (!holdForTwoTurnsY && sminYHoldForTwoTurns)
+						if (skippedY == doNotAccelerateY)
 						{
-							holdForTwoTurnsY = true;
+							skippingY = false;
+						}
+						if(skippingY)
+						{
+							skippedY += 1;
+							ay = 0;
 						}
 						else
 						{
-							ay = (int)Math.signum(sy2-sy);
-							sy = sy + ay;
-							additionalSkippingY = true;
+							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+							{
+								additionalSkippedY += 1;
+								ay = 0;
+							}
+							else
+							{
+								ay = (int)Math.signum(sy2-sy);
+								sy = sy + ay;
+								additionalSkippingY = true;
+							}
 						}
 					}
 					int newX = x + sx;
 					int newY = y + sy;
-					/*for (LineSegment border : borders)
-					{
-						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-						{
-							return null;
-						}
-					}*/
-					x = newX;
-					y = newY;
-					speedsX[t] = sx;
-					speedsY[t] = sy;
-				}
-				int distanceX = Math.abs(x-x2);
-				int distanceY = Math.abs(y-y2);
-				int potentialSpeed = smaxX;
-				int directionToSx2= (int)Math.signum(sx2 - smaxX);
-				while (distanceX != 0)
-				{
-					int potentialTurn = -1;
-					for (int t = speedsX.length - 2; t > 0; t--)
-					{
-						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
-						{
-							potentialTurn = speedsX.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsX.length; t++)
-						{
-							if (speedsX[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsX.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
-						distanceX--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSx2;
-						if (Math.abs(potentialSpeed - sx2) > t_new)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				potentialSpeed = sminY;
-				int directionToSy2= (int)Math.signum(sy2 - sminY);
-				while (distanceY != 0)
-				{
-					int potentialTurn = -1;
-					
-					for (int t = speedsY.length - 2; t > 0; t--)
-					{
-						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
-						{
-							potentialTurn = speedsY.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsY.length; t++)
-						{
-							if (speedsY[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsY.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
-						distanceY--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSy2;
-						if (Math.abs(potentialSpeed - sy2) > t_new)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				x = x1;
-				y = y1;
-				for (int t = 0; t < t_new; t++)
-				{
-					int newX = x + speedsX[t];
-					int newY = y + speedsY[t];
 					for (LineSegment border : borders)
 					{
 						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
@@ -1103,15 +890,228 @@ public class AIUtils
 					}
 					x = newX;
 					y = newY;
-					if (t == 0)
-					{
-						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
-					}
-					else
-					{
-						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
-					}
+					accelerations.add(new Point2D(ax,ay));
 				}
+//				if (sy1 == sminY)
+//				{
+//					sminYReached = true;
+//				}
+//				if (sx1 == smaxX)
+//				{
+//					smaxXReached = true;
+//				}
+//				int speedsX[] = new int[t_new];
+//				int speedsY[] = new int[t_new];
+//				boolean holdForTwoTurnsX = false;
+//				boolean holdForTwoTurnsY = false;
+//				for (int t = 0; t < t_new; t++)
+//				{
+//					if(!smaxXReached)
+//					{
+//						//increase speed to smax
+//						ax = (int)Math.signum(smaxX-sx);
+//						sx = sx + ax;
+//						if (sx == smaxX)
+//						{
+//							//did we reach smax?
+//							smaxXReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						//we reached smax
+//						if (!holdForTwoTurnsX && !zxIsEven)
+//						{
+//							holdForTwoTurnsX = true;
+//						}
+//						else
+//						{
+//							//everything is already handled, now accelerate to sx2
+//							ax = (int)Math.signum(sx2-sx);
+//							sx = sx + ax;
+//						}
+//					}
+//					if(!sminYReached)
+//					{
+//						//increase speed to smax
+//						ay = (int)Math.signum(sminY-sy);
+//						sy = sy + ay;
+//						if (sy == sminY)
+//						{
+//							//did we reach smax?
+//							sminYReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						if (!holdForTwoTurnsY && sminYHoldForTwoTurns)
+//						{
+//							holdForTwoTurnsY = true;
+//						}
+//						else
+//						{
+//							ay = (int)Math.signum(sy2-sy);
+//							sy = sy + ay;
+//							additionalSkippingY = true;
+//						}
+//					}
+//					int newX = x + sx;
+//					int newY = y + sy;
+//					/*for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}*/
+//					x = newX;
+//					y = newY;
+//					speedsX[t] = sx;
+//					speedsY[t] = sy;
+//				}
+//				int distanceX = Math.abs(x-x2);
+//				int distanceY = Math.abs(y-y2);
+//				int potentialSpeed = smaxX;
+//				int directionToSx2= (int)Math.signum(sx2 - smaxX);
+//				while (distanceX != 0)
+//				{
+//					int potentialTurn = -1;
+//					for (int t = speedsX.length - 2; t > 0; t--)
+//					{
+//						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
+//						{
+//							potentialTurn = speedsX.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsX.length; t++)
+//						{
+//							if (speedsX[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsX.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
+//						distanceX--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSx2;
+//						if (Math.abs(potentialSpeed - sx2) > t_new)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				potentialSpeed = sminY;
+//				int directionToSy2= (int)Math.signum(sy2 - sminY);
+//				while (distanceY != 0)
+//				{
+//					int potentialTurn = -1;
+//					
+//					for (int t = speedsY.length - 2; t > 0; t--)
+//					{
+//						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
+//						{
+//							potentialTurn = speedsY.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsY.length; t++)
+//						{
+//							if (speedsY[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsY.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
+//						distanceY--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSy2;
+//						if (Math.abs(potentialSpeed - sy2) > t_new)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				x = x1;
+//				y = y1;
+//				for (int t = 0; t < t_new; t++)
+//				{
+//					int newX = x + speedsX[t];
+//					int newY = y + speedsY[t];
+//					for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}
+//					x = newX;
+//					y = newY;
+//					if (t == 0)
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
+//					}
+//					else
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
+//					}
+//				}
 			}
 		}
 		else
@@ -1215,360 +1215,148 @@ public class AIUtils
 					int y = y1;
 					int ax = 0;
 					int ay = 0;
-//					for (int t = 0; t < ty; t++)
-//					{
-//						if(!smaxYReached)
-//						{
-//							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
-//							{
-//								ay = 0;
-//								skippedY += 1;
-//							}
-//							else
-//							{
-//								ay = (int)Math.signum(smaxReachedY-sy);
-//							}
-//							sy = sy + ay;
-//							if (sy == smaxReachedY)
-//							{
-//								smaxYReached = true;
-//								skippingY = true;
-//								if (t == 0)
-//								{
-//									if (ay == 0)
-//									{
-//										skippedY += 1;
-//									}
-//									else
-//									{
-//										if (Math.signum(ay) == Math.signum(sy2-sy1))
-//										{
-//											skippedY += 2;
-//											doNotAccelerateY -=1;
-//											additionalPointsSkippedY += 1;
-//										}
-//									}
-//									if (skippedY > doNotAccelerateY)
-//									{
-//										sy = sy - ay;
-//										ay = (int)Math.signum(sy2 - sy1);
-//										sy = sy + ay;
-//										additionalSkippingY = true;
-//										skippingY = false;
-//									}
-//								}			
-//							}
-//						}
-//						else
-//						{
-//							if (skippedY == doNotAccelerateY)
-//							{
-//								skippingY = false;
-//							}
-//							if(skippingY)
-//							{
-//								skippedY += 1;
-//								ay = 0;
-//							}
-//							else
-//							{
-//								if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
-//								{
-//									additionalSkippedY += 1;
-//									ay = 0;
-//								}
-//								else
-//								{
-//									ay = (int)Math.signum(sy2-sy);
-//									sy = sy + ay;
-//									additionalSkippingY = true;
-//								}
-//							}
-//						}
-//						if(!sminXReached)
-//						{
-//							if (sx2 == sminReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < ty)
-//							{
-//								//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
-//								ax = 0;
-//								skippedX += 1;
-//							}
-//							else
-//							{
-//								//increase speed to smax
-//								ax = (int)Math.signum(sminReachedX-sx);
-//							}
-//							sx = sx + ax;
-//							if (sx == sminReachedX)
-//							{
-//								sminXReached = true;
-//								skippingX = true;
-//								if (t == 0)
-//								{
-//									if (ax == 0)
-//									{
-//										skippedX += 1;
-//									}
-//									else
-//									{
-//										if (Math.signum(ax) == Math.signum(sx2-sx1))
-//										{
-//											skippedX += 2;
-//											doNotAccelerateX -=1;
-//											additionalPointsSkippedX += 1;
-//										}
-//									}
-//									if (skippedX > doNotAccelerateX)
-//									{
-//										sx = sx - ax;
-//										ax = (int)Math.signum(sx2 - sx1);
-//										sx = sx + ax;
-//										additionalSkippingX = true;
-//										skippingX = false;
-//									}
-//								}
-//							}
-//						}
-//						else
-//						{
-//							if (skippedX == doNotAccelerateX)
-//							{
-//								skippingX = false;
-//							}
-//							if(skippingX)
-//							{
-//								skippedX += 1;
-//								ax = 0;
-//							}
-//							else
-//							{
-//								if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
-//								{
-//									additionalSkippedX += 1;
-//									ax = 0;
-//								}
-//								else
-//								{
-//									ax = (int)Math.signum(sx2-sx);
-//									sx = sx + ax;
-//									additionalSkippingX = true;
-//								}
-//							}
-//						}
-//						int newX = x + sx;
-//						int newY = y + sy;
-//						for (LineSegment border : borders)
-//						{
-//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-//							{
-//								return null;
-//							}
-//						}
-//						x = newX;
-//						y = newY;
-//						accelerations.add(new Point2D(ax,ay));
-//					}
-					int speedsX[] = new int[ty];
-					int speedsY[] = new int[ty];
-					boolean holdForTwoTurnsX = false;
-					boolean holdForTwoTurnsY = false;
-					if (sx1 == sminX)
-					{
-						sminXReached = true;
-					}
-					if (sy1 == smaxY)
-					{
-						smaxYReached = true;
-					}
 					for (int t = 0; t < ty; t++)
 					{
 						if(!smaxYReached)
 						{
-							//increase speed to smax
-							ay = (int)Math.signum(smaxY-sy);
-							sy = sy + ay;
-							if (sy == smaxY)
+							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
 							{
-								//did we reach smax?
-								smaxYReached = true;			
+								ay = 0;
+								skippedY += 1;
+							}
+							else
+							{
+								ay = (int)Math.signum(smaxReachedY-sy);
+							}
+							sy = sy + ay;
+							if (sy == smaxReachedY)
+							{
+								smaxYReached = true;
+								skippingY = true;
+								if (t == 0)
+								{
+									if (ay == 0)
+									{
+										skippedY += 1;
+									}
+									else
+									{
+										if (Math.signum(ay) == Math.signum(sy2-sy1))
+										{
+											skippedY += 2;
+											doNotAccelerateY -=1;
+											additionalPointsSkippedY += 1;
+										}
+									}
+									if (skippedY > doNotAccelerateY)
+									{
+										sy = sy - ay;
+										ay = (int)Math.signum(sy2 - sy1);
+										sy = sy + ay;
+										additionalSkippingY = true;
+										skippingY = false;
+									}
+								}			
 							}
 						}
 						else
 						{
-							//we reached smax
-							if (!holdForTwoTurnsY && !zyIsEven)
+							if (skippedY == doNotAccelerateY)
 							{
-								holdForTwoTurnsY = true;
+								skippingY = false;
+							}
+							if(skippingY)
+							{
+								skippedY += 1;
+								ay = 0;
 							}
 							else
 							{
-								//everything is already handled, now accelerate to sx2
-								ay = (int)Math.signum(sy2-sy);
-								sy = sy + ay;
+								if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+								{
+									additionalSkippedY += 1;
+									ay = 0;
+								}
+								else
+								{
+									ay = (int)Math.signum(sy2-sy);
+									sy = sy + ay;
+									additionalSkippingY = true;
+								}
 							}
 						}
 						if(!sminXReached)
 						{
-							//increase speed to smax
-							ax = (int)Math.signum(sminX-sx);
-							sx = sx + ax;
-							if (sx == sminX)
+							if (sx2 == sminReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < ty)
 							{
-								//did we reach smax?
-								sminXReached = true;			
+								//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
+								ax = 0;
+								skippedX += 1;
+							}
+							else
+							{
+								//increase speed to smax
+								ax = (int)Math.signum(sminReachedX-sx);
+							}
+							sx = sx + ax;
+							if (sx == sminReachedX)
+							{
+								sminXReached = true;
+								skippingX = true;
+								if (t == 0)
+								{
+									if (ax == 0)
+									{
+										skippedX += 1;
+									}
+									else
+									{
+										if (Math.signum(ax) == Math.signum(sx2-sx1))
+										{
+											skippedX += 2;
+											doNotAccelerateX -=1;
+											additionalPointsSkippedX += 1;
+										}
+									}
+									if (skippedX > doNotAccelerateX)
+									{
+										sx = sx - ax;
+										ax = (int)Math.signum(sx2 - sx1);
+										sx = sx + ax;
+										additionalSkippingX = true;
+										skippingX = false;
+									}
+								}
 							}
 						}
 						else
 						{
-							if (!holdForTwoTurnsX && sminXHoldForTwoTurns)
+							if (skippedX == doNotAccelerateX)
 							{
-								holdForTwoTurnsX = true;
+								skippingX = false;
+							}
+							if(skippingX)
+							{
+								skippedX += 1;
+								ax = 0;
 							}
 							else
 							{
-								ax = (int)Math.signum(sx2-sx);
-								sx = sx + ax;
-								additionalSkippingX = true;
+								if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+								{
+									additionalSkippedX += 1;
+									ax = 0;
+								}
+								else
+								{
+									ax = (int)Math.signum(sx2-sx);
+									sx = sx + ax;
+									additionalSkippingX = true;
+								}
 							}
 						}
 						int newX = x + sx;
 						int newY = y + sy;
-						/*for (LineSegment border : borders)
-						{
-							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-							{
-								return null;
-							}
-						}*/
-						x = newX;
-						y = newY;
-						speedsX[t] = sx;
-						speedsY[t] = sy;
-					}
-					int distanceX = Math.abs(x-x2);
-					int distanceY = Math.abs(y-y2);
-					int potentialSpeed = smaxY;
-					int directionToSy2= (int)Math.signum(sy2 - smaxY);
-					while (distanceY != 0)
-					{
-						int potentialTurn = -1;
-						for (int t = speedsY.length - 2; t > 0; t--)
-						{
-							if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
-							{
-								potentialTurn = t;
-								break;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1 && Math.abs(speedsY[0] + directionToSy2 - speedsY[1]) <= 1)
-							{
-								potentialTurn = 0;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
-							{
-								potentialTurn = speedsY.length -2;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							boolean allSpeedsTheSame = true;
-							for (int t = 0; t < speedsY.length; t++)
-							{
-								if (speedsY[t] != potentialSpeed)
-								{
-									allSpeedsTheSame = false;
-									break;
-								}
-							}
-							if (allSpeedsTheSame)
-							{
-								potentialTurn = speedsY.length - 2;
-							}
-						}
-						if (potentialTurn != -1)
-						{
-							speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
-							distanceY--;
-						}
-						else
-						{
-							potentialSpeed = potentialSpeed + directionToSy2;
-							if (Math.abs(potentialSpeed - sy2) > ty)
-							{
-								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-								return null;
-							}
-						}
-					}
-					potentialSpeed = sminX;
-					int directionToSx2= (int)Math.signum(sx2 - sminX);
-					while (distanceX != 0)
-					{
-						int potentialTurn = -1;
-						for (int t = speedsX.length - 2; t > 0; t--)
-						{
-							if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
-							{
-								potentialTurn = t;
-								break;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1)
-							{
-								potentialTurn = 0;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
-							{
-								potentialTurn = speedsX.length -2;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							boolean allSpeedsTheSame = true;
-							for (int t = 0; t < speedsX.length; t++)
-							{
-								if (speedsX[t] != potentialSpeed)
-								{
-									allSpeedsTheSame = false;
-									break;
-								}
-							}
-							if (allSpeedsTheSame)
-							{
-								potentialTurn = speedsX.length - 2;
-							}
-						}
-						if (potentialTurn != -1)
-						{
-							speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
-							distanceX--;
-						}
-						else
-						{
-							potentialSpeed = potentialSpeed + directionToSx2;
-							if (Math.abs(potentialSpeed - sx2) > ty)
-							{
-								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-								return null;
-							}
-						}
-					}
-					x = x1;
-					y = y1;
-					for (int t = 0; t < ty; t++)
-					{
-						int newX = x + speedsX[t];
-						int newY = y + speedsY[t];
 						for (LineSegment border : borders)
 						{
 							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
@@ -1578,15 +1366,227 @@ public class AIUtils
 						}
 						x = newX;
 						y = newY;
-						if (t == 0)
-						{
-							accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
-						}
-						else
-						{
-							accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
-						}
+						accelerations.add(new Point2D(ax,ay));
 					}
+//					int speedsX[] = new int[ty];
+//					int speedsY[] = new int[ty];
+//					boolean holdForTwoTurnsX = false;
+//					boolean holdForTwoTurnsY = false;
+//					if (sx1 == sminX)
+//					{
+//						sminXReached = true;
+//					}
+//					if (sy1 == smaxY)
+//					{
+//						smaxYReached = true;
+//					}
+//					for (int t = 0; t < ty; t++)
+//					{
+//						if(!smaxYReached)
+//						{
+//							//increase speed to smax
+//							ay = (int)Math.signum(smaxY-sy);
+//							sy = sy + ay;
+//							if (sy == smaxY)
+//							{
+//								//did we reach smax?
+//								smaxYReached = true;			
+//							}
+//						}
+//						else
+//						{
+//							//we reached smax
+//							if (!holdForTwoTurnsY && !zyIsEven)
+//							{
+//								holdForTwoTurnsY = true;
+//							}
+//							else
+//							{
+//								//everything is already handled, now accelerate to sx2
+//								ay = (int)Math.signum(sy2-sy);
+//								sy = sy + ay;
+//							}
+//						}
+//						if(!sminXReached)
+//						{
+//							//increase speed to smax
+//							ax = (int)Math.signum(sminX-sx);
+//							sx = sx + ax;
+//							if (sx == sminX)
+//							{
+//								//did we reach smax?
+//								sminXReached = true;			
+//							}
+//						}
+//						else
+//						{
+//							if (!holdForTwoTurnsX && sminXHoldForTwoTurns)
+//							{
+//								holdForTwoTurnsX = true;
+//							}
+//							else
+//							{
+//								ax = (int)Math.signum(sx2-sx);
+//								sx = sx + ax;
+//								additionalSkippingX = true;
+//							}
+//						}
+//						int newX = x + sx;
+//						int newY = y + sy;
+//						/*for (LineSegment border : borders)
+//						{
+//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//							{
+//								return null;
+//							}
+//						}*/
+//						x = newX;
+//						y = newY;
+//						speedsX[t] = sx;
+//						speedsY[t] = sy;
+//					}
+//					int distanceX = Math.abs(x-x2);
+//					int distanceY = Math.abs(y-y2);
+//					int potentialSpeed = smaxY;
+//					int directionToSy2= (int)Math.signum(sy2 - smaxY);
+//					while (distanceY != 0)
+//					{
+//						int potentialTurn = -1;
+//						for (int t = speedsY.length - 2; t > 0; t--)
+//						{
+//							if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
+//							{
+//								potentialTurn = t;
+//								break;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1 && Math.abs(speedsY[0] + directionToSy2 - speedsY[1]) <= 1)
+//							{
+//								potentialTurn = 0;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
+//							{
+//								potentialTurn = speedsY.length -2;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							boolean allSpeedsTheSame = true;
+//							for (int t = 0; t < speedsY.length; t++)
+//							{
+//								if (speedsY[t] != potentialSpeed)
+//								{
+//									allSpeedsTheSame = false;
+//									break;
+//								}
+//							}
+//							if (allSpeedsTheSame)
+//							{
+//								potentialTurn = speedsY.length - 2;
+//							}
+//						}
+//						if (potentialTurn != -1)
+//						{
+//							speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
+//							distanceY--;
+//						}
+//						else
+//						{
+//							potentialSpeed = potentialSpeed + directionToSy2;
+//							if (Math.abs(potentialSpeed - sy2) > ty)
+//							{
+//								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//								return null;
+//							}
+//						}
+//					}
+//					potentialSpeed = sminX;
+//					int directionToSx2= (int)Math.signum(sx2 - sminX);
+//					while (distanceX != 0)
+//					{
+//						int potentialTurn = -1;
+//						for (int t = speedsX.length - 2; t > 0; t--)
+//						{
+//							if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
+//							{
+//								potentialTurn = t;
+//								break;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1)
+//							{
+//								potentialTurn = 0;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
+//							{
+//								potentialTurn = speedsX.length -2;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							boolean allSpeedsTheSame = true;
+//							for (int t = 0; t < speedsX.length; t++)
+//							{
+//								if (speedsX[t] != potentialSpeed)
+//								{
+//									allSpeedsTheSame = false;
+//									break;
+//								}
+//							}
+//							if (allSpeedsTheSame)
+//							{
+//								potentialTurn = speedsX.length - 2;
+//							}
+//						}
+//						if (potentialTurn != -1)
+//						{
+//							speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
+//							distanceX--;
+//						}
+//						else
+//						{
+//							potentialSpeed = potentialSpeed + directionToSx2;
+//							if (Math.abs(potentialSpeed - sx2) > ty)
+//							{
+//								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//								return null;
+//							}
+//						}
+//					}
+//					x = x1;
+//					y = y1;
+//					for (int t = 0; t < ty; t++)
+//					{
+//						int newX = x + speedsX[t];
+//						int newY = y + speedsY[t];
+//						for (LineSegment border : borders)
+//						{
+//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//							{
+//								return null;
+//							}
+//						}
+//						x = newX;
+//						y = newY;
+//						if (t == 0)
+//						{
+//							accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
+//						}
+//						else
+//						{
+//							accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
+//						}
+//					}
 				}
 				else
 				{
@@ -1711,360 +1711,148 @@ public class AIUtils
 					int y = y1;
 					int ax = 0;
 					int ay = 0;
-//					for (int t = 0; t < t_new; t++)
-//					{
-//						if(!smaxYReached)
-//						{
-//							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < t_new)
-//							{
-//								ay = 0;
-//								skippedY += 1;
-//							}
-//							else
-//							{
-//								ay = (int)Math.signum(smaxReachedY-sy);
-//							}
-//							sy = sy + ay;
-//							if (sy == smaxReachedY)
-//							{
-//								smaxYReached = true;
-//								skippingY = true;
-//								if (t == 0)
-//								{
-//									if (ay == 0)
-//									{
-//										skippedY += 1;
-//									}
-//									else
-//									{
-//										if (Math.signum(ay) == Math.signum(sy2-sy1))
-//										{
-//											skippedY += 2;
-//											doNotAccelerateY -=1;
-//											additionalPointsSkippedY += 1;
-//										}
-//									}
-//									if (skippedY > doNotAccelerateY)
-//									{
-//										sy = sy - ay;
-//										ay = (int)Math.signum(sy2 - sy1);
-//										sy = sy + ay;
-//										additionalSkippingY = true;
-//										skippingY = false;
-//									}
-//								}			
-//							}
-//						}
-//						else
-//						{
-//							if (skippedY == doNotAccelerateY)
-//							{
-//								skippingY = false;
-//							}
-//							if(skippingY)
-//							{
-//								skippedY += 1;
-//								ay = 0;
-//							}
-//							else
-//							{
-//								if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
-//								{
-//									additionalSkippedY += 1;
-//									ay = 0;
-//								}
-//								else
-//								{
-//									ay = (int)Math.signum(sy2-sy);
-//									sy = sy + ay;
-//									additionalSkippingY = true;
-//								}
-//							}
-//						}
-//						if(!sminXReached)
-//						{
-//							if (sx2 == sminReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < t_new)
-//							{
-//								//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
-//								ax = 0;
-//								skippedX += 1;
-//							}
-//							else
-//							{
-//								//increase speed to smax
-//								ax = (int)Math.signum(sminReachedX-sx);
-//							}
-//							sx = sx + ax;
-//							if (sx == sminReachedX)
-//							{
-//								sminXReached = true;
-//								skippingX = true;
-//								if (t == 0)
-//								{
-//									if (ax == 0)
-//									{
-//										skippedX += 1;
-//									}
-//									else
-//									{
-//										if (Math.signum(ax) == Math.signum(sx2-sx1))
-//										{
-//											skippedX += 2;
-//											doNotAccelerateX -=1;
-//											additionalPointsSkippedX += 1;
-//										}
-//									}
-//									if (skippedX > doNotAccelerateX)
-//									{
-//										sx = sx - ax;
-//										ax = (int)Math.signum(sx2 - sx1);
-//										sx = sx + ax;
-//										additionalSkippingX = true;
-//										skippingX = false;
-//									}
-//								}
-//							}
-//						}
-//						else
-//						{
-//							if (skippedX == doNotAccelerateX)
-//							{
-//								skippingX = false;
-//							}
-//							if(skippingX)
-//							{
-//								skippedX += 1;
-//								ax = 0;
-//							}
-//							else
-//							{
-//								if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
-//								{
-//									additionalSkippedX += 1;
-//									ax = 0;
-//								}
-//								else
-//								{
-//									ax = (int)Math.signum(sx2-sx);
-//									sx = sx + ax;
-//									additionalSkippingX = true;
-//								}
-//							}
-//						}
-//						int newX = x + sx;
-//						int newY = y + sy;
-//						for (LineSegment border : borders)
-//						{
-//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-//							{
-//								return null;
-//							}
-//						}
-//						x = newX;
-//						y = newY;
-//						accelerations.add(new Point2D(ax,ay));
-//					}
-					if (sx1 == sminX)
-					{
-						sminXReached = true;
-					}
-					if (sy1 == smaxY)
-					{
-						smaxYReached = true;
-					}
-					int speedsX[] = new int[t_new];
-					int speedsY[] = new int[t_new];
-					boolean holdForTwoTurnsX = false;
-					boolean holdForTwoTurnsY = false;
 					for (int t = 0; t < t_new; t++)
 					{
 						if(!smaxYReached)
 						{
-							//increase speed to smax
-							ay = (int)Math.signum(smaxY-sy);
-							sy = sy + ay;
-							if (sy == smaxY)
+							if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < t_new)
 							{
-								//did we reach smax?
-								smaxYReached = true;			
+								ay = 0;
+								skippedY += 1;
+							}
+							else
+							{
+								ay = (int)Math.signum(smaxReachedY-sy);
+							}
+							sy = sy + ay;
+							if (sy == smaxReachedY)
+							{
+								smaxYReached = true;
+								skippingY = true;
+								if (t == 0)
+								{
+									if (ay == 0)
+									{
+										skippedY += 1;
+									}
+									else
+									{
+										if (Math.signum(ay) == Math.signum(sy2-sy1))
+										{
+											skippedY += 2;
+											doNotAccelerateY -=1;
+											additionalPointsSkippedY += 1;
+										}
+									}
+									if (skippedY > doNotAccelerateY)
+									{
+										sy = sy - ay;
+										ay = (int)Math.signum(sy2 - sy1);
+										sy = sy + ay;
+										additionalSkippingY = true;
+										skippingY = false;
+									}
+								}			
 							}
 						}
 						else
 						{
-							//we reached smax
-							if (!holdForTwoTurnsY && !zyIsEven)
+							if (skippedY == doNotAccelerateY)
 							{
-								holdForTwoTurnsY = true;
+								skippingY = false;
+							}
+							if(skippingY)
+							{
+								skippedY += 1;
+								ay = 0;
 							}
 							else
 							{
-								//everything is already handled, now accelerate to sx2
-								ay = (int)Math.signum(sy2-sy);
-								sy = sy + ay;
+								if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+								{
+									additionalSkippedY += 1;
+									ay = 0;
+								}
+								else
+								{
+									ay = (int)Math.signum(sy2-sy);
+									sy = sy + ay;
+									additionalSkippingY = true;
+								}
 							}
 						}
 						if(!sminXReached)
 						{
-							//increase speed to smax
-							ax = (int)Math.signum(sminX-sx);
-							sx = sx + ax;
-							if (sx == sminX)
+							if (sx2 == sminReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < t_new)
 							{
-								//did we reach smax?
-								sminXReached = true;			
+								//special case: sx2 = smax and we also have to skip some turns in smax -> skip them from the left and not from the right
+								ax = 0;
+								skippedX += 1;
+							}
+							else
+							{
+								//increase speed to smax
+								ax = (int)Math.signum(sminReachedX-sx);
+							}
+							sx = sx + ax;
+							if (sx == sminReachedX)
+							{
+								sminXReached = true;
+								skippingX = true;
+								if (t == 0)
+								{
+									if (ax == 0)
+									{
+										skippedX += 1;
+									}
+									else
+									{
+										if (Math.signum(ax) == Math.signum(sx2-sx1))
+										{
+											skippedX += 2;
+											doNotAccelerateX -=1;
+											additionalPointsSkippedX += 1;
+										}
+									}
+									if (skippedX > doNotAccelerateX)
+									{
+										sx = sx - ax;
+										ax = (int)Math.signum(sx2 - sx1);
+										sx = sx + ax;
+										additionalSkippingX = true;
+										skippingX = false;
+									}
+								}
 							}
 						}
 						else
 						{
-							if (!holdForTwoTurnsX && sminXHoldForTwoTurns)
+							if (skippedX == doNotAccelerateX)
 							{
-								holdForTwoTurnsX = true;
+								skippingX = false;
+							}
+							if(skippingX)
+							{
+								skippedX += 1;
+								ax = 0;
 							}
 							else
 							{
-								ax = (int)Math.signum(sx2-sx);
-								sx = sx + ax;
-								additionalSkippingX = true;
+								if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+								{
+									additionalSkippedX += 1;
+									ax = 0;
+								}
+								else
+								{
+									ax = (int)Math.signum(sx2-sx);
+									sx = sx + ax;
+									additionalSkippingX = true;
+								}
 							}
 						}
 						int newX = x + sx;
 						int newY = y + sy;
-						/*for (LineSegment border : borders)
-						{
-							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-							{
-								return null;
-							}
-						}*/
-						x = newX;
-						y = newY;
-						speedsX[t] = sx;
-						speedsY[t] = sy;
-					}
-					int distanceX = Math.abs(x-x2);
-					int distanceY = Math.abs(y-y2);
-					int potentialSpeed = smaxY;
-					int directionToSy2= (int)Math.signum(sy2 - smaxY);
-					while (distanceY != 0)
-					{
-						int potentialTurn = -1;
-						for (int t = speedsY.length - 2; t > 0; t--)
-						{
-							if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
-							{
-								potentialTurn = t;
-								break;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1 && Math.abs(speedsY[0] + directionToSy2 - speedsY[1]) <= 1)
-							{
-								potentialTurn = 0;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
-							{
-								potentialTurn = speedsY.length -2;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							boolean allSpeedsTheSame = true;
-							for (int t = 0; t < speedsY.length; t++)
-							{
-								if (speedsY[t] != potentialSpeed)
-								{
-									allSpeedsTheSame = false;
-									break;
-								}
-							}
-							if (allSpeedsTheSame)
-							{
-								potentialTurn = speedsY.length - 2;
-							}
-						}
-						if (potentialTurn != -1)
-						{
-							speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
-							distanceY--;
-						}
-						else
-						{
-							potentialSpeed = potentialSpeed + directionToSy2;
-							if (Math.abs(potentialSpeed - sy2) > t_new)
-							{
-								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-								return null;
-							}
-						}
-					}
-					potentialSpeed = sminX;
-					int directionToSx2= (int)Math.signum(sx2 - sminX);
-					while (distanceX != 0)
-					{
-						int potentialTurn = -1;
-						for (int t = speedsX.length - 2; t > 0; t--)
-						{
-							if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
-							{
-								potentialTurn = t;
-								break;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1)
-							{
-								potentialTurn = 0;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
-							{
-								potentialTurn = speedsX.length -2;
-							}
-						}
-						if (potentialTurn == -1)
-						{
-							boolean allSpeedsTheSame = true;
-							for (int t = 0; t < speedsX.length; t++)
-							{
-								if (speedsX[t] != potentialSpeed)
-								{
-									allSpeedsTheSame = false;
-									break;
-								}
-							}
-							if (allSpeedsTheSame)
-							{
-								potentialTurn = speedsX.length - 2;
-							}
-						}
-						if (potentialTurn != -1)
-						{
-							speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
-							distanceX--;
-						}
-						else
-						{
-							potentialSpeed = potentialSpeed + directionToSx2;
-							if (Math.abs(potentialSpeed - sx2) > t_new)
-							{
-								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-								return null;
-							}
-						}
-					}
-					x = x1;
-					y = y1;
-					for (int t = 0; t < t_new; t++)
-					{
-						int newX = x + speedsX[t];
-						int newY = y + speedsY[t];
 						for (LineSegment border : borders)
 						{
 							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
@@ -2074,15 +1862,227 @@ public class AIUtils
 						}
 						x = newX;
 						y = newY;
-						if (t == 0)
-						{
-							accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
-						}
-						else
-						{
-							accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
-						}
+						accelerations.add(new Point2D(ax,ay));
 					}
+//					if (sx1 == sminX)
+//					{
+//						sminXReached = true;
+//					}
+//					if (sy1 == smaxY)
+//					{
+//						smaxYReached = true;
+//					}
+//					int speedsX[] = new int[t_new];
+//					int speedsY[] = new int[t_new];
+//					boolean holdForTwoTurnsX = false;
+//					boolean holdForTwoTurnsY = false;
+//					for (int t = 0; t < t_new; t++)
+//					{
+//						if(!smaxYReached)
+//						{
+//							//increase speed to smax
+//							ay = (int)Math.signum(smaxY-sy);
+//							sy = sy + ay;
+//							if (sy == smaxY)
+//							{
+//								//did we reach smax?
+//								smaxYReached = true;			
+//							}
+//						}
+//						else
+//						{
+//							//we reached smax
+//							if (!holdForTwoTurnsY && !zyIsEven)
+//							{
+//								holdForTwoTurnsY = true;
+//							}
+//							else
+//							{
+//								//everything is already handled, now accelerate to sx2
+//								ay = (int)Math.signum(sy2-sy);
+//								sy = sy + ay;
+//							}
+//						}
+//						if(!sminXReached)
+//						{
+//							//increase speed to smax
+//							ax = (int)Math.signum(sminX-sx);
+//							sx = sx + ax;
+//							if (sx == sminX)
+//							{
+//								//did we reach smax?
+//								sminXReached = true;			
+//							}
+//						}
+//						else
+//						{
+//							if (!holdForTwoTurnsX && sminXHoldForTwoTurns)
+//							{
+//								holdForTwoTurnsX = true;
+//							}
+//							else
+//							{
+//								ax = (int)Math.signum(sx2-sx);
+//								sx = sx + ax;
+//								additionalSkippingX = true;
+//							}
+//						}
+//						int newX = x + sx;
+//						int newY = y + sy;
+//						/*for (LineSegment border : borders)
+//						{
+//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//							{
+//								return null;
+//							}
+//						}*/
+//						x = newX;
+//						y = newY;
+//						speedsX[t] = sx;
+//						speedsY[t] = sy;
+//					}
+//					int distanceX = Math.abs(x-x2);
+//					int distanceY = Math.abs(y-y2);
+//					int potentialSpeed = smaxY;
+//					int directionToSy2= (int)Math.signum(sy2 - smaxY);
+//					while (distanceY != 0)
+//					{
+//						int potentialTurn = -1;
+//						for (int t = speedsY.length - 2; t > 0; t--)
+//						{
+//							if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
+//							{
+//								potentialTurn = t;
+//								break;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1 && Math.abs(speedsY[0] + directionToSy2 - speedsY[1]) <= 1)
+//							{
+//								potentialTurn = 0;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
+//							{
+//								potentialTurn = speedsY.length -2;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							boolean allSpeedsTheSame = true;
+//							for (int t = 0; t < speedsY.length; t++)
+//							{
+//								if (speedsY[t] != potentialSpeed)
+//								{
+//									allSpeedsTheSame = false;
+//									break;
+//								}
+//							}
+//							if (allSpeedsTheSame)
+//							{
+//								potentialTurn = speedsY.length - 2;
+//							}
+//						}
+//						if (potentialTurn != -1)
+//						{
+//							speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
+//							distanceY--;
+//						}
+//						else
+//						{
+//							potentialSpeed = potentialSpeed + directionToSy2;
+//							if (Math.abs(potentialSpeed - sy2) > t_new)
+//							{
+//								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//								return null;
+//							}
+//						}
+//					}
+//					potentialSpeed = sminX;
+//					int directionToSx2= (int)Math.signum(sx2 - sminX);
+//					while (distanceX != 0)
+//					{
+//						int potentialTurn = -1;
+//						for (int t = speedsX.length - 2; t > 0; t--)
+//						{
+//							if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
+//							{
+//								potentialTurn = t;
+//								break;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1)
+//							{
+//								potentialTurn = 0;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
+//							{
+//								potentialTurn = speedsX.length -2;
+//							}
+//						}
+//						if (potentialTurn == -1)
+//						{
+//							boolean allSpeedsTheSame = true;
+//							for (int t = 0; t < speedsX.length; t++)
+//							{
+//								if (speedsX[t] != potentialSpeed)
+//								{
+//									allSpeedsTheSame = false;
+//									break;
+//								}
+//							}
+//							if (allSpeedsTheSame)
+//							{
+//								potentialTurn = speedsX.length - 2;
+//							}
+//						}
+//						if (potentialTurn != -1)
+//						{
+//							speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
+//							distanceX--;
+//						}
+//						else
+//						{
+//							potentialSpeed = potentialSpeed + directionToSx2;
+//							if (Math.abs(potentialSpeed - sx2) > t_new)
+//							{
+//								System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//								return null;
+//							}
+//						}
+//					}
+//					x = x1;
+//					y = y1;
+//					for (int t = 0; t < t_new; t++)
+//					{
+//						int newX = x + speedsX[t];
+//						int newY = y + speedsY[t];
+//						for (LineSegment border : borders)
+//						{
+//							if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//							{
+//								return null;
+//							}
+//						}
+//						x = newX;
+//						y = newY;
+//						if (t == 0)
+//						{
+//							accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
+//						}
+//						else
+//						{
+//							accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
+//						}
+//					}
 				}
 			}
 			else
@@ -2156,360 +2156,146 @@ public class AIUtils
 				int y = y1;
 				int ax = 0;
 				int ay = 0;
-//				for (int t = 0; t < ty; t++)
-//				{
-//					if(!smaxYReached)
-//					{
-//						if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
-//						{
-//							ay = 0;
-//							skippedY += 1;
-//						}
-//						else
-//						{
-//							ay = (int)Math.signum(smaxReachedY-sy);
-//						}
-//						sy = sy + ay;
-//						if (sy == smaxReachedY)
-//						{
-//							smaxYReached = true;
-//							skippingY = true;
-//							if (t == 0)
-//							{
-//								if (ay == 0)
-//								{
-//									skippedY += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ay) == Math.signum(sy2-sy1))
-//									{
-//										skippedY += 2;
-//										doNotAccelerateY -=1;
-//										additionalPointsSkippedY += 1;
-//									}
-//								}
-//								if (skippedY > doNotAccelerateY)
-//								{
-//									sy = sy - ay;
-//									ay = (int)Math.signum(sy2 - sy1);
-//									sy = sy + ay;
-//									additionalSkippingY = true;
-//									skippingY = false;
-//								}
-//							}			
-//						}
-//					}
-//					else
-//					{
-//						if (skippedY == doNotAccelerateY)
-//						{
-//							skippingY = false;
-//						}
-//						if(skippingY)
-//						{
-//							skippedY += 1;
-//							ay = 0;
-//						}
-//						else
-//						{
-//							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
-//							{
-//								additionalSkippedY += 1;
-//								ay = 0;
-//							}
-//							else
-//							{
-//								ay = (int)Math.signum(sy2-sy);
-//								sy = sy + ay;
-//								additionalSkippingY = true;
-//							}
-//						}
-//					}
-//					if(!smaxXReached)
-//					{
-//						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
-//						{
-//							ax = 0;
-//							skippedX += 1;
-//						}
-//						else
-//						{
-//							ax = (int)Math.signum(smaxReachedX-sx);
-//						}
-//						sx = sx + ax;
-//						if (sx == smaxReachedX)
-//						{
-//							smaxXReached = true;
-//							skippingX = true;
-//							if (t == 0)
-//							{
-//								if (ax == 0)
-//								{
-//									skippedX += 1;
-//								}
-//								else
-//								{
-//									if (Math.signum(ax) == Math.signum(sx2-sx1))
-//									{
-//										skippedX += 2;
-//										doNotAccelerateX -=1;
-//										additionalPointsSkippedX += 1;
-//									}
-//								}
-//								if (skippedX > doNotAccelerateX)
-//								{
-//									sx = sx - ax;
-//									ax = (int)Math.signum(sx2 - sx1);
-//									sx = sx + ax;
-//									additionalSkippingX = true;
-//									skippingX = false;
-//								}
-//							}
-//						}
-//					}
-//					else
-//					{
-//						if (skippedX == doNotAccelerateX)
-//						{
-//							skippingX = false;
-//						}
-//						if(skippingX)
-//						{
-//							skippedX += 1;
-//							ax = 0;
-//						}
-//						else
-//						{
-//							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
-//							{
-//								additionalSkippedX += 1;
-//								ax = 0;
-//							}
-//							else
-//							{
-//								ax = (int)Math.signum(sx2-sx);
-//								sx = sx + ax;
-//								additionalSkippingX = true;
-//							}
-//						}
-//					}
-//					int newX = x + sx;
-//					int newY = y + sy;
-//					for (LineSegment border : borders)
-//					{
-//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-//						{
-//							return null;
-//						}
-//					}
-//					x = newX;
-//					y = newY;
-//					accelerations.add(new Point2D(ax,ay));
-//				}
-				if (sy1 == smaxY)
-				{
-					smaxXReached = true;
-				}
-				if (sx1 == smaxX)
-				{
-					smaxXReached = true;
-				}
-				int speedsX[] = new int[ty];
-				int speedsY[] = new int[ty];
-				boolean holdForTwoTurnsX = false;
-				boolean holdForTwoTurnsY = false;
 				for (int t = 0; t < ty; t++)
 				{
-					if(!smaxXReached)
-					{
-						//increase speed to smax
-						ax = (int)Math.signum(smaxX-sx);
-						sx = sx + ax;
-						if (sx == smaxX)
-						{
-							//did we reach smax?
-							smaxXReached = true;			
-						}
-					}
-					else
-					{
-						//we reached smax
-						if (!holdForTwoTurnsX && !zxIsEven)
-						{
-							holdForTwoTurnsX = true;
-						}
-						else
-						{
-							//everything is already handled, now accelerate to sx2
-							ax = (int)Math.signum(sx2-sx);
-							sx = sx + ax;
-						}
-					}
 					if(!smaxYReached)
 					{
-						//increase speed to smax
-						ay = (int)Math.signum(smaxY-sy);
-						sy = sy + ay;
-						if (sy == smaxY)
+						if (sy2 == smaxReachedY && (int)Math.abs(sy - sy2) == 1 && t+1+doNotAccelerateY < ty)
 						{
-							//did we reach smax?
-							smaxYReached = true;			
+							ay = 0;
+							skippedY += 1;
+						}
+						else
+						{
+							ay = (int)Math.signum(smaxReachedY-sy);
+						}
+						sy = sy + ay;
+						if (sy == smaxReachedY)
+						{
+							smaxYReached = true;
+							skippingY = true;
+							if (t == 0)
+							{
+								if (ay == 0)
+								{
+									skippedY += 1;
+								}
+								else
+								{
+									if (Math.signum(ay) == Math.signum(sy2-sy1))
+									{
+										skippedY += 2;
+										doNotAccelerateY -=1;
+										additionalPointsSkippedY += 1;
+									}
+								}
+								if (skippedY > doNotAccelerateY)
+								{
+									sy = sy - ay;
+									ay = (int)Math.signum(sy2 - sy1);
+									sy = sy + ay;
+									additionalSkippingY = true;
+									skippingY = false;
+								}
+							}			
 						}
 					}
 					else
 					{
-						//we reached smax
-						if (!holdForTwoTurnsY && !zyIsEven)
+						if (skippedY == doNotAccelerateY)
 						{
-							holdForTwoTurnsY = true;
+							skippingY = false;
+						}
+						if(skippingY)
+						{
+							skippedY += 1;
+							ay = 0;
 						}
 						else
 						{
-							//everything is already handled, now accelerate to sx2
-							ay = (int)Math.signum(sy2-sy);
-							sy = sy + ay;
+							if (additionalSkippingY && (additionalSkippedY < additionalPointsSkippedY))
+							{
+								additionalSkippedY += 1;
+								ay = 0;
+							}
+							else
+							{
+								ay = (int)Math.signum(sy2-sy);
+								sy = sy + ay;
+								additionalSkippingY = true;
+							}
+						}
+					}
+					if(!smaxXReached)
+					{
+						if (sx2 == smaxReachedX && (int)Math.abs(sx - sx2) == 1 && t+1+doNotAccelerateX < tx)
+						{
+							ax = 0;
+							skippedX += 1;
+						}
+						else
+						{
+							ax = (int)Math.signum(smaxReachedX-sx);
+						}
+						sx = sx + ax;
+						if (sx == smaxReachedX)
+						{
+							smaxXReached = true;
+							skippingX = true;
+							if (t == 0)
+							{
+								if (ax == 0)
+								{
+									skippedX += 1;
+								}
+								else
+								{
+									if (Math.signum(ax) == Math.signum(sx2-sx1))
+									{
+										skippedX += 2;
+										doNotAccelerateX -=1;
+										additionalPointsSkippedX += 1;
+									}
+								}
+								if (skippedX > doNotAccelerateX)
+								{
+									sx = sx - ax;
+									ax = (int)Math.signum(sx2 - sx1);
+									sx = sx + ax;
+									additionalSkippingX = true;
+									skippingX = false;
+								}
+							}
+						}
+					}
+					else
+					{
+						if (skippedX == doNotAccelerateX)
+						{
+							skippingX = false;
+						}
+						if(skippingX)
+						{
+							skippedX += 1;
+							ax = 0;
+						}
+						else
+						{
+							if (additionalSkippingX && (additionalSkippedX < additionalPointsSkippedX))
+							{
+								additionalSkippedX += 1;
+								ax = 0;
+							}
+							else
+							{
+								ax = (int)Math.signum(sx2-sx);
+								sx = sx + ax;
+								additionalSkippingX = true;
+							}
 						}
 					}
 					int newX = x + sx;
 					int newY = y + sy;
-					/*for (LineSegment border : borders)
-					{
-						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
-						{
-							return null;
-						}
-					}*/
-					x = newX;
-					y = newY;
-					speedsX[t] = sx;
-					speedsY[t] = sy;
-				}
-				int distanceX = Math.abs(x-x2);
-				int distanceY = Math.abs(y-y2);
-				int potentialSpeed = smaxX;
-				int directionToSx2= (int)Math.signum(sx2 - smaxX);
-				while (distanceX != 0)
-				{
-					int potentialTurn = -1;
-					for (int t = speedsX.length - 2; t > 0; t--)
-					{
-						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
-						{
-							potentialTurn = speedsX.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsX.length; t++)
-						{
-							if (speedsX[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsX.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
-						distanceX--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSx2;
-						if (Math.abs(potentialSpeed - sx2) > tx)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				potentialSpeed = smaxY;
-				int directionToSy2= (int)Math.signum(sy2 - smaxY);
-				while (distanceY != 0)
-				{
-					int potentialTurn = -1;
-					
-					for (int t = speedsY.length - 2; t > 0; t--)
-					{
-						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
-						{
-							potentialTurn = t;
-							break;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
-						{
-							potentialTurn = 0;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
-						{
-							potentialTurn = speedsY.length -2;
-						}
-					}
-					if (potentialTurn == -1)
-					{
-						boolean allSpeedsTheSame = true;
-						for (int t = 0; t < speedsY.length; t++)
-						{
-							if (speedsY[t] != potentialSpeed)
-							{
-								allSpeedsTheSame = false;
-								break;
-							}
-						}
-						if (allSpeedsTheSame)
-						{
-							potentialTurn = speedsY.length - 2;
-						}
-					}
-					if (potentialTurn != -1)
-					{
-						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
-						distanceY--;
-					}
-					else
-					{
-						potentialSpeed = potentialSpeed + directionToSy2;
-						if (Math.abs(potentialSpeed - sy2) > tx)
-						{
-							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
-							return null;
-						}
-					}
-				}
-				x = x1;
-				y = y1;
-				for (int t = 0; t < ty; t++)
-				{
-					int newX = x + speedsX[t];
-					int newY = y + speedsY[t];
 					for (LineSegment border : borders)
 					{
 						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
@@ -2519,15 +2305,229 @@ public class AIUtils
 					}
 					x = newX;
 					y = newY;
-					if (t == 0)
-					{
-						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
-					}
-					else
-					{
-						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
-					}
+					accelerations.add(new Point2D(ax,ay));
 				}
+//				if (sy1 == smaxY)
+//				{
+//					smaxXReached = true;
+//				}
+//				if (sx1 == smaxX)
+//				{
+//					smaxXReached = true;
+//				}
+//				int speedsX[] = new int[ty];
+//				int speedsY[] = new int[ty];
+//				boolean holdForTwoTurnsX = false;
+//				boolean holdForTwoTurnsY = false;
+//				for (int t = 0; t < ty; t++)
+//				{
+//					if(!smaxXReached)
+//					{
+//						//increase speed to smax
+//						ax = (int)Math.signum(smaxX-sx);
+//						sx = sx + ax;
+//						if (sx == smaxX)
+//						{
+//							//did we reach smax?
+//							smaxXReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						//we reached smax
+//						if (!holdForTwoTurnsX && !zxIsEven)
+//						{
+//							holdForTwoTurnsX = true;
+//						}
+//						else
+//						{
+//							//everything is already handled, now accelerate to sx2
+//							ax = (int)Math.signum(sx2-sx);
+//							sx = sx + ax;
+//						}
+//					}
+//					if(!smaxYReached)
+//					{
+//						//increase speed to smax
+//						ay = (int)Math.signum(smaxY-sy);
+//						sy = sy + ay;
+//						if (sy == smaxY)
+//						{
+//							//did we reach smax?
+//							smaxYReached = true;			
+//						}
+//					}
+//					else
+//					{
+//						//we reached smax
+//						if (!holdForTwoTurnsY && !zyIsEven)
+//						{
+//							holdForTwoTurnsY = true;
+//						}
+//						else
+//						{
+//							//everything is already handled, now accelerate to sx2
+//							ay = (int)Math.signum(sy2-sy);
+//							sy = sy + ay;
+//						}
+//					}
+//					int newX = x + sx;
+//					int newY = y + sy;
+//					/*for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}*/
+//					x = newX;
+//					y = newY;
+//					speedsX[t] = sx;
+//					speedsY[t] = sy;
+//				}
+//				int distanceX = Math.abs(x-x2);
+//				int distanceY = Math.abs(y-y2);
+//				int potentialSpeed = smaxX;
+//				int directionToSx2= (int)Math.signum(sx2 - smaxX);
+//				while (distanceX != 0)
+//				{
+//					int potentialTurn = -1;
+//					for (int t = speedsX.length - 2; t > 0; t--)
+//					{
+//						if (speedsX[t] == potentialSpeed && ((speedsX[t + 1] == potentialSpeed + directionToSx2 && speedsX[t - 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed) || (speedsX[t - 1] == potentialSpeed + directionToSx2 && speedsX[t + 1] == potentialSpeed  + directionToSx2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[0] == potentialSpeed && Math.abs(speedsX[0] + directionToSx2 - sx1) <= 1 && Math.abs(speedsX[0] + directionToSx2 - speedsX[1]) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsX[speedsX.length -2] == potentialSpeed && speedsX[speedsX.length -3] == potentialSpeed && speedsX[speedsX.length -1] == potentialSpeed + directionToSx2)
+//						{
+//							potentialTurn = speedsX.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsX.length; t++)
+//						{
+//							if (speedsX[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsX.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsX[potentialTurn] = speedsX[potentialTurn] + directionToSx2;
+//						distanceX--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSx2;
+//						if (Math.abs(potentialSpeed - sx2) > tx)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				potentialSpeed = smaxY;
+//				int directionToSy2= (int)Math.signum(sy2 - smaxY);
+//				while (distanceY != 0)
+//				{
+//					int potentialTurn = -1;
+//					
+//					for (int t = speedsY.length - 2; t > 0; t--)
+//					{
+//						if (speedsY[t] == potentialSpeed && ((speedsY[t + 1] == potentialSpeed + directionToSy2 && speedsY[t - 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed) || (speedsY[t - 1] == potentialSpeed + directionToSy2 && speedsY[t + 1] == potentialSpeed  + directionToSy2)))
+//						{
+//							potentialTurn = t;
+//							break;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[0] == potentialSpeed && Math.abs(speedsY[0] + directionToSy2 - sy1) <= 1)
+//						{
+//							potentialTurn = 0;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						if (speedsY[speedsY.length -2] == potentialSpeed && speedsY[speedsY.length -3] == potentialSpeed && speedsY[speedsY.length -1] == potentialSpeed + directionToSy2)
+//						{
+//							potentialTurn = speedsY.length -2;
+//						}
+//					}
+//					if (potentialTurn == -1)
+//					{
+//						boolean allSpeedsTheSame = true;
+//						for (int t = 0; t < speedsY.length; t++)
+//						{
+//							if (speedsY[t] != potentialSpeed)
+//							{
+//								allSpeedsTheSame = false;
+//								break;
+//							}
+//						}
+//						if (allSpeedsTheSame)
+//						{
+//							potentialTurn = speedsY.length - 2;
+//						}
+//					}
+//					if (potentialTurn != -1)
+//					{
+//						speedsY[potentialTurn] = speedsY[potentialTurn] + directionToSy2;
+//						distanceY--;
+//					}
+//					else
+//					{
+//						potentialSpeed = potentialSpeed + directionToSy2;
+//						if (Math.abs(potentialSpeed - sy2) > tx)
+//						{
+//							System.out.println(String.format("Overflow while computing (%d,%d,%d,%d) -> (%d,%d,%d,%d)", (int)startPosition.getX(),(int)startPosition.getY(),(int)startSpeed.getX(),(int)startSpeed.getY(),(int)endPosition.getX(),(int)endPosition.getY(),(int)endSpeed.getX(),(int)endSpeed.getY()));
+//							return null;
+//						}
+//					}
+//				}
+//				x = x1;
+//				y = y1;
+//				for (int t = 0; t < ty; t++)
+//				{
+//					int newX = x + speedsX[t];
+//					int newY = y + speedsY[t];
+//					for (LineSegment border : borders)
+//					{
+//						if (border.IntersectWith(new LineSegment(new Point(x,y), new Point(newX,newY))))
+//						{
+//							return null;
+//						}
+//					}
+//					x = newX;
+//					y = newY;
+//					if (t == 0)
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-sx1,speedsY[t]-sy1));
+//					}
+//					else
+//					{
+//						accelerations.add(new Point2D(speedsX[t]-speedsX[t-1],speedsY[t]-speedsY[t-1]));
+//					}
+//				}
 			}
 		}
 		return accelerations;
