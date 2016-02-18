@@ -10,19 +10,16 @@ import src.main.java.logic.utils.AIUtils.Direction;
 
 public class BipartiteStartCalculator
 {
-	private LandingRegion mEndLR;
-
+	private AtomicReference<LandingRegion> mEndLR;
 	private LandingPoint mStartLandingPoint;
-	private ArrayList<LandingPoint> mEndLRVertex;
-	private boolean [][] mEntireGrid;
 	
-	private LandingPoint mAreaStartLandingPoint;
-	private ArrayList<LandingPoint> mAreaEndLRVertex;	
-	private boolean [][] mAreaGrid;
+	//private boolean [][] mEntireGrid;	
+	//private LandingPoint mAreaStartLandingPoint;
+	//private boolean [][] mAreaGrid;
+	//private boolean [][] mTransformedAreaGrid;
 	
 	private LandingPoint mTransformedStartLandingPoint;
 	private ArrayList<LandingPoint> mTransformedEndLRVertex;	
-	private boolean [][] mTransformedAreaGrid;
 	
 	private int [] mWeights;
 	
@@ -40,22 +37,17 @@ public class BipartiteStartCalculator
 	private Point2D mEndAreaOfPath;
 	
     public BipartiteStartCalculator( 	Point2D startPoint, 
-            							LandingRegion endLR, 
-            							Direction main, 
-            							Direction out, 
-                                        int w,
-                                        //ArrayList<LineSegment> borders,
-                                        boolean [][] entireGrid )
+    									AtomicReference<LandingRegion> endLR/*, 
+                                        boolean [][] entireGrid*/ )
     {
     	mEndLR=endLR;
-    	mMain=main; 
-    	mOut=out; 
-        mW=w;
+    	mMain=endLR.get().getOldDirection(); 
+    	mOut=endLR.get().getNewDirection(); 
+        mW=endLR.get().getW();
     	//mBorders=borders;
-    	mEntireGrid=entireGrid;
+    	//mEntireGrid=entireGrid;
 
     	mStartLandingPoint=new LandingPoint( startPoint, new Point2D( 0, 0 ) ); 
-    	mEndLRVertex=   mEndLR.getLandingPoints();
     	
     	calcAreaFlippingRotationUturn();
     	createGridTransform();
@@ -64,62 +56,64 @@ public class BipartiteStartCalculator
 
     private void createGridTransform()
     {
-    	mAreaEndLRVertex=new ArrayList<LandingPoint>();	
+    	ArrayList<LandingPoint> areaEndLRVertex=new ArrayList<LandingPoint>();
+    	LandingPoint areaStartLandingPoint=null;
 
     	int grid_width=(int)( mEndAreaOfPath.getX()-mStartAreaOfPath.getX()+1 );
     	int grid_height=(int)( mEndAreaOfPath.getY()-mStartAreaOfPath.getY()+1 );
     	
-    	mAreaGrid=new boolean[grid_width][grid_height];
+    	//mAreaGrid=new boolean[grid_width][grid_height];
     	for( int ii=0, i=(int)mStartAreaOfPath.getX() ; i<mEndAreaOfPath.getX()+1 ; i++, ii++ )
     	{
     		for( int jj=0, j=(int)mStartAreaOfPath.getY() ; j<mEndAreaOfPath.getY()+1 ; j++, jj++ )
         	{
-    			mAreaGrid[ii][jj]=mEntireGrid[i][j];
+    			//mAreaGrid[ii][jj]=mEntireGrid[i][j];
             	Point2D p=new Point2D( i, j ); 
         		if( mStartLandingPoint.isAtPosition( p ) )
         		{
-        			mAreaStartLandingPoint = new LandingPoint( p, mStartLandingPoint.getSpeed() );
+        			areaStartLandingPoint = new LandingPoint( p, mStartLandingPoint.getSpeed() );
         		}
     			
-    			for( int k=0 ; k<mEndLRVertex.size() ; k++ )
-            	{//Search all 'wrong' vertex and remove them
-            		if( mEndLRVertex.get( k ).isAtPosition( p ) )
+    			for( int k=0 ; k<mEndLR.get().getLandingPoints().get().size() ; k++ )
+            	{
+            		if( mEndLR.get().getLandingPoints().get().get( k ).isAtPosition( p ) )
             		{
-            			mAreaEndLRVertex.add( new LandingPoint( p, mEndLRVertex.get( k ).getSpeed() ) );            			
+            			areaEndLRVertex.add( new LandingPoint( p, mEndLR.get().getLandingPoints().get().get( k ).getSpeed() ) );            			
             		}
             	}
         	}	
     	}
-    	boolean[][] tmpGrid=mAreaGrid;
+    	// boolean[][] tmpGrid=mAreaGrid;
     	ArrayList<LandingPoint> tmpStartList=new ArrayList<LandingPoint>();
-    	tmpStartList.add( mAreaStartLandingPoint );
-    	ArrayList<LandingPoint> tmpEndList=mAreaEndLRVertex;
+    	tmpStartList.add( areaStartLandingPoint );
+    	ArrayList<LandingPoint> tmpEndList=areaEndLRVertex;
     	// FlipX
     	if( mFlipArroundXAxis )
     	{
-    		tmpGrid=flipX( tmpGrid, grid_width, grid_height );
+    		// tmpGrid=flipX( tmpGrid, grid_width, grid_height );
 			tmpStartList=flipXVertex( tmpStartList, grid_width, grid_height );
 			tmpEndList=flipXVertex( tmpEndList, grid_width, grid_height );
     	}
     	// FlipY
     	if( mFlipArroundYAxis )
     	{
-    		tmpGrid=flipY( tmpGrid, grid_width, grid_height );
+    		// tmpGrid=flipY( tmpGrid, grid_width, grid_height );
 			tmpStartList=flipYVertex( tmpStartList, grid_width, grid_height );
 			tmpEndList=flipYVertex( tmpEndList, grid_width, grid_height );
     	}
     	// Rot
     	if( mRotate90DegreeClockwise )
     	{
-    		tmpGrid=rotate90DegreeClockwise( tmpGrid, grid_width, grid_height );
+    		// tmpGrid=rotate90DegreeClockwise( tmpGrid, grid_width, grid_height );
 			tmpStartList=rotate90DegreeClockwiseVertex( tmpStartList, grid_width, grid_height );
 			tmpEndList=rotate90DegreeClockwiseVertex( tmpEndList, grid_width, grid_height );
     	}
-    	mTransformedAreaGrid=tmpGrid;
+    	// mTransformedAreaGrid=tmpGrid;
     	mTransformedStartLandingPoint=tmpStartList.get( 0 );
     	mTransformedEndLRVertex=tmpEndList;
     }
 
+    /*
     private boolean[][] flipX( boolean[][] grid, int grid_width, int grid_height )
     {
     	boolean[][] flippedX = new boolean[grid_width][grid_height];
@@ -158,7 +152,7 @@ public class BipartiteStartCalculator
     	}
     	return rot;
     }
-    
+    */
     private ArrayList<LandingPoint> flipXVertex( ArrayList<LandingPoint> inList, int grid_width, int grid_height )
     {
     	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
@@ -218,8 +212,8 @@ public class BipartiteStartCalculator
 				//    |
 				//    |
 				//
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mStartLandingPoint.getPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mEndLR.getAreaEndPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mStartLandingPoint.getPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaEndPosition().getY()+1 );
 				mFlipArroundXAxis=false;
 				mFlipArroundYAxis=false;
 				mRotate90DegreeClockwise=false;
@@ -232,8 +226,8 @@ public class BipartiteStartCalculator
 				//       |
 				//       |
 				//
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mStartLandingPoint.getPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mEndLR.getAreaStartPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mStartLandingPoint.getPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 				mFlipArroundXAxis=true;
 				mFlipArroundYAxis=false;
 				mRotate90DegreeClockwise=false;
@@ -249,8 +243,8 @@ public class BipartiteStartCalculator
 				//    v
 				//     -->
 				//	
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mStartLandingPoint.getPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mStartLandingPoint.getPosition().getY()+1 );
 				mFlipArroundXAxis=false;
 				mFlipArroundYAxis=true;
 				mRotate90DegreeClockwise=false;
@@ -263,8 +257,8 @@ public class BipartiteStartCalculator
 				//    v
 				// <--
 				//
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mStartLandingPoint.getPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mStartLandingPoint.getPosition().getY()+1 );
 				mFlipArroundXAxis=true;
 				mFlipArroundYAxis=true;
 				mRotate90DegreeClockwise=false;
@@ -279,8 +273,8 @@ public class BipartiteStartCalculator
 				//         |
 				//     --->
 				//	
-				mStartAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mEndLR.getAreaStartPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 				mFlipArroundXAxis=false;
 				mFlipArroundYAxis=true;
 				mRotate90DegreeClockwise=true;					
@@ -292,8 +286,8 @@ public class BipartiteStartCalculator
 				//         |
 				//         v
 				//	
-				mStartAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mEndLR.getAreaEndPosition().getX()+1, mEndLR.getAreaStartPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 				mFlipArroundXAxis=true;
 				mFlipArroundYAxis=true;
 				mRotate90DegreeClockwise=true;					
@@ -308,8 +302,8 @@ public class BipartiteStartCalculator
 				//    |
 				//     <---
 				//	
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()+1, mEndLR.getAreaStartPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 				mFlipArroundXAxis=false;
 				mFlipArroundYAxis=false;
 				mRotate90DegreeClockwise=true;					
@@ -321,8 +315,8 @@ public class BipartiteStartCalculator
 				//    |
 				//    v
 				//	
-				mStartAreaOfPath=new Point2D( mEndLR.getAreaStartPosition().getX()-1, mEndLR.getAreaEndPosition().getY()-1 );
-				mEndAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()+1, mEndLR.getAreaStartPosition().getY()+1 );
+				mStartAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()-1, mEndLR.get().getAreaEndPosition().getY()-1 );
+				mEndAreaOfPath=new Point2D( mStartLandingPoint.getPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 				mFlipArroundXAxis=true;
 				mFlipArroundYAxis=false;
 				mRotate90DegreeClockwise=true;					
@@ -334,20 +328,17 @@ public class BipartiteStartCalculator
 
 	private void calcWeights()
 	{
-		mWeights= new int [mTransformedEndLRVertex.size()];
-		for( int j=0 ; j<mTransformedEndLRVertex.size() ; j++ )
+		AtomicReference<ArrayList<LandingPoint> > allEndLandingPoints=mEndLR.get().getLandingPoints();
+		mWeights= new int [allEndLandingPoints.get().size()];
+		for( int j=0 ; j<allEndLandingPoints.get().size() ; j++ )
 		{
+			System.out.println( "  from:" + this.mTransformedStartLandingPoint + "; to:" + mEndLR.get().getLandingPoints().get().get( j ) + "." );
 			mWeights[j]=calcWeight( this.mTransformedStartLandingPoint, mTransformedEndLRVertex.get( j ) );
-			mTransformedEndLRVertex.get( j ).setDistance( mWeights[j] );
-			mTransformedEndLRVertex.get( j ).setPredecessor( mTransformedStartLandingPoint );
+			allEndLandingPoints.get().get( j ).setDistance( mWeights[j] );
+			allEndLandingPoints.get().get( j ).setPredecessor( mStartLandingPoint );
 		}
 	}
-	
-	public ArrayList<LandingPoint> getDistancePredecessorInformation()
-	{
-		return mTransformedEndLRVertex;
-	}
-	
+		
 	public int calcWeight( LandingPoint from, LandingPoint to )
 	{
 		ArrayList<Integer> xSpeeds;
@@ -402,6 +393,14 @@ public class BipartiteStartCalculator
 				continue;
 			break;
 		}
+		int Csx=(int)( ( from.getSpeed().getX()+1 )*from.getSpeed().getX()+( to.getSpeed().getX()+1 )*to.getSpeed().getX() )/2;
+		int Csy=(int)( ( from.getSpeed().getY()+1 )*from.getSpeed().getY()+( to.getSpeed().getY()+1 )*to.getSpeed().getY() )/2;
+		int s_max_x=(int)( Math.sqrt( dx+Csx+0.25 )-0.5 );
+		int s_max_y=(int)( Math.sqrt( dy+Csy+0.25 )-0.5 );
+		int t_f_x=(int)( 2*s_max_x-from.getSpeed().getX()-to.getSpeed().getX() );
+		int t_f_y=(int)( 2*s_max_y-from.getSpeed().getY()-to.getSpeed().getY() );
+		int t_f=Math.max( t_f_x, t_f_y );
+		System.out.println( "Real t:" + t + "; Formula t:" + t_f + "." );
 		return t;
 	}
 
@@ -414,17 +413,17 @@ public class BipartiteStartCalculator
 		int n_to=to-t;
 		int m_to=1;
 		// x is the point of intersection
-		int x=to-t-from;
+		double xx=((double)(n_to-n_f))/(m_f-m_to);
 		// incase we have two minimas, these are the two points of "intersection"
 		int x1=0,x2=0;
-		boolean twoMinima=( x%2==1 );
+		boolean twoMinima=( ( xx-Math.floor( xx ) )>=0.1 );
 		ArrayList<Integer> ret=new ArrayList<Integer>();
 		int integral=0;
 		int tmpVal=0;
 		if( twoMinima )
 		{
-			x1=( x-1 )/2;
-			x2=( x+1 )/2;
+			x1=(int)(xx-0.5);
+			x2=(int)(xx+0.5);
 
 			ret.add( from );
 			for( int i=1 ; i<=x1 ; i++ )
@@ -443,7 +442,7 @@ public class BipartiteStartCalculator
 		}
 		else
 		{
-			x/=2;
+			int x=(int)xx;
 			ret.add( from );
 			for( int i=1 ; i<=x ; i++ )
 			{
@@ -512,59 +511,183 @@ public class BipartiteStartCalculator
 		return false;		
 	}
 
+	private ArrayList<Integer> calculateAccelations( ArrayList<Integer> speeds )
+	{
+		ArrayList<Integer> ret=new ArrayList<Integer>();
+		for( int i=0 ; i<speeds.size()-1; i++ )
+		{
+			ret.add( speeds.get( i+1 )-speeds.get( i ) );
+		}
+		return ret;
+	}
+	
 	private ArrayList<Integer> fill( ArrayList<Integer> speeds )
 	{
 		boolean successfulFilledOne=false;
-		ArrayList<Integer> differences=new ArrayList<Integer>();
-		for( int i=0 ; i<speeds.size()-1; i++ )
-		{
-			differences.add( speeds.get( i+1 )-speeds.get( i ) );
-		}
+		ArrayList<Integer> accelerations=calculateAccelations( speeds );
+
 		// Search -1, 1
-		for( int i=0 ; i<differences.size()-1 && !successfulFilledOne ; i++ )
+		for( int i=0 ; i<accelerations.size()-1 && !successfulFilledOne ; i++ )
 		{
-			if( -1==differences.get( i ) && 1==differences.get( i+1 ) )
+			if( -1==accelerations.get( i ) && 1==accelerations.get( i+1 ) )
 			{
-				differences.set( i, 0 );
-				differences.set( i+1, 0 );
+				accelerations.set( i, 0 );
+				accelerations.set( i+1, 0 );
 				successfulFilledOne=true;
 			}
 		}
 		// Search -1, 0
-		for( int i=0 ; i<differences.size()-1 && !successfulFilledOne; i++ )
+		for( int i=0 ; i<accelerations.size()-1 && !successfulFilledOne; i++ )
 		{
-			if( -1==differences.get( i ) && 0==differences.get( i+1 ) )
+			if( -1==accelerations.get( i ) && 0==accelerations.get( i+1 ) )
 			{
-				differences.set( i, 0 );
-				differences.set( i+1, -1 );
+				accelerations.set( i, 0 );
+				accelerations.set( i+1, -1 );
 				successfulFilledOne=true;
 			}
 		}
 		// Search 0, 1
-		for( int i=0 ; i<differences.size()-1 && !successfulFilledOne; i++ )
+		for( int i=0 ; i<accelerations.size()-1 && !successfulFilledOne; i++ )
 		{
-			if( 0==differences.get( i ) && 1==differences.get( i+1 ) )
+			if( 0==accelerations.get( i ) && 1==accelerations.get( i+1 ) )
 			{
-				differences.set( i, 1 );
-				differences.set( i+1, 0 );
+				accelerations.set( i, 1 );
+				accelerations.set( i+1, 0 );
 				successfulFilledOne=true;
 			}
 		}
 		// Search 0, 0
-		for( int i=0 ; i<differences.size()-1 && !successfulFilledOne; i++ )
+		for( int i=0 ; i<accelerations.size()-1 && !successfulFilledOne; i++ )
 		{
-			if( 0==differences.get( i ) && 1==differences.get( i+1 ) )
+			if( 0==accelerations.get( i ) && 1==accelerations.get( i+1 ) )
 			{
-				differences.set( i, 1 );
-				differences.set( i+1, -1 );
+				accelerations.set( i, 1 );
+				accelerations.set( i+1, -1 );
 				successfulFilledOne=true;
 			}
 		}
 		ArrayList<Integer> ret=new ArrayList<Integer>();
 		ret.add( speeds.get( 0 ) );
-		for( int i=0 ; i<differences.size(); i++ )
+		for( int i=0 ; i<accelerations.size(); i++ )
 		{
-			ret.add( ret.get( i )+differences.get( i ) );
+			ret.add( ret.get( i )+accelerations.get( i ) );
+		}
+		return ret;
+	}
+
+	public ArrayList<Point2D> getPath( LandingPoint from, LandingPoint to )
+	{
+		ArrayList<Point2D> ret=new ArrayList<Point2D>();
+		ArrayList<Integer> xSpeeds;
+		ArrayList<Integer> ySpeeds;
+		int t=(int)Math.max( Math.abs( to.getSpeed().getX()-from.getSpeed().getX() ), Math.abs( to.getSpeed().getY()-from.getSpeed().getY() ) );
+		t=Math.max( t, 1 );
+		int dx=(int)( to.getPosition().getX()-from.getPosition().getX() );
+		int dy=(int)( to.getPosition().getY()-from.getPosition().getY() );
+		int ix=0;
+		int iy=0;
+		boolean restart=false;
+		while( true )
+		{
+			restart=false;
+			AtomicReference<Integer> integralX=new AtomicReference<Integer>();
+			xSpeeds=createGraph( (int)from.getSpeed().getX(), (int)to.getSpeed().getX(), t, integralX );
+			ix=integralX.get();
+			while( dx!=ix )
+			{
+				if( !fillable( xSpeeds ) || ix>dx )
+				{
+					t++;
+					restart=true;
+					break;
+				}
+				else
+				{
+					xSpeeds=fill( xSpeeds );
+					ix++;
+				}
+			}
+			if( restart )
+				continue;
+			AtomicReference<Integer> integralY=new AtomicReference<Integer>();
+			ySpeeds=createGraph( (int)from.getSpeed().getY(), (int)to.getSpeed().getY(), t, integralY );
+			iy=integralY.get();
+			while( dy!=iy )
+			{
+				if( !fillable( ySpeeds ) || iy>dy )
+				{
+					t++;
+					restart=true;
+					break;
+				}
+				else
+				{
+					ySpeeds=fill( ySpeeds );
+					iy++;
+				}
+			}
+			if( restart )
+				continue;
+			break;
+		}
+		
+
+		ArrayList<Integer> accX=calculateAccelations( xSpeeds );
+		ArrayList<Integer> accY=calculateAccelations( ySpeeds );
+		ArrayList<Point2D> realAccelerations=new ArrayList<Point2D>();
+		for( int i=0 ; i<accX.size() ; i++ )
+		{
+			realAccelerations.add( new Point2D( accX.get( i ), accY.get( i ) ) );
+		}
+
+		if( mRotate90DegreeClockwise )
+			realAccelerations=rotateAccelerations90CounterClockwise( realAccelerations );
+		if(mFlipArroundYAxis  )
+			realAccelerations=flipAccelerationsOnYAxis( realAccelerations );
+		if( mFlipArroundXAxis )
+			realAccelerations=flipAccelerationsOnXAxis( realAccelerations );
+
+		Point2D currentPos=from.getPosition();
+		Point2D currentSpeed=from.getSpeed();
+		for( int i=0 ; i<realAccelerations.size() ; i++ )
+		{
+			currentSpeed=currentSpeed.add( realAccelerations.get( i ) );
+			currentPos=currentPos.add( currentSpeed );
+			ret.add( currentPos );
+		}
+		
+		return ret;
+	}
+
+	private ArrayList<Point2D> rotateAccelerations90CounterClockwise( ArrayList<Point2D> accelerations )
+	{
+		ArrayList<Point2D> ret=new ArrayList<Point2D>();
+		for( int i=0 ; i<accelerations.size() ; i++ )
+		{
+			ret.add( new Point2D( -accelerations.get( i ).getY(),
+					              accelerations.get( i ).getX() ) );
+		}
+		return ret;
+	}
+	
+	private ArrayList<Point2D> flipAccelerationsOnXAxis( ArrayList<Point2D> accelerations )
+	{
+		ArrayList<Point2D> ret=new ArrayList<Point2D>();
+		for( int i=0 ; i<accelerations.size() ; i++ )
+		{
+			ret.add( new Point2D(  accelerations.get( i ).getX(),
+		                          -accelerations.get( i ).getY() ) );
+		}
+		return ret;
+	}
+	
+	private ArrayList<Point2D> flipAccelerationsOnYAxis( ArrayList<Point2D> accelerations )
+	{
+		ArrayList<Point2D> ret=new ArrayList<Point2D>();
+		for( int i=0 ; i<accelerations.size() ; i++ )
+		{
+			ret.add( new Point2D( -accelerations.get( i ).getX(),
+                                   accelerations.get( i ).getY() ) );
 		}
 		return ret;
 	}

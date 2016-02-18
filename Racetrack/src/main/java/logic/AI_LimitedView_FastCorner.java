@@ -689,7 +689,6 @@ public class AI_LimitedView_FastCorner extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j );// i.e. O
@@ -758,7 +757,6 @@ public class AI_LimitedView_FastCorner extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j );// i.e. O
@@ -827,7 +825,6 @@ public class AI_LimitedView_FastCorner extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j+1 );// i.e. O
@@ -896,7 +893,6 @@ public class AI_LimitedView_FastCorner extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j+1 );// i.e. O
@@ -959,16 +955,16 @@ public class AI_LimitedView_FastCorner extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					ArrayList<LandingPoint> zzv=tmpLandingRegion.getLandingPoints();
-					//TODO: REMOVE THIS:
-					if( mVerbose )
-					{
-						System.out.println( ""+regionFoundFirstIdOrder+": " );
-						for( int x=0 ; x<zzv.size() ;  x++ )
-						{
-							System.out.println( zzv.get( x ) );
-						}
-					}
+//					ArrayList<LandingPoint> zzv=tmpLandingRegion.getLandingPoints();
+//					//TODO: REMOVE THIS:
+//					if( mVerbose )
+//					{
+//						System.out.println( ""+regionFoundFirstIdOrder+": " );
+//						for( int x=0 ; x<zzv.size() ;  x++ )
+//						{
+//							System.out.println( zzv.get( x ) );
+//						}
+//					}
 					
 					
 					if( idOfDijkstraShortestPathForSorting.size() == 0 )

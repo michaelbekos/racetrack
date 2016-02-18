@@ -36,7 +36,7 @@ public class AI_Zigzag extends AI
 	private int mWidth;
 	private int mHeight;
 	private int currentIndexPosition;
-	private LinkedList<ArrayList<LandingPoint>> mLandingRegionsList;
+	private LinkedList<AtomicReference<ArrayList<LandingPoint>>> mLandingRegionsList;
 	
 	// This is the pure path
 	private List<Point2D> shortestPath;
@@ -97,11 +97,11 @@ public class AI_Zigzag extends AI
 				borders.add(LineSegment.GetLineSegment(boundary));
 			}
 
-			mLandingRegionsList = new LinkedList<ArrayList<LandingPoint>>();
-			ArrayList<LandingPoint> firstLandingRegion = new ArrayList<LandingPoint>();
+			mLandingRegionsList = new LinkedList<AtomicReference<ArrayList<LandingPoint>>>();
+			AtomicReference<ArrayList<LandingPoint>> firstLandingRegion = new AtomicReference<ArrayList<LandingPoint>>();
 			LandingPoint startingState = new LandingPoint(this.getCurrentPosition(),this.getCurrentVelocity());
 			startingState.setDistance(0);
-			firstLandingRegion.add(startingState);
+			firstLandingRegion.get().add(startingState);
 			mLandingRegionsList.add(firstLandingRegion);
 			for (int i = 0; i < lrl.size(); i++)
 			{
@@ -110,9 +110,9 @@ public class AI_Zigzag extends AI
 			
 			for (int landingRegionIndex = 0; landingRegionIndex < mLandingRegionsList.size() - 1; landingRegionIndex++)
 			{
-				for (LandingPoint endLandingPoint : mLandingRegionsList.get(landingRegionIndex+1))
+				for (LandingPoint endLandingPoint : mLandingRegionsList.get(landingRegionIndex+1).get() )
 				{
-					for (LandingPoint startLandingPoint : mLandingRegionsList.get(landingRegionIndex))
+					for (LandingPoint startLandingPoint : mLandingRegionsList.get(landingRegionIndex).get() )
 					{
 						if (landingRegionIndex != 0 && startLandingPoint.getPredecessor() == null)
 						{
@@ -140,7 +140,7 @@ public class AI_Zigzag extends AI
 			
 			int minimumDistance = -1;
 			LandingPoint bestLandingPoint = null;
-			for (LandingPoint finalLandingPoint : mLandingRegionsList.get(mLandingRegionsList.size()-1))
+			for (LandingPoint finalLandingPoint : mLandingRegionsList.get(mLandingRegionsList.size()-1).get() )
 			{
 				if (finalLandingPoint.getPredecessor() == null)
 				{
@@ -810,7 +810,6 @@ public class AI_Zigzag extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j );// i.e. O
@@ -879,7 +878,6 @@ public class AI_Zigzag extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j );// i.e. O
@@ -948,7 +946,6 @@ public class AI_Zigzag extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j+1 );// i.e. O
@@ -1017,7 +1014,6 @@ public class AI_Zigzag extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j+1 );// i.e. O

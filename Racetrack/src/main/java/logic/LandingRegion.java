@@ -1,5 +1,6 @@
 package src.main.java.logic;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.geometry.Point2D;
 //import src.main.java.logic.utils.AIUtils;
@@ -18,10 +19,11 @@ public class LandingRegion
 
     private Direction mOldDirection;
     private Direction mNewDirection;
+    
+	private boolean mLandingPointsCalculated;
+    private AtomicReference< ArrayList<LandingPoint> > mLandingPoints;
 
     static private boolean mVerbose=false;
-    static private int recessiveDirectionMaxSpeed;
-    static private int dominantDirectionMaxSpeed;
 
     static private ArrayList<LandingPoint> landingRegionSpeedMatrix;
     //static private boolean isLandingRegionSpeedMatrixSet=false;
@@ -35,6 +37,7 @@ public class LandingRegion
                           int a, 
                           int lW ) 
     {
+    	mLandingPointsCalculated=false;
         mOrigin= origin;
         mStart= start;
         mEnd=    end;
@@ -79,11 +82,6 @@ public class LandingRegion
     {
     	return mNewDirection;
     }
-    static void setMaxSpeeds( int recessiveMaxSpeed, int dominantMaxSpeed )
-    {
-    	recessiveDirectionMaxSpeed=recessiveMaxSpeed;
-    	dominantDirectionMaxSpeed=dominantMaxSpeed;
-    }
 
     public Point2D getAreaStartPosition()
     {
@@ -106,34 +104,7 @@ public class LandingRegion
         }
         return ret;
     }
-    
-    /*
-    // Creates every Vertex, even those that are not relevant.
-    private ArrayList<LandingPoint> createEveryVertex()
-    {
-    	ArrayList<Point2D> allPos=getAllPositions();
-		ArrayList<LandingPoint> ret = new ArrayList<LandingPoint>();
-    	for( int i=0 ; i<allPos.size() ; i++ )
-    	{
-    		for( int j=1 ; j<recessiveDirectionMaxSpeed+1 ; j++ )
-        	{
-        		for( int k=1 ; k<dominantDirectionMaxSpeed+1 ; k++ )
-            	{
-        			if( Direction.RIGHT==mNewDirection || Direction.LEFT==mNewDirection )
-        			{
-        				ret.add( new LandingPoint( allPos.get( i ), new Point2D( k, j ) ) );
-        			}
-        			else
-        			{
-        				ret.add( new LandingPoint( allPos.get( i ), new Point2D( j, k ) ) );
-        			}
-            	}
-        	}
-    	}
-    	return ret;
-    }
-    */
-    
+        
     public static void setLandingRegionSpeedMatrix( int w )
     {
         //##########
@@ -389,10 +360,20 @@ public class LandingRegion
         }
     	return ret;
     }
-    
-    public ArrayList<LandingPoint> getLandingPoints()
+
+    public AtomicReference< ArrayList<LandingPoint> > getLandingPoints()
     {
-    	ArrayList<LandingPoint> ret;
+    	if( !mLandingPointsCalculated )
+    	{
+    		mLandingPoints=calcLandingPoints();
+    		mLandingPointsCalculated=true;
+    	}
+		return mLandingPoints;
+    }
+    
+    private AtomicReference< ArrayList<LandingPoint> > calcLandingPoints()
+    {
+    	AtomicReference< ArrayList<LandingPoint> > ret;
     	if( null==landingRegionSpeedMatrix )
     	{
     		LandingRegion.setLandingRegionSpeedMatrix( mW );
@@ -413,14 +394,14 @@ public class LandingRegion
                 //#.....####
                 //#.....####
                 //#.....####
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<landingRegionSpeedMatrix.size() ; i++ )
             	{
             		double x=landingRegionSpeedMatrix.get( i ).getPosition().getX();
             		double y=landingRegionSpeedMatrix.get( i ).getPosition().getY();
             		double sx=landingRegionSpeedMatrix.get( i ).getSpeed().getX();
             		double sy=landingRegionSpeedMatrix.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -437,14 +418,14 @@ public class LandingRegion
                 //####.....#
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) ) );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -463,14 +444,14 @@ public class LandingRegion
                 //##########
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -487,14 +468,14 @@ public class LandingRegion
                 //####.....#
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( landingRegionSpeedMatrix );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -513,14 +494,14 @@ public class LandingRegion
                 //##########
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=flipLandingRegionOnXAxis( landingRegionSpeedMatrix );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -537,14 +518,14 @@ public class LandingRegion
                 //##########
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
@@ -563,14 +544,14 @@ public class LandingRegion
                 //##########
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( rotateLandingRegion90Clockwise( landingRegionSpeedMatrix ) ) );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             else
@@ -587,20 +568,20 @@ public class LandingRegion
                 //#.....####
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
             	pLRSM=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             	for( int i=0 ; i<pLRSM.size() ; i++ )
             	{
             		double x=pLRSM.get( i ).getPosition().getX();
             		double y=pLRSM.get( i ).getPosition().getY();
             		double sx=pLRSM.get( i ).getSpeed().getX();
             		double sy=pLRSM.get( i ).getSpeed().getY();
-            		ret.add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
+            		ret.get().add( new LandingPoint( new Point2D( x+mStart.getX(), y+mEnd.getY() ), new Point2D( sx, sy ) ) );
             	}
             }
             break;
             default:
             {
-            	ret=new ArrayList<LandingPoint>();
+            	ret=new AtomicReference< ArrayList<LandingPoint> >( new ArrayList<LandingPoint>() );
             }
         	break;
         }
@@ -610,16 +591,16 @@ public class LandingRegion
     public LandingPoint getFastCornerLandingPoint()
     {
     	LandingPoint ret=null;
-    	ArrayList<LandingPoint> allVertex=getLandingPoints();
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
     	double s=0;
-    	for( int i=0 ; i<allVertex.size() ; i++ )
+    	for( int i=0 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( mCornor.equals( allVertex.get( i ).getPosition() ) )
+    		if( mCornor.equals( allVertex.get().get( i ).getPosition() ) )
     		{
-    			if( s<allVertex.get( i ).getTotalSpeed() )
+    			if( s<allVertex.get().get( i ).getTotalSpeed() )
 				{
-					s=allVertex.get( i ).getTotalSpeed();
-					ret=allVertex.get( i );
+					s=allVertex.get().get( i ).getTotalSpeed();
+					ret=allVertex.get().get( i );
 				}
     		}
     	}
@@ -652,15 +633,15 @@ public class LandingRegion
     		positiv=true;
     	}
     	
-    	ArrayList<LandingPoint> allVertex=getLandingPoints();
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
     	int frontmost=0;
     	int tmpPossiblyFrontmost=0;
-		frontmost=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
-    	ret=allVertex.get( 0 );
+		frontmost=(int)( ( horizontal )?( allVertex.get().get( 0 ).getPosition().getX() ):( allVertex.get().get( 0 ).getPosition().getY() ) );
+    	ret=allVertex.get().get( 0 );
 		
-    	for( int i=1 ; i<allVertex.size() ; i++ )
+    	for( int i=1 ; i<allVertex.get().size() ; i++ )
     	{
-    		tmpPossiblyFrontmost=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		tmpPossiblyFrontmost=(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) );
     		boolean bigger=false;
     		if( positiv )
     		{
@@ -675,7 +656,7 @@ public class LandingRegion
     		if( bigger )
     		{
     			frontmost=tmpPossiblyFrontmost;
-    			ret=allVertex.get( i );
+    			ret=allVertex.get().get( i );
     		}
     	}
     	
@@ -708,22 +689,22 @@ public class LandingRegion
     	}
     	
     	//int landingRegionHeight=mW+mA;
-    	ArrayList<LandingPoint> allVertex=getLandingPoints();
-    	int highestVertex=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
-    	int lowestVertex=(int)( ( horizontal )?( allVertex.get( 0 ).getPosition().getX() ):( allVertex.get( 0 ).getPosition().getY() ) );
-    	for( int i=1 ; i<allVertex.size() ; i++ )
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
+    	int highestVertex=(int)( ( horizontal )?( allVertex.get().get( 0 ).getPosition().getX() ):( allVertex.get().get( 0 ).getPosition().getY() ) );
+    	int lowestVertex=(int)( ( horizontal )?( allVertex.get().get( 0 ).getPosition().getX() ):( allVertex.get().get( 0 ).getPosition().getY() ) );
+    	for( int i=1 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( highestVertex<(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) ) )
+    		if( highestVertex<(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) ) )
     		{
-    			highestVertex=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    			highestVertex=(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) );
     		}
     	}
     	
-    	for( int i=1 ; i<allVertex.size() ; i++ )
+    	for( int i=1 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( lowestVertex>(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) ) )
+    		if( lowestVertex>(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) ) )
     		{
-    			lowestVertex=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    			lowestVertex=(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) );
     		}
     	}
     	int diff=highestVertex-lowestVertex;
@@ -740,12 +721,12 @@ public class LandingRegion
     		center=diff/2;
     	}
     	int tmp;	
-    	for( int i=0 ; i<allVertex.size() ; i++ )
+    	for( int i=0 ; i<allVertex.get().size() ; i++ )
     	{
-    		tmp=(int)( ( horizontal )?( allVertex.get( i ).getPosition().getX() ):( allVertex.get( i ).getPosition().getY() ) );
+    		tmp=(int)( ( horizontal )?( allVertex.get().get( i ).getPosition().getX() ):( allVertex.get().get( i ).getPosition().getY() ) );
     		if( tmp==center || tmp==center2 )
     		{
-        		ret.add( allVertex.get( i ) );
+        		ret.add( allVertex.get().get( i ) );
     		}
     	}
     	

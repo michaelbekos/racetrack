@@ -14,6 +14,7 @@ import src.main.java.logic.AIstar.LineSegment;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
 import src.main.java.logic.utils.AIUtils.Direction;
+import src.main.java.logic.utils.BipartiteEndCalculator;
 import src.main.java.logic.utils.BipartiteNormalCalculator;
 import src.main.java.logic.utils.BipartiteStartCalculator;
 
@@ -85,34 +86,46 @@ public class AI_Bipartite extends AI
 			//System.out.println( this.getName()+ " is enhancing the path list." );
 			//createMovePath();
 			//System.out.println( this.getName()+ " is extracting all landing regions." );
-			
-			ArrayList<LandingRegion> lrl=searchLandingRegions();
-			ArrayList<BipartiteNormalCalculator> theGraph=new ArrayList<BipartiteNormalCalculator>();
 
+ 			ArrayList<AtomicReference<LandingRegion> > lrl=searchLandingRegions();
 			BipartiteStartCalculator startToGraph=new BipartiteStartCalculator( this.getCurrentPosition(), 
-																				lrl.get( 0 ),
-																				lrl.get( 0 ).getOldDirection(), 
-																				lrl.get( 0 ).getNewDirection(), 
-																				lrl.get( 0 ).getW(),
-																				mGrid );
+																				lrl.get( 0 )/*,
+																				mGrid */);
 			
-			ArrayList<LandingPoint> prevLRDistPredInfo=startToGraph.getDistancePredecessorInformation();
-			
+			ArrayList<BipartiteNormalCalculator> theGraph=new ArrayList<BipartiteNormalCalculator>();
 			for( int i=0 ; i<lrl.size()-1 ; i++ )
 			{
 				BipartiteNormalCalculator tmp =
-						new BipartiteNormalCalculator( lrl.get( i ), 
-												 lrl.get( i+1 ), 
-												 lrl.get( i ).getOldDirection(), 
-												 lrl.get( i ).getNewDirection(), 
-												 lrl.get( i+1 ).getNewDirection(), 
-												 lrl.get( i ).getW(),
-												 mGrid,
-												 prevLRDistPredInfo );
-				prevLRDistPredInfo=tmp.getDistancePredecessorInformation();
+						new BipartiteNormalCalculator( 	lrl.get( i ), 
+												 		lrl.get( i+1 ),
+												 		mGrid );
 						theGraph.add( tmp );
 			}
+			BipartiteEndCalculator graphToGoal=new BipartiteEndCalculator( 	lrl.get( lrl.size()-1 ), 
+																			LineSegment.GetLineSegment( mGame.getTrack().getFinishLine() ),
+																			mGrid );
+			// The entire graph is built now.
 			
+			ArrayList<LandingPoint> fastestLandingPoints=new ArrayList<LandingPoint>();
+			fastestLandingPoints.add( graphToGoal.getFastestPoint() );						
+			while( null!=fastestLandingPoints.get( fastestLandingPoints.size()-1 ).getPredecessor() )
+				fastestLandingPoints.add( fastestLandingPoints.get( fastestLandingPoints.size()-1 ).getPredecessor() );
+
+			LandingPoint from=fastestLandingPoints.get( fastestLandingPoints.size()-1 );
+			LandingPoint to=fastestLandingPoints.get( fastestLandingPoints.size()-2 );
+
+			ArrayList<Point2D> tmpPath=startToGraph.getPath( from, to );
+			movePath.addAll( tmpPath );
+			
+			for( int i=fastestLandingPoints.size()-2,ii=0 ; i>0 ; i--,ii++ )
+			{
+				tmpPath=theGraph.get( ii ).getPath( fastestLandingPoints.get( i ), 
+													fastestLandingPoints.get( i-1 ) );
+				movePath.addAll( tmpPath );
+			}
+			tmpPath=graphToGoal.getPath( fastestLandingPoints.get( 0 ), LineSegment.GetLineSegment( mGame.getTrack().getFinishLine() ) );
+			movePath.addAll( tmpPath );
+
 			if( mVerbose )
 			{
 				for( int j=mHeight-1 ; j>=0 ; j-- )
@@ -655,7 +668,7 @@ public class AI_Bipartite extends AI
 		}
 		//System.out.println( "   Not in PQ" );
 	}
-	private ArrayList< LandingRegion > searchLandingRegions()
+	private ArrayList<AtomicReference<LandingRegion> > searchLandingRegions()
 	{
 		mLandingRegions=new int[mWidth][mHeight];
 		for( int j=mHeight-1 ; j>=0 ; j-- )
@@ -675,7 +688,7 @@ public class AI_Bipartite extends AI
 		
 		int regionFoundFirstIdOrder=0;
 		
-		ArrayList<LandingRegion> ret= new ArrayList<LandingRegion>();
+		ArrayList<AtomicReference<LandingRegion> > ret= new ArrayList<AtomicReference<LandingRegion> >();
 		ArrayList<Integer> idOfDijkstraShortestPathForSorting=new ArrayList<Integer>();
 		//ArrayList<Point2D> tmpLandingRegion;
 		AtomicReference<Integer> w=new AtomicReference<Integer>( 0 );
@@ -705,7 +718,6 @@ public class AI_Bipartite extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j );// i.e. O
@@ -774,7 +786,6 @@ public class AI_Bipartite extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j );// i.e. O
@@ -843,7 +854,6 @@ public class AI_Bipartite extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i+1, j+1 );// i.e. O
@@ -912,7 +922,6 @@ public class AI_Bipartite extends AI
 						calcWidthAndLandingRegion( w, landingRegionWidth, landingRegionAdditionalHeight, i, j, true );
 						maxSpeedDominantDirection = landingRegionAdditionalHeight.get();
 						maxSpeedOtherDirection = landingRegionWidth.get();
-					    LandingRegion.setMaxSpeeds( maxSpeedOtherDirection, maxSpeedDominantDirection );
 						LandingRegion.setLandingRegionSpeedMatrix( w.get() );
 					}
 					origin=new Point2D( i, j+1 );// i.e. O
@@ -975,22 +984,10 @@ public class AI_Bipartite extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					ArrayList<LandingPoint> zzv=tmpLandingRegion.getLandingPoints();
-					//TODO: REMOVE THIS:
-					if( mVerbose )
-					{
-						System.out.println( ""+regionFoundFirstIdOrder+": " );
-						for( int x=0 ; x<zzv.size() ;  x++ )
-						{
-							System.out.println( zzv.get( x ) );
-						}
-					}
-					
-					
 					if( idOfDijkstraShortestPathForSorting.size() == 0 )
 					{
 						idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-						ret.add( tmpLandingRegion );
+						ret.add( new AtomicReference<LandingRegion>( tmpLandingRegion ) );
 						landingRegionOldDirections.add(oldDirection);
 						landingRegionNewDirections.add(newDirection);
 					}
@@ -1005,7 +1002,7 @@ public class AI_Bipartite extends AI
 							{
 								foundSlot=true;
 								idOfDijkstraShortestPathForSorting.add( k+1, idForSorting.get() );
-								ret.add( k+1, tmpLandingRegion );
+								ret.add( k+1, new AtomicReference<LandingRegion>( tmpLandingRegion ) );
 								landingRegionOldDirections.add(k+1, oldDirection);
 								landingRegionNewDirections.add(k+1, newDirection);
 								break;
@@ -1016,14 +1013,14 @@ public class AI_Bipartite extends AI
 							if( idForSorting.get() < idOfDijkstraShortestPathForSorting.get( 0 ) )
 							{
 								idOfDijkstraShortestPathForSorting.add( 0, idForSorting.get() );
-								ret.add( 0, tmpLandingRegion );
+								ret.add( 0, new AtomicReference<LandingRegion>( tmpLandingRegion ) );
 								landingRegionOldDirections.add(0, oldDirection);
 								landingRegionNewDirections.add(0, newDirection);
 							}
 							else
 							{
 								idOfDijkstraShortestPathForSorting.add( idForSorting.get() );
-								ret.add( tmpLandingRegion );
+								ret.add( new AtomicReference<LandingRegion>( tmpLandingRegion ) );
 								landingRegionOldDirections.add(oldDirection);
 								landingRegionNewDirections.add(newDirection);
 							}
@@ -1032,11 +1029,10 @@ public class AI_Bipartite extends AI
 				}
 			}
 		}
-
 		
 		for( int i=0 ; i<ret.size() ; i++ )
 		{
-			ArrayList<Point2D> lr=ret.get(i).getAllPositions();
+			ArrayList<Point2D> lr=ret.get(i).get().getAllPositions();
 			for( int k=0 ; k<lr.size() ; k++ )
 			{
 				mLandingRegions[(int)lr.get(k).getX()][(int)lr.get(k).getY()]=i+1;
