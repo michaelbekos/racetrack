@@ -280,6 +280,39 @@ public class LandingRegion
 	    	}
     	}
 
+		
+    	
+    	// Normal Landing Region Reducing Not Achievable Speeds
+        for( int j=0 ; j<w+a ; j++ )
+        {
+        	int rowMaxSpeed=(int)Math.floor( Math.sqrt( ( j+1 )*2-1.75 )-0.5 );
+            for( int l=0 ; l<lw ; l++ )
+            {
+            	Point2D p=new Point2D( j, l );
+            	for( int k=0 ; k<tmpLandingRegionSpeedMatrix.size() ; k++ )
+            	{//Search all 'wrong' vertex and remove them
+            		if( tmpLandingRegionSpeedMatrix.get( k ).isAtPosition( p ) )
+            		{
+            			if( tmpLandingRegionSpeedMatrix.get( k ).getSpeed().getX()>rowMaxSpeed )
+            			{
+            				// This vertex implies we are driving into the additional landing region with a too small speed.
+            				// It is not possible and we will delete the vertex.
+            				tmpLandingRegionSpeedMatrix.remove( k );
+            				k--;
+            			}
+            		}
+            	}
+            }
+        }    
+    	if( mVerbose )
+    	{
+			System.out.println( " Additional Landing Region Edge cutting Reducing: " );
+	    	for( int i=0 ; i<tmpLandingRegionSpeedMatrix.size() ; i++ )
+	    	{
+	    		System.out.println( tmpLandingRegionSpeedMatrix.get( i ) );
+	    	}
+    	}
+
     	// For every point in the landing region, does this point with it's incoming speed
         // go into the landing region again if going backwards? If yes, remove it.
     	
@@ -382,7 +415,7 @@ public class LandingRegion
 	            		
 	            		double sx=lrsm.get( k ).getSpeed().getX();
 	            		double sy=lrsm.get( k ).getSpeed().getY();
-	        			ret.add( new LandingPoint( new Point2D( ( maxVertical+1 )-( t.getX()+1 ), t.getY() ), new Point2D( sy, -sx ) ) );
+	        			ret.add( new LandingPoint( new Point2D( t.getY(), maxVertical-t.getX() ), new Point2D( sy, -sx ) ) );
             		}
             	}
             }
@@ -586,6 +619,26 @@ public class LandingRegion
                 //#...oo####
                 //#.....####
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
+
+        		System.out.println( "Pure: " );
+            	for( int i=0; i<landingRegionSpeedMatrix.size() ; i++ )
+            	{
+            		System.out.println( landingRegionSpeedMatrix.get( i ) );
+            	}
+            	ArrayList<LandingPoint> flipped=flipLandingRegionOnXAxis( landingRegionSpeedMatrix );
+        		System.out.println( "Flipped On X: " );
+            	for( int i=0; i<flipped.size() ; i++ )
+            	{
+            		System.out.println( flipped.get( i ) );
+            	}
+            	ArrayList<LandingPoint> flippedAndRot=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
+        		System.out.println( "Flipped On X and rotated: " );
+            	for( int i=0; i<flippedAndRot.size() ; i++ )
+            	{
+            		System.out.println( flippedAndRot.get( i ) );
+            	}
+            	
+            	
             	pLRSM=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
             	ret=new ArrayList<LandingPoint>();
             	for( int i=0 ; i<pLRSM.size() ; i++ )
