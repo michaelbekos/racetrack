@@ -22,20 +22,29 @@ public class StaircaseCreator
 	public static void main(String[] args)
 	{
 		generator.setSeed(System.currentTimeMillis());
-		if (args.length != 2)
+		if (args.length != 2 && args.length != 3)
 		{
-			System.out.println("Usage: StaircaseCreator width numberOfTurns");
+			System.out.println("Usage: StaircaseCreator width numberOfTurns lengthOfStraightSegments(optional)");
 		}
 		else
 		{
 			int width = Integer.parseInt(args[0]);
 			int numberOfTurns = Integer.parseInt(args[1]);
-			if (width < 1 || numberOfTurns < 1)
+			int lengthOfStraightSegments;
+			if (args.length == 3)
+			{
+				lengthOfStraightSegments = Integer.parseInt(args[2]);
+			}
+			else
+			{
+				lengthOfStraightSegments = width;
+			}
+			if (width < 1 || numberOfTurns < 1 || lengthOfStraightSegments < 1)
 			{
 				System.out.println("Invalid parameter values!");
 				return;
 			}
-			writeStaircaseXML(width, numberOfTurns);
+			writeStaircaseXML(width, numberOfTurns, lengthOfStraightSegments);
 			System.out.println("Track generation done.");
 		}
 	}
@@ -45,7 +54,7 @@ public class StaircaseCreator
 		LEFT, RIGHT, UP, DOWN 
 	}
 	
-	private static void writeStaircaseXML(int width, int numberOfTurns)
+	private static void writeStaircaseXML(int width, int numberOfTurns, int lengthOfStraightSegments)
 	{
 		ZigZagDimensions zigZagDim = new ZigZagDimensions(0, width+1, 0, width+1);
 		Direction currentDirection;
@@ -78,7 +87,7 @@ public class StaircaseCreator
 			boundaries.add(new LineSegment(innerBoundaryPoints.get(0),innerBoundaryPoints.get(1)));
 			for(turns = 0; turns < numberOfTurns; turns++)
 			{
-				if (!addStraightLine(width, width, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection))
+				if (!addStraightLine(lengthOfStraightSegments, lengthOfStraightSegments, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection))
 				{
 					break;
 				}
@@ -98,7 +107,7 @@ public class StaircaseCreator
 				}
 				currentDirection = newDirection;
 			}
-			addStraightLine(width, width, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection);
+			addStraightLine(lengthOfStraightSegments, lengthOfStraightSegments, outerBoundaryPoints, innerBoundaryPoints,	boundaries, zigZagDim, currentDirection);
 		}
 		int offsetX = 0 -zigZagDim.minX + 2;
 		int offsetY = 0 -zigZagDim.minY + 2;

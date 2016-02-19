@@ -32,6 +32,7 @@ public class AI_LimitedView_FastCorner extends AI
 	private boolean mGridCreated;
 	private boolean [][] mGrid;
 	private int [][] mDijkstaDistances;
+	private HashSet<Point2D> grid;
 	private int [][] mLandingRegions;
 	private int mWidth;
 	private int mHeight;
@@ -97,18 +98,85 @@ public class AI_LimitedView_FastCorner extends AI
 			}
 
 			LinkedList<ArrayList<ZigZagVertex>> landingRegions = new LinkedList<ArrayList<ZigZagVertex>>();
-			
 			LandingPoint tmpFrom=new LandingPoint( this.getCurrentPosition(), this.getCurrentVelocity() );
 			LandingPoint tmpTo;
+			int sx = (int)this.getCurrentVelocity().getX();
+			int sy = (int)this.getCurrentVelocity().getY();
+			List<LandingPoint> landingPoints = new ArrayList<LandingPoint>();
+			for (int i = 0; i < lrl.size(); i++)
+			{
+				landingPoints.add(lrl.get(i).getFastCornerLandingPoint());
+			}
+			for( int j=mHeight-1 ; j>=0 ; j-- )
+			{
+				for( int i=0 ; i<mWidth ; i++ )
+				{
+					if( grid.contains( new Point2D( i, j ) ) )
+					{
+						boolean isLandingPoint = false;
+						int landingPointIndex;
+						for (landingPointIndex = 0; landingPointIndex < landingPoints.size(); landingPointIndex++)
+						{
+							if ((int)landingPoints.get(landingPointIndex).getPosition().getX() == i)
+							{
+								if ((int)landingPoints.get(landingPointIndex).getPosition().getY() == j)
+								{
+									isLandingPoint = true;
+									break;
+								}
+							}
+						}
+						if (!isLandingPoint)
+						{
+							System.out.print( " " );
+						}
+						else
+						{
+							System.out.print(landingPointIndex);
+						}	
+					}
+					else
+					{
+						System.out.print( "X" );
+					}
+				}
+				System.out.println( " " );
+			}
+			for (int landingPointIndex = 0; landingPointIndex < landingPoints.size(); landingPointIndex++)
+			{
+				System.out.println(landingPointIndex + ": " + landingPoints.get(landingPointIndex).toString());
+			}
 			for (int i = 0; i < lrl.size(); i++)
 			{
 				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
-				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+				List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
 																	tmpTo.getPosition(), 
 																	tmpFrom.getSpeed(), 
 																	tmpTo.getSpeed(), 
-																	borders ) );
+																	borders );
+				for (int j = 0; j < accelerations.size(); j++)
+				{
+					sx += (int)accelerations.get(j).getX();
+					sy += (int)accelerations.get(j).getY();
+					x += sx;
+					y += sy;
+					movePath.add(new Point2D(x,y));
+				}
 				tmpFrom=tmpTo;
+			}
+			List<Point2D> finalAccelerations = AIUtils.CalculateFinalAccelerations( 	
+					tmpFrom.getPosition(), 
+					tmpFrom.getSpeed(),
+					LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()),
+					landingRegionNewDirections.get(landingRegionNewDirections.size()-1),
+					borders );
+			for (int j = 0; j < finalAccelerations.size(); j++)
+			{
+				sx += (int)finalAccelerations.get(j).getX();
+				sy += (int)finalAccelerations.get(j).getY();
+				x += sx;
+				y += sy;
+				movePath.add(new Point2D(x,y));
 			}
 		}			
 			
@@ -499,7 +567,7 @@ public class AI_LimitedView_FastCorner extends AI
 		sX=(int)mGame.getTrack().getStartingPoints()[0].getX();
 		sY=(int)mGame.getTrack().getStartingPoints()[0].getY();
 	
-		HashSet<Point2D> grid = iterativeTryFill();
+		grid = iterativeTryFill();
 		//tryFill( sX, sY, sX, sY, considered );
 		
 		if( mVerbose )

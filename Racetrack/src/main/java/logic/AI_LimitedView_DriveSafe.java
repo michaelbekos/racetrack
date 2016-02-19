@@ -29,6 +29,7 @@ public class AI_LimitedView_DriveSafe extends AI
 	private List<AIUtils.Direction> landingRegionNewDirections;
 	private int maxSpeedDominantDirection;
 	private int maxSpeedOtherDirection;
+	private HashSet<Point2D> grid;
 	private boolean mGridCreated;
 	private boolean [][] mGrid;
 	private int [][] mDijkstaDistances;
@@ -97,18 +98,170 @@ public class AI_LimitedView_DriveSafe extends AI
 			}
 
 			LinkedList<ArrayList<LandingPoint>> landingRegions = new LinkedList<ArrayList<LandingPoint>>();
-			
+			int sx = (int)this.getCurrentVelocity().getX();
+			int sy = (int)this.getCurrentVelocity().getY();
 			LandingPoint tmpFrom=new LandingPoint( this.getCurrentPosition(), this.getCurrentVelocity() );
-			LandingPoint tmpTo;
+			LandingPoint tmpTo = null;
+			List<LandingPoint> landingPoints = new ArrayList<LandingPoint>();
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
-				movePath.addAll( AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
-																	tmpTo.getPosition(), 
-																	tmpFrom.getSpeed(), 
-																	tmpTo.getSpeed(), 
-																	borders ) );
+				ArrayList<LandingPoint> tmpTos=lrl.get( i ).getSafeLandingPoint();
+				int bestSpeed = 0;
+				int minimumNumberOfTurns = -1;
+				AIUtils.Direction tmpNewDirection = landingRegionNewDirections.get(i);
+				for (LandingPoint landingPoint : tmpTos)
+				{
+					List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+							landingPoint.getPosition(), 
+							tmpFrom.getSpeed(), 
+							landingPoint.getSpeed(), 
+							borders );
+					if (accelerations == null)
+					{
+						continue;
+					}
+					if (accelerations.size() < minimumNumberOfTurns || minimumNumberOfTurns == -1)
+					{
+						tmpTo = landingPoint;
+						minimumNumberOfTurns = accelerations.size();
+						switch (tmpNewDirection)
+						{
+							case UP:
+							{
+								bestSpeed = (int)landingPoint.getSpeed().getY();
+								break;
+							}
+							case DOWN:
+							{
+								bestSpeed = -(int)landingPoint.getSpeed().getY();
+								break;
+							}
+							case RIGHT:
+							{
+								bestSpeed = (int)landingPoint.getSpeed().getX();
+								break;
+							}
+							case LEFT:
+							{
+								bestSpeed = -(int)landingPoint.getSpeed().getX();
+								break;
+							}
+						}
+					}
+					else
+					{
+						if (accelerations.size() == minimumNumberOfTurns)
+						{
+							switch (tmpNewDirection)
+							{
+								case UP:
+								{
+									if ((int)landingPoint.getSpeed().getY() > bestSpeed)
+									{
+										bestSpeed = (int)landingPoint.getSpeed().getY();
+										tmpTo = landingPoint;
+									}
+									break;
+								}
+								case DOWN:
+								{
+									if (-(int)landingPoint.getSpeed().getY() > bestSpeed)
+									{
+										bestSpeed = -(int)landingPoint.getSpeed().getY();
+										tmpTo = landingPoint;
+									}
+									break;
+								}
+								case RIGHT:
+								{
+									if ((int)landingPoint.getSpeed().getX() > bestSpeed)
+									{
+										bestSpeed = (int)landingPoint.getSpeed().getX();
+										tmpTo = landingPoint;
+									}
+									break;
+								}
+								case LEFT:
+								{
+									if (-(int)landingPoint.getSpeed().getX() > bestSpeed)
+									{
+										bestSpeed = -(int)landingPoint.getSpeed().getX();
+										tmpTo = landingPoint;
+									}
+									break;
+								}
+							}
+						}
+					}
+				}
+				List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+						tmpTo.getPosition(), 
+						tmpFrom.getSpeed(), 
+						tmpTo.getSpeed(), 
+						borders );
+				for (int j = 0; j < accelerations.size(); j++)
+				{
+					sx += (int)accelerations.get(j).getX();
+					sy += (int)accelerations.get(j).getY();
+					x += sx;
+					y += sy;
+					movePath.add(new Point2D(x,y));
+				}
+				landingPoints.add(tmpTo);
 				tmpFrom=tmpTo;
+			}
+			List<Point2D> finalAccelerations = AIUtils.CalculateFinalAccelerations( 	
+					tmpFrom.getPosition(), 
+					tmpFrom.getSpeed(),
+					LineSegment.GetLineSegment(mGame.getTrack().getFinishLine()),
+					landingRegionNewDirections.get(landingRegionNewDirections.size()-1),
+					borders );
+			for (int j = 0; j < finalAccelerations.size(); j++)
+			{
+				sx += (int)finalAccelerations.get(j).getX();
+				sy += (int)finalAccelerations.get(j).getY();
+				x += sx;
+				y += sy;
+				movePath.add(new Point2D(x,y));
+			}
+			for( int j=mHeight-1 ; j>=0 ; j-- )
+			{
+				for( int i=0 ; i<mWidth ; i++ )
+				{
+					if( grid.contains( new Point2D( i, j ) ) )
+					{
+						boolean isLandingPoint = false;
+						int landingPointIndex;
+						for (landingPointIndex = 0; landingPointIndex < landingPoints.size(); landingPointIndex++)
+						{
+							if ((int)landingPoints.get(landingPointIndex).getPosition().getX() == i)
+							{
+								if ((int)landingPoints.get(landingPointIndex).getPosition().getY() == j)
+								{
+									isLandingPoint = true;
+									break;
+								}
+							}
+						}
+						if (!isLandingPoint)
+						{
+							System.out.print( " " );
+						}
+						else
+						{
+							System.out.print(landingPointIndex);
+						}	
+					}
+					else
+					{
+						System.out.print( "X" );
+					}
+				}
+				System.out.println( " " );
+			}
+			for (int landingPointIndex = 0; landingPointIndex < landingPoints.size(); landingPointIndex++)
+			{
+				System.out.println(landingPointIndex + ": " + landingPoints.get(landingPointIndex).toString());
 			}
 		}			
 			
@@ -499,7 +652,7 @@ public class AI_LimitedView_DriveSafe extends AI
 		sX=(int)mGame.getTrack().getStartingPoints()[0].getX();
 		sY=(int)mGame.getTrack().getStartingPoints()[0].getY();
 	
-		HashSet<Point2D> grid = iterativeTryFill();
+		grid = iterativeTryFill();
 		//tryFill( sX, sY, sX, sY, considered );
 		
 		if( mVerbose )
