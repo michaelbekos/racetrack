@@ -98,7 +98,7 @@ public class AI_Zigzag extends AI
 			}
 
 			mLandingRegionsList = new LinkedList<AtomicReference<ArrayList<LandingPoint>>>();
-			AtomicReference<ArrayList<LandingPoint>> firstLandingRegion = new AtomicReference<ArrayList<LandingPoint>>();
+			AtomicReference<ArrayList<LandingPoint>> firstLandingRegion = new AtomicReference<ArrayList<LandingPoint>>( new ArrayList<LandingPoint>() );
 			LandingPoint startingState = new LandingPoint(this.getCurrentPosition(),this.getCurrentVelocity());
 			startingState.setDistance(0);
 			firstLandingRegion.get().add(startingState);
@@ -1076,7 +1076,6 @@ public class AI_Zigzag extends AI
 				{
 					regionFoundFirstIdOrder++;
 					
-					//TODO: Henry, adjust here...
 					// ArrayList<LandingPoint> zzv=tmpLandingRegion.getZigZagVertice();
 					
 //					if( mVerbose )

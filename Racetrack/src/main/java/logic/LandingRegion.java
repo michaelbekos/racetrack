@@ -23,7 +23,7 @@ public class LandingRegion
 	private boolean mLandingPointsCalculated;
     private AtomicReference< ArrayList<LandingPoint> > mLandingPoints;
 
-    static private boolean mVerbose=false;
+    static private boolean mVerbose=true;
 
     static private ArrayList<LandingPoint> landingRegionSpeedMatrix;
     //static private boolean isLandingRegionSpeedMatrixSet=false;
@@ -314,6 +314,15 @@ public class LandingRegion
 	    	}
     	}
     }
+    public static void main(String[] args)
+    {
+    	int n=3000;
+    	for( int i=0; i<n ; i++ )
+    	{
+    		setLandingRegionSpeedMatrix( i );
+    		System.out.println( "For w=" + i + " # of Landing Points are:" + landingRegionSpeedMatrix.size() );
+    	}
+    }
 
     private ArrayList<LandingPoint> flipLandingRegionOnXAxis( ArrayList<LandingPoint> lrsm ) // Landing Region Speed Matrix
     {
@@ -353,46 +362,74 @@ public class LandingRegion
     	return ret;
     }
     
+//    private ArrayList<LandingPoint> rotateLandingRegion90Clockwise( ArrayList<LandingPoint> lrsm ) // Landing Region Speed Matrix
+//    {
+//    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
+//    	int maxHorizontal=0;
+//    	int maxVertical=0;
+//    	for( int i=0 ; i<lrsm.size() ; i++ )
+//    	{
+//    		if( maxHorizontal<lrsm.get( i ).getPosition().getX() )
+//    		{
+//    			maxHorizontal=(int)lrsm.get( i ).getPosition().getX();
+//    		}
+//    		if( maxVertical<lrsm.get( i ).getPosition().getY() )
+//    		{
+//    			maxVertical=(int)lrsm.get( i ).getPosition().getY();
+//    		}
+//    	}
+//    	for( int ix=0 ; ix<maxHorizontal+1 ; ix++ )
+//        {
+//            for( int iy=0 ; iy<maxVertical+1 ; iy++ )
+//            {
+//            	Point2D p=new Point2D( ix, iy ); 
+//        		for( int k=0 ; k<lrsm.size() ; k++ )
+//            	{
+//            		if( lrsm.get( k ).isAtPosition( p ) )
+//            		{
+//	            		double x=lrsm.get( k ).getPosition().getX();
+//	            		double y=lrsm.get( k ).getPosition().getY();
+//	            		
+//	            		// t=transposed
+//	            		Point2D t=new Point2D( y, x );
+//	            		
+//	            		double sx=lrsm.get( k ).getSpeed().getX();
+//	            		double sy=lrsm.get( k ).getSpeed().getY();
+//	        			ret.add( new LandingPoint( new Point2D( t.getY(), maxVertical-t.getX() ), new Point2D( sy, -sx ) ) );
+//            		}
+//            	}
+//            }
+//        }
+//    	return ret;
+//    }
+    
+    
     private ArrayList<LandingPoint> rotateLandingRegion90Clockwise( ArrayList<LandingPoint> lrsm ) // Landing Region Speed Matrix
     {
     	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
-    	int maxHorizontal=0;
-    	int maxVertical=0;
+    	int max_w=0;// max_w==w-1
     	for( int i=0 ; i<lrsm.size() ; i++ )
     	{
-    		if( maxHorizontal<lrsm.get( i ).getPosition().getX() )
-    		{
-    			maxHorizontal=(int)lrsm.get( i ).getPosition().getX();
-    		}
-    		if( maxVertical<lrsm.get( i ).getPosition().getY() )
-    		{
-    			maxVertical=(int)lrsm.get( i ).getPosition().getY();
-    		}
+    		if( max_w<lrsm.get( i ).getPosition().getX() )
+    			max_w=(int)lrsm.get( i ).getPosition().getX();
     	}
-    	for( int ix=0 ; ix<maxHorizontal+1 ; ix++ )
-        {
-            for( int iy=0 ; iy<maxVertical+1 ; iy++ )
-            {
-            	Point2D p=new Point2D( ix, iy ); 
-        		for( int k=0 ; k<lrsm.size() ; k++ )
-            	{
-            		if( lrsm.get( k ).isAtPosition( p ) )
-            		{
-	            		double x=lrsm.get( k ).getPosition().getX();
-	            		double y=lrsm.get( k ).getPosition().getY();
-	            		
-	            		// t=transposed
-	            		Point2D t=new Point2D( y, x );
-	            		
-	            		double sx=lrsm.get( k ).getSpeed().getX();
-	            		double sy=lrsm.get( k ).getSpeed().getY();
-	        			ret.add( new LandingPoint( new Point2D( t.getY(), maxVertical-t.getX() ), new Point2D( sy, -sx ) ) );
-            		}
-            	}
-            }
-        }
+    	//max_w++;
+    	
+    	for( int i=0 ; i<lrsm.size() ; i++ )
+    	{
+    		LandingPoint rotatedPoint;    		
+    		rotatedPoint = new LandingPoint( new Point2D( 	lrsm.get( i ).getPosition().getY(), 
+    														max_w-lrsm.get( i ).getPosition().getX() ), 
+    										 new Point2D(   lrsm.get( i ).getSpeed().getY(), 
+    												        -lrsm.get( i ).getSpeed().getX() ) );
+    		ret.add( rotatedPoint );
+    	}
+    	
+    	
+    	
     	return ret;
-    }
+    }  
+    
 
     public AtomicReference< ArrayList<LandingPoint> > getLandingPoints()
     {
@@ -601,23 +638,23 @@ public class LandingRegion
                 //#.....####
             	ArrayList<LandingPoint> pLRSM;// Prepared Landing Region Speed Matrix
 
-        		System.out.println( "Pure: " );
-            	for( int i=0; i<landingRegionSpeedMatrix.size() ; i++ )
-            	{
-            		System.out.println( landingRegionSpeedMatrix.get( i ) );
-            	}
-            	ArrayList<LandingPoint> flipped=flipLandingRegionOnXAxis( landingRegionSpeedMatrix );
-        		System.out.println( "Flipped On X: " );
-            	for( int i=0; i<flipped.size() ; i++ )
-            	{
-            		System.out.println( flipped.get( i ) );
-            	}
-            	ArrayList<LandingPoint> flippedAndRot=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
-        		System.out.println( "Flipped On X and rotated: " );
-            	for( int i=0; i<flippedAndRot.size() ; i++ )
-            	{
-            		System.out.println( flippedAndRot.get( i ) );
-            	}
+//        		System.out.println( "Pure: " );
+//            	for( int i=0; i<landingRegionSpeedMatrix.size() ; i++ )
+//            	{
+//            		System.out.println( landingRegionSpeedMatrix.get( i ) );
+//            	}
+//            	ArrayList<LandingPoint> flipped=flipLandingRegionOnXAxis( landingRegionSpeedMatrix );
+//        		System.out.println( "Flipped On X: " );
+//            	for( int i=0; i<flipped.size() ; i++ )
+//            	{
+//            		System.out.println( flipped.get( i ) );
+//            	}
+//            	ArrayList<LandingPoint> flippedAndRot=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
+//        		System.out.println( "Flipped On X and rotated: " );
+//            	for( int i=0; i<flippedAndRot.size() ; i++ )
+//            	{
+//            		System.out.println( flippedAndRot.get( i ) );
+//            	}
             	
             	
             	pLRSM=rotateLandingRegion90Clockwise( flipLandingRegionOnXAxis( landingRegionSpeedMatrix ) );
