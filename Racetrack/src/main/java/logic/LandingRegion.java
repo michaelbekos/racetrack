@@ -8,8 +8,8 @@ import src.main.java.logic.utils.AIUtils.Direction;
 
 public class LandingRegion
 {
-    private Point2D mOrigin; // Point diagonal to cornor
-    private Point2D mCornor; // Point diagonal to cornor
+    private Point2D mOrigin; // Point diagonal to corner
+    private Point2D mCorner; // Point diagonal to corner
     private Point2D mStart;
     private Point2D mEnd;
 
@@ -51,25 +51,35 @@ public class LandingRegion
         if(    mOldDirection==Direction.LEFT && mNewDirection==Direction.DOWN ||
     		   mOldDirection==Direction.DOWN && mNewDirection==Direction.LEFT )
         {
-        	mCornor = new Point2D( mOrigin.getX()-1, mOrigin.getY()-1 );
+        	mCorner = new Point2D( mOrigin.getX()-1, mOrigin.getY()-1 );
         }
         else if( mOldDirection==Direction.LEFT && mNewDirection==Direction.UP ||
     		     mOldDirection==Direction.UP && mNewDirection==Direction.LEFT )
         {
-        	mCornor = new Point2D( mOrigin.getX()-1, mOrigin.getY()+1 );
+        	mCorner = new Point2D( mOrigin.getX()-1, mOrigin.getY()+1 );
         }
         else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.DOWN ||
     		     mOldDirection==Direction.DOWN && mNewDirection==Direction.RIGHT )
         {
-        	mCornor = new Point2D( mOrigin.getX()+1, mOrigin.getY()-1 );
+        	mCorner = new Point2D( mOrigin.getX()+1, mOrigin.getY()-1 );
         }
         else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.UP ||
     		     mOldDirection==Direction.UP && mNewDirection==Direction.RIGHT )
         {
-        	mCornor = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
+        	mCorner = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
         }
     }
 
+    public Point2D getCorner()
+    {
+    	return mCorner;
+    }
+    
+    public Point2D getStart()
+    {
+    	return mStart;
+    }
+    
     public int getW()
     {
     	return mW;
@@ -685,7 +695,7 @@ public class LandingRegion
     	double s=0;
     	for( int i=0 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( mCornor.equals( allVertex.get().get( i ).getPosition() ) )
+    		if( mCorner.equals( allVertex.get().get( i ).getPosition() ) )
     		{
     			if( s<allVertex.get().get( i ).getTotalSpeed() )
 				{

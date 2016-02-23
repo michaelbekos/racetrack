@@ -56,7 +56,12 @@ public class BipartiteNormalCalculator
     	
     	//mStartLRVertex= mStartLR.get().getLandingPoints(); 
     	//mEndLRVertex=   mEndLR.get().getLandingPoints();
-    	
+
+//    	if( startLR.get().getCorner().getX()==19 && startLR.get().getCorner().getY()==57 &&
+//    		startLR.get().getStart().getX()==14 && startLR.get().getStart().getY()==57 )
+//    	{
+//    		System.out.println( "LOL" );
+//    	}
     	calcAreaFlippingRotationUturn();
     	createGridTransform();
     	calcWeights();
@@ -330,11 +335,11 @@ public class BipartiteNormalCalculator
 					//         ^
 					//         |
 					//	
-					mStartAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()-mW, mEndLR.get().getAreaEndPosition().getY()-1 );
-					mEndAreaOfPath=new Point2D( mStartLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
+					mStartAreaOfPath=new Point2D( mStartLR.get().getAreaStartPosition().getX()-1, mStartLR.get().getAreaEndPosition().getY()-1 );
+					mEndAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()+mW, mEndLR.get().getAreaStartPosition().getY()+1 );
 					mFlipArroundXAxis=false;
-					mFlipArroundYAxis=false;
-					mRotate90DegreeClockwise=true;					
+					mFlipArroundYAxis=true;
+					mRotate90DegreeClockwise=true;				
 				}
 				else
 				{
@@ -344,11 +349,11 @@ public class BipartiteNormalCalculator
 					//     --->
 					//    ^
 					//    |
-					//	
-					mStartAreaOfPath=new Point2D( mStartLR.get().getAreaStartPosition().getX()-1, mStartLR.get().getAreaEndPosition().getY()-1 );
-					mEndAreaOfPath=new Point2D( mEndLR.get().getAreaStartPosition().getX()+mW, mEndLR.get().getAreaStartPosition().getY()+1 );
+					//		
+					mStartAreaOfPath=new Point2D( mEndLR.get().getAreaEndPosition().getX()-mW, mEndLR.get().getAreaEndPosition().getY()-1 );
+					mEndAreaOfPath=new Point2D( mStartLR.get().getAreaEndPosition().getX()+1, mEndLR.get().getAreaStartPosition().getY()+1 );
 					mFlipArroundXAxis=false;
-					mFlipArroundYAxis=true;
+					mFlipArroundYAxis=false;
 					mRotate90DegreeClockwise=true;					
 				}
 			}			
