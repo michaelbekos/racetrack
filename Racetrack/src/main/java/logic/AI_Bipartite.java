@@ -111,6 +111,15 @@ public class AI_Bipartite extends AI
 			while( null!=fastestLandingPoints.get( fastestLandingPoints.size()-1 ).getPredecessor() )
 				fastestLandingPoints.add( fastestLandingPoints.get( fastestLandingPoints.size()-1 ).getPredecessor() );
 
+			if( mVerbose )
+			{
+				System.out.println( "Relevant Points:" );
+				for( int i=fastestLandingPoints.size()-1 ; i>=0 ; i-- )
+				{
+					System.out.println( "  " + (fastestLandingPoints.size()-i) + ". " + fastestLandingPoints.get( i ) );
+				}
+			}
+			
 			LandingPoint from=fastestLandingPoints.get( fastestLandingPoints.size()-1 );
 			LandingPoint to=fastestLandingPoints.get( fastestLandingPoints.size()-2 );
 

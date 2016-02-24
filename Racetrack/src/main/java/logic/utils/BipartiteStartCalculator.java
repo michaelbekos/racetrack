@@ -559,7 +559,7 @@ public class BipartiteStartCalculator
 		// Search 0, 0
 		for( int i=0 ; i<accelerations.size()-1 && !successfulFilledOne; i++ )
 		{
-			if( 0==accelerations.get( i ) && 1==accelerations.get( i+1 ) )
+			if( 0==accelerations.get( i ) && 0==accelerations.get( i+1 ) )
 			{
 				accelerations.set( i, 1 );
 				accelerations.set( i+1, -1 );
@@ -575,15 +575,67 @@ public class BipartiteStartCalculator
 		return ret;
 	}
 
+
+	private void transformPoints( 	AtomicReference<LandingPoint>    fromTransformed, 
+									AtomicReference<LandingPoint>    toTransformed, 
+									LandingPoint                     fromUntransformed,
+									LandingPoint                     toUntransformed)
+	{
+		int grid_width=(int)( mEndAreaOfPath.getX()-mStartAreaOfPath.getX()+1 );
+		int grid_height=(int)( mEndAreaOfPath.getY()-mStartAreaOfPath.getY()+1 );
+		
+		ArrayList<LandingPoint> tmpFrom=new ArrayList<LandingPoint>();
+		ArrayList<LandingPoint> tmpTo=new ArrayList<LandingPoint>();
+		
+		tmpFrom.add( fromUntransformed );
+		tmpTo.add(   toUntransformed   );
+				
+		// FlipX
+		if( mFlipArroundXAxis )
+		{
+			tmpFrom=flipXVertex( tmpFrom, grid_width, grid_height );
+			tmpTo=flipXVertex( tmpTo, grid_width, grid_height );
+		}
+		// FlipY
+		if( mFlipArroundYAxis )
+		{
+			tmpFrom=flipYVertex( tmpFrom, grid_width, grid_height );
+			tmpTo=flipYVertex( tmpTo, grid_width, grid_height );
+		}
+		// Rot
+		if( mRotate90DegreeClockwise )
+		{
+			tmpFrom=rotate90DegreeClockwiseVertex( tmpFrom, grid_width, grid_height );
+			tmpTo=rotate90DegreeClockwiseVertex( tmpTo, grid_width, grid_height );
+		}
+		
+		fromTransformed.set( tmpFrom.get( 0 ) );
+		toTransformed.set(   tmpTo.get( 0 ) );
+	}
+		
+		
+		
 	public ArrayList<Point2D> getPath( LandingPoint from, LandingPoint to )
 	{
+		AtomicReference<LandingPoint> fromTransformedRet=new AtomicReference<LandingPoint>();
+		AtomicReference<LandingPoint> toTransformedRet=new AtomicReference<LandingPoint>();
+		
+		transformPoints( 	fromTransformedRet, 
+							toTransformedRet, 
+							from,
+							to );
+		//fromT == fromTransformed
+		//toT == toTransformed
+		LandingPoint fromT = fromTransformedRet.get();
+		LandingPoint toT   = toTransformedRet.get();
+		
 		ArrayList<Point2D> ret=new ArrayList<Point2D>();
 		ArrayList<Integer> xSpeeds;
 		ArrayList<Integer> ySpeeds;
-		int t=(int)Math.max( Math.abs( to.getSpeed().getX()-from.getSpeed().getX() ), Math.abs( to.getSpeed().getY()-from.getSpeed().getY() ) );
+		int t=(int)Math.max( Math.abs( toT.getSpeed().getX()-fromT.getSpeed().getX() ), Math.abs( toT.getSpeed().getY()-fromT.getSpeed().getY() ) );
 		t=Math.max( t, 1 );
-		int dx=(int)( to.getPosition().getX()-from.getPosition().getX() );
-		int dy=(int)( to.getPosition().getY()-from.getPosition().getY() );
+		int dx=(int)( toT.getPosition().getX()-fromT.getPosition().getX() );
+		int dy=(int)( toT.getPosition().getY()-fromT.getPosition().getY() );
 		int ix=0;
 		int iy=0;
 		boolean restart=false;
@@ -591,7 +643,7 @@ public class BipartiteStartCalculator
 		{
 			restart=false;
 			AtomicReference<Integer> integralX=new AtomicReference<Integer>();
-			xSpeeds=createGraph( (int)from.getSpeed().getX(), (int)to.getSpeed().getX(), t, integralX );
+			xSpeeds=createGraph( (int)fromT.getSpeed().getX(), (int)toT.getSpeed().getX(), t, integralX );
 			ix=integralX.get();
 			while( dx!=ix )
 			{
@@ -610,7 +662,7 @@ public class BipartiteStartCalculator
 			if( restart )
 				continue;
 			AtomicReference<Integer> integralY=new AtomicReference<Integer>();
-			ySpeeds=createGraph( (int)from.getSpeed().getY(), (int)to.getSpeed().getY(), t, integralY );
+			ySpeeds=createGraph( (int)fromT.getSpeed().getY(), (int)toT.getSpeed().getY(), t, integralY );
 			iy=integralY.get();
 			while( dy!=iy )
 			{
