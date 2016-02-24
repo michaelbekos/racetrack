@@ -75,6 +75,7 @@ public class AI_LimitedView_DriveSafe extends AI
 		
 		if( !mGridCreated )
 		{
+			LandingRegion.setRemoveAnyZeroSpeeds( true );
 			//System.out.println( this.getName()+ " is creating a grid." ); 
 			mGridCreated=createGrid( x, y );
 			//System.out.println( this.getName()+ " is calculating dijkstra." );

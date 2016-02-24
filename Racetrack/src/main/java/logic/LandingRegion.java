@@ -8,6 +8,10 @@ import src.main.java.logic.utils.AIUtils.Direction;
 
 public class LandingRegion
 {
+    // This variable will ensure any speeds with speed 0 in y or x will get removed.
+    // TODO: It has to be removed, the moves are legal ( theoretical! )
+    private static boolean mRemoveAnyZeroSpeeds;
+
     private Point2D mOrigin; // Point diagonal to corner
     private Point2D mCorner; // Point diagonal to corner
     private Point2D mStart;
@@ -68,6 +72,14 @@ public class LandingRegion
         {
         	mCorner = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
         }
+    }
+
+    public static void setRemoveAnyZeroSpeeds( boolean removeAnyZeroSpeeds )
+    {
+    	mRemoveAnyZeroSpeeds=	removeAnyZeroSpeeds;
+
+
+
     }
 
     public Point2D getCorner()
@@ -313,6 +325,18 @@ public class LandingRegion
         	}
     	}
 
+    	if( mRemoveAnyZeroSpeeds )
+    	{
+        	for( int j=0 ; j<tmpLandingRegionSpeedMatrix.size() ; j++ )
+        	{
+        		if( tmpLandingRegionSpeedMatrix.get( j ).getSpeed().getX() == 0
+        		||	tmpLandingRegionSpeedMatrix.get( j ).getSpeed().getY() == 0 )
+        		{
+    				tmpLandingRegionSpeedMatrix.remove( j );
+    				j--;
+        		}
+        	}    		
+    	}
 
     	landingRegionSpeedMatrix=tmpLandingRegionSpeedMatrix;
     	if( mVerbose )
