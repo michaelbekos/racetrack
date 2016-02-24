@@ -75,6 +75,7 @@ public class AI_LimitedView_DriveSafe extends AI
 		
 		if( !mGridCreated )
 		{
+			LandingRegion.setRemoveAnyZeroSpeeds( true );
 			//System.out.println( this.getName()+ " is creating a grid." ); 
 			mGridCreated=createGrid( x, y );
 			//System.out.println( this.getName()+ " is calculating dijkstra." );
@@ -263,13 +264,18 @@ public class AI_LimitedView_DriveSafe extends AI
 			{
 				System.out.println(landingPointIndex + ": " + landingPoints.get(landingPointIndex).toString());
 			}
+			System.out.println(String.format("Total of %d moves required!", movePath.size()));
+			for (int movePathIndex = 0; movePathIndex < movePath.size(); movePathIndex++)
+			{
+				System.out.println(movePath.get(movePathIndex).toString());
+			}
 		}			
 			
 			
 			
 			
 		
-		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition + 1 ).getX() + ", "+ movePath.get( currentIndexPosition + 1 ).getY() +" )" ); 
+		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition ).getX() + ", "+ movePath.get( currentIndexPosition ).getY() +" )" ); 
 		return movePath.get( currentIndexPosition++ );
 	}
 	
