@@ -16,8 +16,9 @@ public class LandingRegion
     private Point2D mCorner;
     private Point2D mStart;
     private Point2D mEnd;
-    
-    private int  mCenterOfNormalLR;
+
+    private int     mCenterOfNormalLR;
+    private double  mCenterOfEntireLR;
     private boolean mLRPositivOrientated;
     
     private int mW;  // Track width
@@ -55,8 +56,7 @@ public class LandingRegion
 
         mOldDirection= oldDirection;
         mNewDirection= newDirection;
-        int halfOfWCeil  = (int)Math.ceil( mW/2 );
-        int halfOfWFloor = (int)Math.floor( mW/2 );
+        int halfOfWCeil  = (int)Math.ceil( ((double)mW)/2 );
         if(    mOldDirection==Direction.RIGHT && mNewDirection==Direction.DOWN ||
     		   mOldDirection==Direction.UP &&    mNewDirection==Direction.LEFT )
         {
@@ -64,11 +64,13 @@ public class LandingRegion
         	if( mOldDirection==Direction.UP )
         	{
         		mCenterOfNormalLR=(int)mCorner.getX()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
         		mLRPositivOrientated=true;
         	}
         	else
         	{
         		mCenterOfNormalLR=(int)mCorner.getY()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
         		mLRPositivOrientated=true;
         	}
         }
@@ -79,11 +81,13 @@ public class LandingRegion
         	if( mOldDirection==Direction.DOWN )
         	{
         		mCenterOfNormalLR=(int)mCorner.getX()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
         		mLRPositivOrientated=false;
         	}
         	else
         	{
         		mCenterOfNormalLR=(int)mCorner.getY()-halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
         		mLRPositivOrientated=true;
         	}
         }
@@ -94,11 +98,13 @@ public class LandingRegion
         	if( mOldDirection==Direction.UP )
         	{
         		mCenterOfNormalLR=(int)mCorner.getX()-halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
         		mLRPositivOrientated=true;
         	}
         	else
         	{
         		mCenterOfNormalLR=(int)mCorner.getY()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
         		mLRPositivOrientated=false;
         	}
         }
@@ -828,6 +834,59 @@ public class LandingRegion
     	
     	return ret;
     }
+    
+    
+    public ArrayList<LandingPoint> getSafeLandingPoint()
+    {
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
+    	boolean horizontal=false;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    	}
+    	
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
+    	
+    	int center1=(int)Math.ceil( mCenterOfEntireLR );
+    	int center2=(int)Math.floor( mCenterOfEntireLR );
+    	// This section is for extracting the points we need by spatial criteria
+		if( horizontal )
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( center1==allVertex.get().get( i ).getPosition().getX() ||
+    				center2==allVertex.get().get( i ).getPosition().getX() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );	
+	    		}
+	    	}
+		}
+		else
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( center1==allVertex.get().get( i ).getPosition().getY() ||
+    				center2==allVertex.get().get( i ).getPosition().getY() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );
+	    		}
+	    	}
+		}
+    	return ret;
+    }
+/*
     public ArrayList<LandingPoint> getSafeLandingPoint()
     {
     	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
@@ -898,31 +957,26 @@ public class LandingRegion
     	
     	return ret;
     }
-
+*/
     public ArrayList<LandingPoint> getCarefulLandingPoint()
     {
     	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
     	boolean horizontal=false;
-    	boolean positiv=false;
     	if( mNewDirection==Direction.LEFT )
     	{
     		horizontal=true;
-    		positiv=false;
     	}
     	else if( mNewDirection==Direction.RIGHT )
     	{
     		horizontal=true;
-    		positiv=true;
     	}
     	else if( mNewDirection==Direction.DOWN )
     	{
     		horizontal=false;
-    		positiv=false;
     	}
     	else if( mNewDirection==Direction.UP )
     	{
     		horizontal=false;
-    		positiv=true;
     	}
     	
     	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
