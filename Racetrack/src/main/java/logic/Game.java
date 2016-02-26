@@ -195,6 +195,9 @@ public class Game {
 			case 12:
 				players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], "AI Bipartite " + lobby.getPlayerNames()[i], i );
 				break;		
+			case 13:
+				players[i]= new AI_LimitedView_DriveCarefully( lobby.getPlayerIDs()[i], "AI LimitedView DriveCarefully " + lobby.getPlayerNames()[i], i );
+				break;		
 			/* ADD YOUR NEW AI ALSO HERE */
 			default:
 				return;

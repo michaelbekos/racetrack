@@ -389,6 +389,9 @@ public class Administration implements IAdministration{
 		case 12:
 			entity= new AI_Bipartite( playerID, "AI Bipartite " + clientName );
 			break;
+		case 13:
+			entity= new AI_LimitedView_DriveCarefully( playerID, "AI LimitedView DriveCarefully " + clientName );
+			break;
 			/* ADD YOUR NEW AI ALSO HERE */
 		}
 		//Player player=getPlayerMap().get(playerID);

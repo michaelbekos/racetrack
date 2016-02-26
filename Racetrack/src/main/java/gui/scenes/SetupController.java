@@ -123,11 +123,12 @@ public class SetupController extends NavigationSceneBase {
 				"AIStar",	// 5
 				"Crasher",	// 6
 				"Zigzag",	// 7
-				"LimitedView_DriveSafe",	// 8
-				"LimitedView_FastCorner",	// 9
-				"LimitedView_FastTopmost",	// 10
-				"LimitedView_SpeedUp",		// 11
-				"Bipartite"					// 12
+				"LimitedView_DriveSafe",		// 8
+				"LimitedView_FastCorner",		// 9
+				"LimitedView_FastTopmost",		// 10
+				"LimitedView_SpeedUp",			// 11
+				"Bipartite",					// 12
+				"LimitedView_DriveCarefully"	// 13
 				/* "YOUR NEW AI" */ ) );
 		aiChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
 				new ChangeListener<Number>()

@@ -7,6 +7,7 @@ import src.main.java.gui.Racetracker;
 import src.main.java.gui.navigation.MultiSceneBase;
 import src.main.java.logic.AI_Bipartite;
 import src.main.java.logic.AI_Crasher;
+import src.main.java.logic.AI_LimitedView_DriveCarefully;
 import src.main.java.logic.AI_LimitedView_DriveSafe;
 import src.main.java.logic.AI_LimitedView_FastCorner;
 import src.main.java.logic.AI_LimitedView_FastTopmost;
@@ -108,6 +109,9 @@ public class ReceiveStartGameMessageClientHandler extends
 						break;
 					case 12:
 						players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], "AI Bipartite " + lobby.getPlayerNames()[i] );
+						break;
+					case 13:
+						players[i]= new AI_LimitedView_DriveCarefully( lobby.getPlayerIDs()[i], "AI LimitedView DriveCarefully " + lobby.getPlayerNames()[i] );
 						break;
 						/* ADD YOUR NEW AI ALSO HERE */
 					default:
