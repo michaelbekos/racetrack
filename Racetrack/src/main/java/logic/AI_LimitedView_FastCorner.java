@@ -13,7 +13,6 @@ import src.main.java.logic.AIstar.LineSegment;
 //import src.main.java.logic.AIstar.Point;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
-import src.main.java.logic.utils.AINUtils;
 import src.main.java.logic.utils.AIUtils;
 
 import java.util.ArrayList;
@@ -151,23 +150,11 @@ public class AI_LimitedView_FastCorner extends AI
 			for (int i = 0; i < lrl.size(); i++)
 			{
 				tmpTo=lrl.get( i ).getFastCornerLandingPoint();
-				List<Point2D> accelerations;
-				if (i == 0)
-				{
-					accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
-															tmpTo.getPosition(), 
-															tmpFrom.getSpeed(), 
-															tmpTo.getSpeed(), 
-															borders );
-				}
-				else
-				{
-					accelerations = AINUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
-															tmpTo.getPosition(), 
-															tmpFrom.getSpeed(), 
-															tmpTo.getSpeed(), 
-															borders );
-				}
+				List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+																	tmpTo.getPosition(), 
+																	tmpFrom.getSpeed(), 
+																	tmpTo.getSpeed(), 
+																	borders );
 				for (int j = 0; j < accelerations.size(); j++)
 				{
 					sx += (int)accelerations.get(j).getX();
