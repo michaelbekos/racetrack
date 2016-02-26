@@ -13,6 +13,7 @@ import src.main.java.logic.AIstar.LineSegment;
 //import src.main.java.logic.AIstar.Point;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
+import src.main.java.logic.utils.AINUtils;
 import src.main.java.logic.utils.AIUtils;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class AI_LimitedView_DriveSafe extends AI
 		
 		if( !mGridCreated )
 		{
-			LandingRegion.setRemoveAnyZeroSpeeds( true );
+			//LandingRegion.setRemoveAnyZeroSpeeds( true );
 			//System.out.println( this.getName()+ " is creating a grid." ); 
 			mGridCreated=createGrid( x, y );
 			//System.out.println( this.getName()+ " is calculating dijkstra." );
@@ -107,12 +108,17 @@ public class AI_LimitedView_DriveSafe extends AI
 			for (int i = 0; i < lrl.size(); i++)
 			{
 				ArrayList<LandingPoint> tmpTos=lrl.get( i ).getSafeLandingPoint();
+				System.out.println(String.format("Safe Landing Points in Region %d:",i));
+				for (LandingPoint lp : tmpTos)
+				{
+					System.out.println(lp.toString());
+				}
 				int bestSpeed = 0;
 				int minimumNumberOfTurns = -1;
 				AIUtils.Direction tmpNewDirection = landingRegionNewDirections.get(i);
 				for (LandingPoint landingPoint : tmpTos)
 				{
-					List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+					List<Point2D> accelerations = AINUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
 							landingPoint.getPosition(), 
 							tmpFrom.getSpeed(), 
 							landingPoint.getSpeed(), 
@@ -210,6 +216,7 @@ public class AI_LimitedView_DriveSafe extends AI
 				}
 				landingPoints.add(tmpTo);
 				tmpFrom=tmpTo;
+				System.out.println("Selected Landing Point " + tmpTo.toString() + "for Region " + i + ".");
 			}
 			List<Point2D> finalAccelerations = AIUtils.CalculateFinalAccelerations( 	
 					tmpFrom.getPosition(), 

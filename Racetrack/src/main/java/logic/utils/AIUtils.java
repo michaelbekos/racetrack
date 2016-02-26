@@ -186,25 +186,58 @@ public class AIUtils
 				}*/
 				//do the same for x-coordinate
 				int smaxX;
+				int dminX;
+				int deltaDminX;
+				int sxForZxMinCalculation;
+				if (sxForZxCalculation == sx2)
+				{
+					sxForZxMinCalculation = sx1;
+				}
+				else
+				{
+					sxForZxMinCalculation = sx2;
+				}
 				if (zxIsEven)
 				{
 					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * (zx/2-1)*(zx/2) + (int)Math.signum(sx2) * zx/2;
-					deltaDX = Math.abs(Dx - dmaxX);
-					layersSkippedX = (int)Math.floor(Math.sqrt(Math.abs(deltaDX)));
-					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
-					doNotAccelerateX= 2*(layersSkippedX) - additionalPointsSkippedX;
-					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * zx/2 - (int)Math.signum(sx2) * layersSkippedX;
-					smaxX = sxForZxCalculation + (int)Math.signum(sx2) * zx/2;
+					deltaDX = Math.abs(Dx - dmaxX);	
+					dminX = Ax + zx * sxForZxMinCalculation - (int)Math.signum(sx2) * (zx/2-1)*(zx/2) - (int)Math.signum(sx2) * zx/2;
+					deltaDminX = Math.abs(Dx - dminX);
+					if (deltaDX <= deltaDminX)
+					{
+						layersSkippedX = (int)Math.floor(Math.sqrt(Math.abs(deltaDX)));
+						additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX;
+						doNotAccelerateX= 2*(layersSkippedX) - additionalPointsSkippedX;
+						smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * zx/2 - (int)Math.signum(sx2) * layersSkippedX;
+					}
+					else
+					{
+						layersSkippedX = (int)Math.floor(Math.sqrt(Math.abs(deltaDminX)));
+						additionalPointsSkippedX = Math.abs(deltaDminX) - layersSkippedX * layersSkippedX;
+						doNotAccelerateX= 2*(layersSkippedX) - additionalPointsSkippedX;
+						smaxReachedX = sxForZxMinCalculation - (int)Math.signum(sx2) * zx/2 + (int)Math.signum(sx2) * layersSkippedX;
+					}
 				}
 				else
 				{
 					dmaxX = Ax + zx * sxForZxCalculation + (int)Math.signum(sx2) * ((zx-1)/2+1)*((zx-1)/2);
 					deltaDX = Math.abs(Dx - dmaxX);
-					layersSkippedX = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDX)));
-					additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX - layersSkippedX;
-					doNotAccelerateX= 2*(layersSkippedX+1) - 1 - additionalPointsSkippedX;
-					smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * (zx-1)/2 - (int)Math.signum(sx2) * layersSkippedX;
-					smaxX = sxForZxCalculation + (int)Math.signum(sx2) * (zx-1)/2;
+					dminX = Ax - zx * sxForZxMinCalculation - (int)Math.signum(sx2) * ((zx-1)/2+1)*((zx-1)/2);
+					deltaDminX = Math.abs(Dx - dminX);
+					if (deltaDX <= deltaDminX)
+					{
+						layersSkippedX = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDX)));
+						additionalPointsSkippedX = Math.abs(deltaDX) - layersSkippedX * layersSkippedX - layersSkippedX;
+						doNotAccelerateX= 2*(layersSkippedX+1) - 1 - additionalPointsSkippedX;
+						smaxReachedX = sxForZxCalculation + (int)Math.signum(sx2) * (zx-1)/2 - (int)Math.signum(sx2) * layersSkippedX;
+					}
+					else
+					{
+						layersSkippedX = (int)Math.floor(-0.5f + Math.sqrt(Math.abs(0.25f + deltaDminX)));
+						additionalPointsSkippedX = Math.abs(deltaDminX) - layersSkippedX * layersSkippedX - layersSkippedX;
+						doNotAccelerateX= 2*(layersSkippedX+1) - 1 - additionalPointsSkippedX;
+						smaxReachedX = sxForZxMinCalculation - (int)Math.signum(sx2) * (zx-1)/2 + (int)Math.signum(sx2) * layersSkippedX;
+					}
 				}
 				//initialize stuff for the output
 				boolean skippingX = false;
@@ -618,7 +651,8 @@ public class AIUtils
 				int sminY_even;
 				int sminY_odd; 
 				double sminY_double_even = Math.sqrt((sy1*sy1 + sy2*sy2 + (int)Math.abs(sy2) - (int)Math.signum(sy2)*sy1 - 2*Math.signum(sy2)*Dy)/2.0f)*(-Math.signum(sy2));
-				double sminY_double_odd = Math.signum(sy2) - Math.sqrt(0.25+(sy1*sy1 + sy2*sy2 + (int)Math.abs(sy2) - (int)Math.signum(sy2)*sy1 - 2*Math.signum(sy2)*Dy)/2.0f)*(Math.signum(sy2));
+				//did something here
+				double sminY_double_odd = 0.5 - Math.sqrt(0.25+(sy1*sy1 + sy2*sy2 + (int)Math.abs(sy2) - (int)Math.signum(sy2)*sy1 - 2*Math.signum(sy2)*Dy)/2.0f)*(Math.signum(sy2));
 				if (Math.signum(sy2)>0)
 				{
 					sminY_even = (int) Math.floor(sminY_double_even);
@@ -1593,7 +1627,7 @@ public class AIUtils
 					int sminX_even;
 					int sminX_odd; 
 					double sminX_double_even = Math.sqrt((sx1*sx1 + sx2*sx2 + (int)Math.abs(sx2) - (int)Math.signum(sx2)*sx1 - 2*Math.signum(sx2)*Dx)/2.0f)*(-Math.signum(sx2));
-					double sminX_double_odd = Math.signum(sx2) - Math.sqrt(0.25+(sx1*sx1 + sx2*sx2 + (int)Math.abs(sx2) - (int)Math.signum(sx2)*sx1 - 2*Math.signum(sx2)*Dx)/2.0f)*(Math.signum(sx2));
+					double sminX_double_odd = 0.5 - Math.sqrt(0.25+(sx1*sx1 + sx2*sx2 + (int)Math.abs(sx2) - (int)Math.signum(sx2)*sx1 - 2*Math.signum(sx2)*Dx)/2.0f)*(Math.signum(sx2));
 					if (Math.signum(sx2)>0)
 					{
 						sminX_even = (int) Math.floor(sminX_double_even);

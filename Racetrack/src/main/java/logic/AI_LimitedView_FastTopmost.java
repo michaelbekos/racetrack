@@ -13,6 +13,7 @@ import src.main.java.logic.AIstar.LineSegment;
 //import src.main.java.logic.AIstar.Point;
 import src.main.java.logic.AIstar.State;
 import src.main.java.logic.AIstar.StateComparator;
+import src.main.java.logic.utils.AINUtils;
 import src.main.java.logic.utils.AIUtils;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class AI_LimitedView_FastTopmost extends AI
 		
 		if( !mGridCreated )
 		{
-			LandingRegion.setRemoveAnyZeroSpeeds( true );
+			//LandingRegion.setRemoveAnyZeroSpeeds( true );
 			//System.out.println( this.getName()+ " is creating a grid." ); 
 			mGridCreated=createGrid( x, y );
 			//System.out.println( this.getName()+ " is calculating dijkstra." );
@@ -151,7 +152,7 @@ public class AI_LimitedView_FastTopmost extends AI
 			for (int i = 0; i < lrl.size(); i++)
 			{
 				tmpTo=lrl.get( i ).getFastTopLandingPoint();
-				List<Point2D> accelerations = AIUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
+				List<Point2D> accelerations = AINUtils.CalculateAccelerations( 	tmpFrom.getPosition(), 
 																	tmpTo.getPosition(), 
 																	tmpFrom.getSpeed(), 
 																	tmpTo.getSpeed(), 

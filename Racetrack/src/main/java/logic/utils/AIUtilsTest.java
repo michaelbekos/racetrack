@@ -776,6 +776,15 @@ public class AIUtilsTest
 		
 		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb, new LinkedList<LineSegment>());
 		Validate(a, b, sa, sb, accelerations, testCase++);
+		
+		//Test Case 44
+		a = new Point2D(32,26);
+		b = new Point2D(48,32);
+		sa = new Point2D(3,3);
+		sb = new Point2D(3,3);
+		
+		accelerations = AIUtils.CalculateAccelerations(a,b,sa,sb, new LinkedList<LineSegment>());
+		Validate(a, b, sa, sb, accelerations, testCase++);
 	}
 
 	private static void Validate(Point2D a, Point2D b, Point2D sa, Point2D sb, List<Point2D> accelerations, int testCaseNumber)
@@ -809,6 +818,9 @@ public class AIUtilsTest
 		{
 			System.out.println(String.format("Position computed not matching with required final position in test case %d", testCaseNumber));
 		}
-		System.out.println(String.format("Validation successful for test case %d!", testCaseNumber));
+		if (sx == (int)sb.getX() && sy == (int)sb.getY() && x == (int)b.getX() && y == (int)b.getY())
+		{	
+			System.out.println(String.format("Validation successful for test case %d!", testCaseNumber));
+		}
 	}
 }

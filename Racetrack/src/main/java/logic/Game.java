@@ -195,6 +195,9 @@ public class Game {
 			case 12:
 				players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], "AI Bipartite " + lobby.getPlayerNames()[i], i );
 				break;		
+			case 13:
+				players[i]= new AI_LimitedView_DriveCarefully( lobby.getPlayerIDs()[i], "AI LimitedView DriveCarefully " + lobby.getPlayerNames()[i], i );
+				break;		
 			/* ADD YOUR NEW AI ALSO HERE */
 			default:
 				return;
@@ -415,6 +418,8 @@ public class Game {
 						selectedPosition);
 
 				// Inner boundary
+				if (false)
+				{
 				for (Line2D boundary : track.getInnerBoundary()) {
 					if (java.awt.geom.Line2D.linesIntersect(
 							lastPlayerMoveLine.getStartX(),
@@ -522,6 +527,7 @@ public class Game {
 					}
 				}
 
+				}
 				setVelocityPositionAndUpdateField(player, selectedPosition);
 
 				return null;
