@@ -13,10 +13,14 @@ public class LandingRegion
     private static boolean mRemoveAnyZeroSpeeds;
 
     private Point2D mOrigin; // Point diagonal to corner
-    private Point2D mCorner; // Point diagonal to corner
+    private Point2D mCorner;
     private Point2D mStart;
     private Point2D mEnd;
 
+    private int     mCenterOfNormalLR;
+    private double  mCenterOfEntireLR;
+    private boolean mLRPositivOrientated;
+    
     private int mW;  // Track width
     private int mA;  // Landing region additional height
     private int mLW; // Landing region width
@@ -52,34 +56,78 @@ public class LandingRegion
 
         mOldDirection= oldDirection;
         mNewDirection= newDirection;
-        if(    mOldDirection==Direction.LEFT && mNewDirection==Direction.DOWN ||
-    		   mOldDirection==Direction.DOWN && mNewDirection==Direction.LEFT )
+        int halfOfWCeil  = (int)Math.ceil( ((double)mW)/2 );
+        if(    mOldDirection==Direction.RIGHT && mNewDirection==Direction.DOWN ||
+    		   mOldDirection==Direction.UP &&    mNewDirection==Direction.LEFT )
         {
         	mCorner = new Point2D( mOrigin.getX()-1, mOrigin.getY()-1 );
+        	if( mOldDirection==Direction.UP )
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getX()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
+        		mLRPositivOrientated=true;
+        	}
+        	else
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getY()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
+        		mLRPositivOrientated=true;
+        	}
         }
-        else if( mOldDirection==Direction.LEFT && mNewDirection==Direction.UP ||
-    		     mOldDirection==Direction.UP && mNewDirection==Direction.LEFT )
+        else if( mOldDirection==Direction.DOWN &&  mNewDirection==Direction.LEFT ||
+    		     mOldDirection==Direction.RIGHT && mNewDirection==Direction.UP )
         {
         	mCorner = new Point2D( mOrigin.getX()-1, mOrigin.getY()+1 );
+        	if( mOldDirection==Direction.DOWN )
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getX()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
+        		mLRPositivOrientated=false;
+        	}
+        	else
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getY()-halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
+        		mLRPositivOrientated=true;
+        	}
         }
-        else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.DOWN ||
-    		     mOldDirection==Direction.DOWN && mNewDirection==Direction.RIGHT )
+        else if( mOldDirection==Direction.UP &&   mNewDirection==Direction.RIGHT ||
+    		     mOldDirection==Direction.LEFT && mNewDirection==Direction.DOWN )
         {
         	mCorner = new Point2D( mOrigin.getX()+1, mOrigin.getY()-1 );
+        	if( mOldDirection==Direction.UP )
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getX()-halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getX()+((double)(mW+mLW))/2;
+        		mLRPositivOrientated=true;
+        	}
+        	else
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getY()+halfOfWCeil;
+        		mCenterOfEntireLR=mStart.getY()-((double)(mW+mLW))/2;
+        		mLRPositivOrientated=false;
+        	}
         }
-        else if( mOldDirection==Direction.RIGHT && mNewDirection==Direction.UP ||
-    		     mOldDirection==Direction.UP && mNewDirection==Direction.RIGHT )
+        else if( mOldDirection==Direction.DOWN && mNewDirection==Direction.RIGHT ||
+    		     mOldDirection==Direction.LEFT && mNewDirection==Direction.UP )
         {
         	mCorner = new Point2D( mOrigin.getX()+1, mOrigin.getY()+1 );
+        	if( mOldDirection==Direction.DOWN )
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getX()-halfOfWCeil;
+        		mLRPositivOrientated=false;
+        	}
+        	else
+        	{
+        		mCenterOfNormalLR=(int)mCorner.getY()-halfOfWCeil;
+        		mLRPositivOrientated=false;
+        	}
         }
     }
 
     public static void setRemoveAnyZeroSpeeds( boolean removeAnyZeroSpeeds )
     {
     	mRemoveAnyZeroSpeeds=	removeAnyZeroSpeeds;
-
-
-
     }
 
     public Point2D getCorner()
@@ -786,6 +834,59 @@ public class LandingRegion
     	
     	return ret;
     }
+    
+    
+    public ArrayList<LandingPoint> getSafeLandingPoint()
+    {
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
+    	boolean horizontal=false;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    	}
+    	
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
+    	
+    	int center1=(int)Math.ceil( mCenterOfEntireLR );
+    	int center2=(int)Math.floor( mCenterOfEntireLR );
+    	// This section is for extracting the points we need by spatial criteria
+		if( horizontal )
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( center1==allVertex.get().get( i ).getPosition().getX() ||
+    				center2==allVertex.get().get( i ).getPosition().getX() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );	
+	    		}
+	    	}
+		}
+		else
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( center1==allVertex.get().get( i ).getPosition().getY() ||
+    				center2==allVertex.get().get( i ).getPosition().getY() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );
+	    		}
+	    	}
+		}
+    	return ret;
+    }
+/*
     public ArrayList<LandingPoint> getSafeLandingPoint()
     {
     	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
@@ -856,11 +957,87 @@ public class LandingRegion
     	
     	return ret;
     }
+*/
+    public ArrayList<LandingPoint> getCarefulLandingPoint()
+    {
+    	ArrayList<LandingPoint> ret=new ArrayList<LandingPoint>();
+    	boolean horizontal=false;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    	}
+    	
+    	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
+    	
+    	// This section is for extracting the points we need by spatial criteria
+		if( horizontal )
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( mCenterOfNormalLR==allVertex.get().get( i ).getPosition().getX() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );	
+	    		}
+	    	}
+	    	int increment=( ( mLRPositivOrientated )?1:-1 );
+			for( int i=0, ii=mW, o=(int)mOrigin.getY() ; i<mLW ; i++,ii--,o+=increment )
+	    	{
+				int maxSpeed=(int)Math.floor( Math.sqrt( 2*ii-1.75 )-0.5 )+1;
+				int driveCarefulMaxSpeed=(int)Math.ceil( maxSpeed/2 );
+
+				for( int j=0 ; j<ret.size() ; j++ )
+		    	{
+					if( o==ret.get( j ).getPosition().getY() )
+					{
+						if( driveCarefulMaxSpeed>ret.get( j ).getSpeed().getX() )
+						{
+			    			ret.remove( j );
+			    			j--;
+						}
+					}
+		    	}
+	    	}
+		}
+		else
+		{
+	    	for( int i=1 ; i<allVertex.get().size() ; i++ )
+	    	{
+	    		if( mCenterOfNormalLR==allVertex.get().get( i ).getPosition().getY() )
+	    		{
+	    			ret.add( allVertex.get().get( i ) );
+	    		}
+	    	}
+	    	int increment=( ( mLRPositivOrientated )?1:-1 );
+			for( int i=0, ii=mW, o=(int)mOrigin.getX() ; i<mLW ; i++,ii--,o+=increment )
+	    	{
+				int maxSpeed=(int)Math.floor( Math.sqrt( 2*ii-1.75 )-0.5 )+1;
+				int driveCarefulMaxSpeed=(int)Math.ceil( maxSpeed/2 );
+
+				for( int j=0 ; j<ret.size() ; j++ )
+		    	{
+					if( o==ret.get( j ).getPosition().getX() )
+					{
+						if( driveCarefulMaxSpeed>ret.get( j ).getSpeed().getY() )
+						{
+			    			ret.remove( j );
+			    			j--;
+						}
+					}
+		    	}
+	    	}
+		}
+    	return ret;
+    }
 }
-
-
-
-
-
-
-
