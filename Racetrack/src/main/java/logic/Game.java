@@ -418,8 +418,6 @@ public class Game {
 						selectedPosition);
 
 				// Inner boundary
-				if (false)
-				{
 				for (Line2D boundary : track.getInnerBoundary()) {
 					if (java.awt.geom.Line2D.linesIntersect(
 							lastPlayerMoveLine.getStartX(),
@@ -525,8 +523,6 @@ public class Game {
 
 						return newPosition;
 					}
-				}
-
 				}
 				setVelocityPositionAndUpdateField(player, selectedPosition);
 

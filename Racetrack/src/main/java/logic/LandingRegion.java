@@ -16,7 +16,7 @@ public class LandingRegion
     private Point2D mCorner;
     private Point2D mStart;
     private Point2D mEnd;
-
+    
     private int     mCenterOfNormalLR;
     private double  mCenterOfEntireLR;
     private boolean mLRPositivOrientated;
@@ -763,17 +763,98 @@ public class LandingRegion
     public LandingPoint getFastCornerLandingPoint()
     {
     	LandingPoint ret=null;
+    	
     	AtomicReference< ArrayList<LandingPoint> > allVertex=getLandingPoints();
+    	boolean horizontal = false;
+    	boolean positiv = false;
+    	Point2D positionToFind = null;
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		horizontal=true;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		horizontal=true;
+    		positiv=true;
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		horizontal=false;
+    		positiv=false;
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		horizontal=false;
+    		positiv=true;
+    	}
+    	if( mNewDirection==Direction.LEFT )
+    	{
+    		positionToFind = new Point2D(mOrigin.getX()-1, mOrigin.getY());
+    	}
+    	else if( mNewDirection==Direction.RIGHT )
+    	{
+    		positionToFind = new Point2D(mOrigin.getX()+1, mOrigin.getY());
+    	}
+    	else if( mNewDirection==Direction.DOWN )
+    	{
+    		positionToFind = new Point2D(mOrigin.getX(), mOrigin.getY()-1);
+    	}
+    	else if( mNewDirection==Direction.UP )
+    	{
+    		positionToFind = new Point2D(mOrigin.getX(), mOrigin.getY()+1);
+    	}
     	double s=0;
     	for( int i=0 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( mCorner.equals( allVertex.get().get( i ).getPosition() ) )
+    		if( positionToFind.equals( allVertex.get().get( i ).getPosition() ) )
     		{
-    			if( s<allVertex.get().get( i ).getTotalSpeed() )
-				{
-					s=allVertex.get().get( i ).getTotalSpeed();
-					ret=allVertex.get().get( i );
-				}
+    			if (horizontal)
+    			{
+    				if ((int)Math.abs(allVertex.get().get( i ).getSpeed().getY()) != 1)
+    				{
+    					continue;
+    				}
+    				if (positiv)
+    				{
+    					if( s<allVertex.get().get( i ).getSpeed().getX() )
+    					{
+    						s=allVertex.get().get( i ).getSpeed().getX();
+    						ret=allVertex.get().get( i );
+    					}
+    				}
+    				else
+    				{
+    					if( s>allVertex.get().get( i ).getSpeed().getX() )
+    					{
+    						s=allVertex.get().get( i ).getSpeed().getX();
+    						ret=allVertex.get().get( i );
+    					}
+    				}
+    			}
+    			else
+    			{
+    				if ((int)Math.abs(allVertex.get().get( i ).getSpeed().getX()) != 1)
+    				{
+    					continue;
+    				}
+    				if (positiv)
+    				{
+    					if( s<allVertex.get().get( i ).getSpeed().getY() )
+    					{
+    						s=allVertex.get().get( i ).getSpeed().getY();
+    						ret=allVertex.get().get( i );
+    					}
+    				}
+    				else
+    				{
+    					if( s>allVertex.get().get( i ).getSpeed().getY() )
+    					{
+    						s=allVertex.get().get( i ).getSpeed().getY();
+    						ret=allVertex.get().get( i );
+    					}
+    				}
+    			}
     		}
     	}
     	return ret;
