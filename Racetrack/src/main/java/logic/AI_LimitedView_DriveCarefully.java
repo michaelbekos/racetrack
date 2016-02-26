@@ -106,7 +106,7 @@ public class AI_LimitedView_DriveCarefully extends AI
 			List<LandingPoint> landingPoints = new ArrayList<LandingPoint>();
 			for (int i = 0; i < lrl.size(); i++)
 			{
-				ArrayList<LandingPoint> tmpTos=lrl.get( i ).getSafeLandingPoint();
+				ArrayList<LandingPoint> tmpTos=lrl.get( i ).getCarefulLandingPoint();
 				int bestSpeed = 0;
 				int minimumNumberOfTurns = -1;
 				AIUtils.Direction tmpNewDirection = landingRegionNewDirections.get(i);
