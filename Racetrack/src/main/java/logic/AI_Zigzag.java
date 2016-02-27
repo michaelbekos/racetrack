@@ -229,16 +229,16 @@ public class AI_Zigzag extends AI
 					System.out.println( " " );
 				}
 				
-				System.out.println(String.format("(%d,%d)", (int)this.getCurrentPosition().getX(),(int)this.getCurrentPosition().getY()));
-				for (int i = 0; i < movePath.size(); i++)
+				System.out.println(String.format("Total of %d moves required!", movePath.size()));
+				for (int movePathIndex = 0; movePathIndex < movePath.size(); movePathIndex++)
 				{
-					System.out.println(String.format("(%d,%d)", (int)movePath.get(i).getX(),(int)movePath.get(i).getY()));
+					System.out.println(movePath.get(movePathIndex).toString());
 				}
 			}
 			
 		}
 		
-		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition + 1 ).getX() + ", "+ movePath.get( currentIndexPosition + 1 ).getY() +" )" ); 
+		System.out.println( ""+this.getName()+" will try to move to: ( "+ movePath.get( currentIndexPosition ).getX() + ", "+ movePath.get( currentIndexPosition ).getY() +" )" ); 
 		return movePath.get( currentIndexPosition++ );
 	}
 	

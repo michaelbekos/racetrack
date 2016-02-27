@@ -807,7 +807,7 @@ public class LandingRegion
     	double s=0;
     	for( int i=0 ; i<allVertex.get().size() ; i++ )
     	{
-    		if( positionToFind.equals( allVertex.get().get( i ).getPosition() ) )
+    		if( mOrigin.equals( allVertex.get().get( i ).getPosition() ) )
     		{
     			if (horizontal)
     			{
