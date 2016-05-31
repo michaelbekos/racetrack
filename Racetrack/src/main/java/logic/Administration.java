@@ -357,40 +357,40 @@ public class Administration implements IAdministration{
 			entity= new Player( playerID, clientName );
 			break;
 		case 2:
-			entity= new AI_NoMover( playerID, "AI No Mover " + clientName );
+			entity= new AI_NoMover( playerID, clientName );
 			break;
 		case 3:
-			entity= new AI_Random( playerID, "AI Random " + clientName );
+			entity= new AI_Random( playerID, clientName );
 			break;
 		case 4:
-			entity= new AI_Puckie( playerID, "AI Puckie " + clientName );
+			entity= new AI_Puckie( playerID,  clientName );
 			break;
 		case 5:
-			entity= new AIstar( playerID, "AIstar " + clientName );
+			entity= new AIstar( playerID,  clientName );
 			break;
 		case 6:
-			entity= new AI_Crasher( playerID, "AI Crasher " + clientName );
+			entity= new AI_Crasher( playerID, clientName );
 			break;
 		case 7:
-			entity= new AI_Zigzag( playerID, "AI Zigzag " + clientName );
+			entity= new AI_Zigzag( playerID, clientName );
 			break;
 		case 8:
-			entity= new AI_LimitedView_DriveSafe( playerID, "AI LimitedView DriveSafe " + clientName );
+			entity= new AI_LimitedView_DriveSafe( playerID, clientName );
 			break;
 		case 9:
-			entity= new AI_LimitedView_FastCorner( playerID, "AI LimitedView FastCorner " + clientName );
+			entity= new AI_LimitedView_FastCorner( playerID, clientName );
 			break;
 		case 10:
-			entity= new AI_LimitedView_FastTopmost( playerID, "AI LimitedView FastTopmost " + clientName );
+			entity= new AI_LimitedView_FastTopmost( playerID, clientName );
 			break;
 		case 11:
-			entity= new AI_LimitedView_SpeedUp( playerID, "AI LimitedView SpeedUp " + clientName );
+			entity= new AI_LimitedView_SpeedUp( playerID, clientName );
 			break;
 		case 12:
-			entity= new AI_Bipartite( playerID, "AI Bipartite " + clientName );
+			entity= new AI_Bipartite( playerID, clientName );
 			break;
 		case 13:
-			entity= new AI_LimitedView_DriveCarefully( playerID, "AI LimitedView DriveCarefully " + clientName );
+			entity= new AI_LimitedView_DriveCarefully( playerID, clientName );
 			break;
 			/* ADD YOUR NEW AI ALSO HERE */
 		}

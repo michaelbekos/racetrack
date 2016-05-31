@@ -78,40 +78,40 @@ public class ReceiveStartGameMessageClientHandler extends
 						players[i]= new Player( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 2:
-						players[i]= new AI_NoMover( lobby.getPlayerIDs()[i], "AI No Mover " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_NoMover( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 3:
-						players[i]= new AI_Random( lobby.getPlayerIDs()[i], "AI Random " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_Random( lobby.getPlayerIDs()[i],lobby.getPlayerNames()[i] );
 						break;
 					case 4:
-						players[i]= new AI_Puckie( lobby.getPlayerIDs()[i], "AI Puckie " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_Puckie( lobby.getPlayerIDs()[i],lobby.getPlayerNames()[i] );
 						break;
 					case 5:
-						players[i]= new AIstar( lobby.getPlayerIDs()[i], "AIstar " + lobby.getPlayerNames()[i] );
+						players[i]= new AIstar( lobby.getPlayerIDs()[i],lobby.getPlayerNames()[i] );
 						break;
 					case 6:
-						players[i]= new AI_Crasher( lobby.getPlayerIDs()[i], "AI Crasher " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_Crasher( lobby.getPlayerIDs()[i],lobby.getPlayerNames()[i] );
 						break;
 					case 7:
-						players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i], "AI Zigzag " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_Zigzag( lobby.getPlayerIDs()[i],lobby.getPlayerNames()[i] );
 						break;
 					case 8:
-						players[i]= new AI_LimitedView_DriveSafe( lobby.getPlayerIDs()[i], "AI LimitedView DriveSafe " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_LimitedView_DriveSafe( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 9:
-						players[i]= new AI_LimitedView_FastCorner( lobby.getPlayerIDs()[i], "AI LimitedView FastCorner " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_LimitedView_FastCorner( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 10:
-						players[i]= new AI_LimitedView_FastTopmost( lobby.getPlayerIDs()[i], "AI LimitedView FastTopmost " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_LimitedView_FastTopmost( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 11:
-						players[i]= new AI_LimitedView_SpeedUp( lobby.getPlayerIDs()[i], "AI LimitedView SpeedUp " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_LimitedView_SpeedUp( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 12:
-						players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], "AI Bipartite " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_Bipartite( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 					case 13:
-						players[i]= new AI_LimitedView_DriveCarefully( lobby.getPlayerIDs()[i], "AI LimitedView DriveCarefully " + lobby.getPlayerNames()[i] );
+						players[i]= new AI_LimitedView_DriveCarefully( lobby.getPlayerIDs()[i], lobby.getPlayerNames()[i] );
 						break;
 						/* ADD YOUR NEW AI ALSO HERE */
 					default:
