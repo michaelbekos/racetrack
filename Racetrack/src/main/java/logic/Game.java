@@ -18,6 +18,10 @@ public class Game {
 	private GameState gameState;
 	private int roundCounter;
 	
+	// This allows cars to occupy the same positions.
+	// So this disables car crashing
+	private boolean phantomCars;
+	
 
 	/**
 	 * @return the inGameLobby
@@ -130,6 +134,7 @@ public class Game {
 	 *            An in-game-lobby
 	 */
 	public Game(Track track, Player[] playerList, Lobby inGameLobby) {
+		this.phantomCars = true;
 		this.track = track;
 		this.RTField = new Player[(int) track.getDimension().getX()][(int) track
 		                                                             .getDimension().getY()];
@@ -602,7 +607,7 @@ public class Game {
 					// Check if velocity change is between -1 to 1
 					(checkIfValidVelocityChange(selectedPosition)) &&
 					// If player will crash into another player
-					(crashIntoOtherPlayer(selectedPosition))) {
+					(!crashIntoOtherPlayer(selectedPosition))) {
 				return true;
 			}
 		}
@@ -632,15 +637,29 @@ public class Game {
 	 *            selected position by the player on the grid
 	 * @return true if there's no crash, false if there's crash.
 	 */
-	boolean crashIntoOtherPlayer(Point2D gridPosition) {
+	boolean crashIntoOtherPlayer(Point2D gridPosition) 
+	{
 		if (gridPosition.getX() >= track.getDimension().getX()
 				|| gridPosition.getY() >= track.getDimension().getY()
-				|| gridPosition.getX() < 0 || gridPosition.getY() < 0) {
+				|| gridPosition.getX() < 0 || gridPosition.getY() < 0) 
+		{
 			return true;
-		} else {
-			return RTField[(int) gridPosition.getX()][(int) gridPosition.getY()] == null
-					|| RTField[(int) gridPosition.getX()][(int) gridPosition
-					                                      .getY()] == playerList[currentPlayerIndex];
+		}
+		else 
+		{
+			if( phantomCars )
+			{
+				return false;
+			}
+			if( RTField[(int) gridPosition.getX()][(int) gridPosition.getY()] == null )
+			{
+				return false;
+			}
+			if( RTField[(int) gridPosition.getX()][(int) gridPosition.getY()] == playerList[currentPlayerIndex] )
+			{
+				return false;
+			}
+			return true;
 		}
 	}
 
